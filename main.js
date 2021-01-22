@@ -18,6 +18,21 @@ client.on("message", (message) => {
 
     console.log(message.author.username+ "\n");
     console.log(message.content)
+	const args = message.content.slice(prefix.length).split(/ +/);
+	const command = args.shift().toLowerCase();
+
+if(message.content === "embed"){
+    let embed = new Discord.MessageEmbed()
+    .setTitle("This is Embed Title")
+    .setDescription("aaaaaaaaaa")
+    .setColor("Red")
+    .setFooter("This is a Foot")
+    message.channel.send(embed)
+}
+	if (command === "hello ${user.tag}") {
+    // console.log(command);
+    // console.log("something");
+    console.log(message.author.username)
 	if (command === "embed") {
 		let embed = new Discord.MessageEmbed()
 			.setTitle("This is Embed Title")

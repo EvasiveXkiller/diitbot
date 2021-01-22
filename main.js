@@ -19,4 +19,3 @@ if(command === 'hello'){
 }
 });
 
-client.login('ODAyMTE4MTAwMjEyMTIxNjAw.YAqksQ.QkVbWD8IDVzJijJBH0SdZYlqAHs');

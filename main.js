@@ -18,8 +18,8 @@ client.on("message", (message) => {
 
     console.log(message.author.username+ "\n");
     console.log(message.content)
-	const args = message.content.slice(prefix.length).split(/ +/);
-	const command = args.shift().toLowerCase();
+	// const args = message.content.slice(prefix.length).split(/ +/);
+	// const command = args.shift().toLowerCase();
 
 if(message.content === "embed"){
     let embed = new Discord.MessageEmbed()
@@ -46,6 +46,15 @@ if(message.content === "embed"){
 	} else if (command == "destroy") {
 		message.channel.send("bot going offline");
 		client.destroy();
-	}
+    }
+
+    if(command === "diitImage"){
+        let embed = new Discord.MessageEmbed()
+        .addFields(
+            {name: 'Rule 1', value: 'Be Nice eat ass'},
+            {name:'Rule 2', value:'Follow Me to the basement'}  
+        )
+        message.channel.send(embed);
+    }
 });
 client.login("ODAyMTE4MTAwMjEyMTIxNjAw.YAqksQ.QkVbWD8IDVzJijJBH0SdZYlqAHs");

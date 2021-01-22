@@ -4,6 +4,8 @@ const client = new Discord.Client();
 
 const prefix = "$";
 
+
+
 client.once("ready", () => {
 	console.log("The International of DIIT Congress is online.");
 });
@@ -18,63 +20,34 @@ client.on("message", (message) => {
 
 	console.log(message.author.username + "\n");
 	console.log(message.content);
-
-	if (command === "embed") {
-        let preprocess = message.content.replace("$embed", "")
-        console.log(preprocess)
-        let finalmessage = preprocess
-		let embed = new Discord.MessageEmbed({
-            title:"Download more ram here now",
-            description:finalmessage,
-            type:"video",
-            color:"red",
-            url:"https://www.youtube.com/watch?v=cvh0nX08nRw",
-            footer:"this is an elephant foot"
-        })
-		message.channel.send(embed);
-    }
-    if(command === "moreram") {
-        let preprocess = message.content.replace("$embed", "")
-        console.log(preprocess)
-        let finalmessage = preprocess
-		let embed = new Discord.MessageEmbed({
-            title:"Download more ram here now",
-            description:finalmessage,
-            type:"video",
-            color:"red",
-            url:"https://www.youtube.com/watch?v=cvh0nX08nRw",
-            footer:"this is an elephant foot"
-        })
-		message.channel.send(embed);
-    }
-    if(command === "dead") {
-        let preprocess = message.content.replace("$embed", "")
-        console.log(preprocess)
-        let finalmessage = preprocess
-		let embed = new Discord.MessageEmbed({
-            title:"We dead",
-            //description:finalmessage,
-            image:{
-                url:"https://cdn.discordapp.com/attachments/754343242224631811/802079453282697246/unknown.png"
-            },
-            type:"image",
-            color:"red",
-            url:"https://cdn.discordapp.com/attachments/754343242224631811/802079453282697246/unknown.png",
-            footer:"this is an elephant foot"
-        })
-		message.channel.send(embed);
-    }
-	if (command === "hello ${user.tag}") {
-		console.log(message.author.username);
-	}
-	if (command === "hello") {
-		message.channel.send("hey!");
-	} else if (command == "destroy") {
-		message.channel.send("bot going offline");
-		client.destroy();
-    }
-    if(command === "quotes") {
+    // * quotes generator and publisher
+    if(command === "iconic") {
+        let quotes = require("./quotes.json")
+        let tempvar = Object.values(quotes)
+        let randindex = Math.random() * tempvar.length
+        let randquotes = tempvar[parseInt(randindex)]
+        let randperson = quotes[randquotes]
+        console.log(randquotes);
+        console.log(randperson);
         
+
+        // * random color generator
+        let randomColor = Math.floor(Math.random()*16777215).toString(16);
+
+        let date = new Date()
+        let output = new Discord.MessageEmbed({
+            title: randquotes[0],
+            description:tempvar,
+            color: randomColor.toUpperCase(),//colors[getRandomArbitrary(0,99)],
+            url:"https://www.youtube.com/watch?v=cvh0nX08nRw",
+            footer: {
+                text:"The International Server " + date.getFullYear()
+            }
+        })
+        message.channel.send(output);
+    }
+    if(command === "destroy") {
+        client.destroy()
     }
 });
 

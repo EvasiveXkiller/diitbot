@@ -24,11 +24,7 @@ client.on("message", (message) => {
     if(command === "iconic") {
         let quotes = require("./quotes.json")
         let tempvar = Object.values(quotes)
-        let randindex = Math.random() * tempvar.length
-        let randquotes = tempvar[parseInt(randindex)]
-        let randperson = quotes[randquotes]
-        console.log(randquotes);
-        console.log(randperson);
+        let randquotes = tempvar[parseInt(Math.random() * tempvar.length)]
         
 
         // * random color generator
@@ -37,7 +33,7 @@ client.on("message", (message) => {
         let date = new Date()
         let output = new Discord.MessageEmbed({
             title: randquotes[0],
-            description:tempvar,
+            description:"name",
             color: randomColor.toUpperCase(),//colors[getRandomArbitrary(0,99)],
             url:"https://www.youtube.com/watch?v=cvh0nX08nRw",
             footer: {

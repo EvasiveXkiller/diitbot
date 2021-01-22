@@ -32,6 +32,7 @@ if(message.content === "embed"){
 	if (command === "hello ${user.tag}") {
     // console.log(command);
     // console.log("something");
+    }
     console.log(message.author.username)
 	if (command === "embed") {
 		let embed = new Discord.MessageEmbed()

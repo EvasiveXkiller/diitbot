@@ -18,5 +18,13 @@ if(command === 'hello'){
     message.channel.send('hey!');
 }
 
+if(message.content === "embed"){
+    let embed = new Discord.MessageEmbed()
+    .setTitle("This is Embed Title")
+    .setDescription("aaaaaaaaaa")
+    .setColor("Red")
+    .setFooter("This is a Foot")
+    message.channel.send(embed)
+}
 });
 

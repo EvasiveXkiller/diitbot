@@ -39,23 +39,16 @@ if(message.content === "embed"){
 			.setTitle("This is Embed Title")
 			.setDescription("aaaaaaaaaa")
 			.setColor(0xff0000)
-			.setFooter("This is a Foot");
-		message.channel.send(embed);
+            .setFooter("This is a Foot");
+		message.channel.send(`${message.author},`,embed);
 	}
 	if (command === "hello") {
-		message.channel.send("hey!");
+        message.channel.send("hey," + `${message.author},`);
+        message.channel.send("I love shit");
 	} else if (command == "destroy") {
 		message.channel.send("bot going offline");
 		client.destroy();
-    }
+    }   
 
-    if(command === "diitImage"){
-        let embed = new Discord.MessageEmbed()
-        .addFields(
-            {name: 'Rule 1', value: 'Be Nice eat ass'},
-            {name:'Rule 2', value:'Follow Me to the basement'}  
-        )
-        message.channel.send(embed);
-    }
 });
 client.login("ODAyMTE4MTAwMjEyMTIxNjAw.YAqksQ.QkVbWD8IDVzJijJBH0SdZYlqAHs");

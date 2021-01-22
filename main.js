@@ -9,14 +9,15 @@ client.once("ready", () => {
 });
 
 client.on("message", (message) => {
-	if (!message.content.startsWith(prefix) || message.author.bot) return;
-    // console.log(message);
+    // * Breaks if the input is not valid
+	if (!message.content.startsWith(prefix) || message.author.bot) {
+		return;
+	}
 	let args = message.content.slice(prefix.length).split(/ +/); // ! i have no idea what it does
-    let command = args.shift().toLowerCase();
+	let command = args.shift().toLowerCase();
 
-    // console.log(command);
-    // console.log("something");
-    console.log(message.author.username)
+    console.log(message.author.username+ "\n");
+    console.log(message.content)
 	if (command === "embed") {
 		let embed = new Discord.MessageEmbed()
 			.setTitle("This is Embed Title")
@@ -28,8 +29,8 @@ client.on("message", (message) => {
 	if (command === "hello") {
 		message.channel.send("hey!");
 	} else if (command == "destroy") {
-        message.channel.send("bot going offline");
-        client.destroy();
+		message.channel.send("bot going offline");
+		client.destroy();
 	}
 });
 client.login("ODAyMTE4MTAwMjEyMTIxNjAw.YAqksQ.QkVbWD8IDVzJijJBH0SdZYlqAHs");

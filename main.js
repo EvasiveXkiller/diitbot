@@ -9,37 +9,46 @@ client.once("ready", () => {
 });
 
 client.on("message", (message) => {
-    // * Breaks if the input is not valid
+	// * Breaks if the input is not valid
 	if (!message.content.startsWith(prefix) || message.author.bot) {
 		return;
 	}
 	let args = message.content.slice(prefix.length).split(/ +/); // ! i have no idea what it does
 	let command = args.shift().toLowerCase();
 
-    console.log(message.author.username+ "\n");
-    console.log(message.content)
-	const args = message.content.slice(prefix.length).split(/ +/);
-	const command = args.shift().toLowerCase();
+	console.log(message.author.username + "\n");
+	console.log(message.content);
 
-if(message.content === "embed"){
-    let embed = new Discord.MessageEmbed()
-    .setTitle("This is Embed Title")
-    .setDescription("aaaaaaaaaa")
-    .setColor("Red")
-    .setFooter("This is a Foot")
-    message.channel.send(embed)
-}
-	if (command === "hello ${user.tag}") {
-    // console.log(command);
-    // console.log("something");
-    console.log(message.author.username)
 	if (command === "embed") {
-		let embed = new Discord.MessageEmbed()
-			.setTitle("This is Embed Title")
-			.setDescription("aaaaaaaaaa")
-			.setColor(0xff0000)
-			.setFooter("This is a Foot");
+        let preprocess = message.content.replace("$embed", "")
+        console.log(preprocess)
+        let finalmessage = preprocess
+		let embed = new Discord.MessageEmbed({
+            title:"Download more ram here now",
+            description:finalmessage,
+            type:"video",
+            color:"red",
+            url:"https://www.youtube.com/watch?v=cvh0nX08nRw",
+            footer:"this is an elephant foot"
+        })
 		message.channel.send(embed);
+    }
+    if(command == "moreram") {
+        let preprocess = message.content.replace("$embed", "")
+        console.log(preprocess)
+        let finalmessage = preprocess
+		let embed = new Discord.MessageEmbed({
+            title:"Download more ram here now",
+            description:finalmessage,
+            type:"video",
+            color:"red",
+            url:"https://www.youtube.com/watch?v=cvh0nX08nRw",
+            footer:"this is an elephant foot"
+        })
+		message.channel.send(embed);
+    }
+	if (command === "hello ${user.tag}") {
+		console.log(message.author.username);
 	}
 	if (command === "hello") {
 		message.channel.send("hey!");
@@ -48,4 +57,5 @@ if(message.content === "embed"){
 		client.destroy();
 	}
 });
+
 client.login("ODAyMTE4MTAwMjEyMTIxNjAw.YAqksQ.QkVbWD8IDVzJijJBH0SdZYlqAHs");

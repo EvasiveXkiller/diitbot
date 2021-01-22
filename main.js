@@ -33,7 +33,7 @@ client.on("message", (message) => {
         })
 		message.channel.send(embed);
     }
-    if(command == "moreram") {
+    if(command === "moreram") {
         let preprocess = message.content.replace("$embed", "")
         console.log(preprocess)
         let finalmessage = preprocess
@@ -47,6 +47,23 @@ client.on("message", (message) => {
         })
 		message.channel.send(embed);
     }
+    if(command === "dead") {
+        let preprocess = message.content.replace("$embed", "")
+        console.log(preprocess)
+        let finalmessage = preprocess
+		let embed = new Discord.MessageEmbed({
+            title:"We dead",
+            //description:finalmessage,
+            image:{
+                url:"https://cdn.discordapp.com/attachments/754343242224631811/802079453282697246/unknown.png"
+            },
+            type:"image",
+            color:"red",
+            url:"https://cdn.discordapp.com/attachments/754343242224631811/802079453282697246/unknown.png",
+            footer:"this is an elephant foot"
+        })
+		message.channel.send(embed);
+    }
 	if (command === "hello ${user.tag}") {
 		console.log(message.author.username);
 	}
@@ -55,7 +72,10 @@ client.on("message", (message) => {
 	} else if (command == "destroy") {
 		message.channel.send("bot going offline");
 		client.destroy();
-	}
+    }
+    if(command === "quotes") {
+        
+    }
 });
 
 client.login("ODAyMTE4MTAwMjEyMTIxNjAw.YAqksQ.QkVbWD8IDVzJijJBH0SdZYlqAHs");

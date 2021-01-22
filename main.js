@@ -22,7 +22,7 @@ if(message.content === "embed"){
     .setFooter("This is a Foot")
     message.channel.send(embed)
 }
-	if (command === "hello") {
+	if (command === "hello ${user.tag}") {
 		message.channel.send("hey!");
     }
     else if(command == "destroy"){

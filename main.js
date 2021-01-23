@@ -58,7 +58,6 @@ client.on("message", (message) => {
 	}
 	let args = message.content.slice(prefix.length).split(/ +/); // ! i have no idea what it does
 	let command = args.shift().toLowerCase();
-
 	console.log(message.author.username + "\n");
 	console.log(message.content);
     // * quotes generator and publisher
@@ -66,9 +65,9 @@ client.on("message", (message) => {
         let output
         let userinput = message.content.replace("iconic" ,"").trim()
         // * random color generator
-        let randomColor = Math.floor(Math.random()*16777215).toString(16);
+        let randomColor = Math.floor(Math.random()*16777215).toString(16)
         let date = new Date()
-        if (userinput === "") {
+        if (message.content == "$iconic") {
             for (let index = 0; index < quotes.length; index++) {
                 //console.log(quotes[index].Name)
                 names.push(quotes[index].Name)
@@ -100,13 +99,16 @@ client.on("message", (message) => {
         message.channel.send("https://tenor.com/view/jack-triggered-diit-international-gif-19946915")
     }
     if(command === "save") {
-        message.channel.send("Do you want to try saving yourself as pdf?")
+        message.channel.send(`${message.author}` + ", Do you want to try saving yourself as pdf?It might work though. Saving space as an added bonus")
     }
 })
 
 function query(input){
     let fuse = new fusejs(quotes, options);
     let closeMatch = fuse.search(input);
+    if(closeMatch.length == 0) {
+        return ["No user found","", "NULL"]
+    }
     console.log(closeMatch)
 	let randgen = closeMatch[0].item.Quotes[parseInt(Math.random() * closeMatch[0].item.Quotes.length)]
     return [closeMatch[0].item.Name, randgen, closeMatch[0].score] 

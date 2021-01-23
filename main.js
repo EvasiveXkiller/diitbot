@@ -17,7 +17,7 @@ const options = {
 }
 
 let names = []
-
+let dbinput = []
 client.once("ready", () => {
     console.log("The International of DIIT Congress is online.");
 });
@@ -65,17 +65,44 @@ client.on("message", (message) => {
     }
     if(command === "destroy") {
         client.destroy()
-        process.exit(1);
     }
     if(command === "help") {
         message.channel.send("Helping?  i Guess not")
         message.channel.send("https://tenor.com/view/jack-triggered-diit-international-gif-19946915")
     }
     if(command === "save") {
-        message.channel.send(`${message.author}` + ", Do you want to try saving yourself as pdf?It might work though. Saving space as an added bonus")
+        message.channel.send(`${message.author}` + ", Do you want to try saving yourself as pdf? It might work though. Saving space as an added bonus")
     }
-    if(command === "dbinsert") {
-        let userinput = message.content.replace("iconic" ,"").trim()
+    if(command === "dbtest") {
+        //let userinput = message.content.replace("iconic" ,"").trim()
+        const filter = m => m.content
+        const collector = message.channel.createMessageCollector(filter, { 
+            time: 15000,
+            max:2
+        });
+
+        collector.on('collect', m => {
+            if(m.content == "$dbtest") {
+                message.channel.send("In Progress. Cannot start another instance!")
+                return
+            }
+            if(dbinput.length == 0) {
+                message.channel.send("Please enter the second variable")
+            }
+            console.log(m.content);
+            dbinput.push(m.content)
+        });
+
+        collector.on('end', m => {
+            message.channel.send("Done")
+            console.log("end")
+            message.channel.send("First input is " + dbinput[0])
+            message.channel.send("2nd " + dbinput[1])
+            dbinput.length = 0
+        });
+    }
+    if(command == "dbview") {
+        message.channel.send(quotes)
     }
 })
 

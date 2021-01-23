@@ -143,8 +143,18 @@ client.on("message", (message) => {
                 })
         });
     }
-    if(command == "dbview") {
-        message.channel.send(db.getState())
+    if(command == "dbview") {     
+            const yx = db.get('quotes').find({ Name : "Carlson" }).write()
+            try {
+                message.channel.send(yx)
+            } catch (error) {
+                message.channel.send("This is crashing like hell")
+            }
+            
+        // db.get('quotes')
+        //     .find({ Name : "Carlson" })
+        //     .assign({ Quotes :  })
+        //     .write()
     }
 })
 

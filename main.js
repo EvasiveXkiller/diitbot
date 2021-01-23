@@ -10,7 +10,6 @@ const db = low(adapter);
 const client = new Discord.Client();
 const prefix = "$";
 
-let quotes = db.get('quotes').write();
 const options = {
     includeScore:true,
 	keys: ["Name"],
@@ -19,6 +18,14 @@ const options = {
 let names = []
 let dbinput = []
 client.once("ready", () => {
+    client.user.setPresence({
+        status : 'dnd',
+        activity :{
+            name : "dead",
+            type: "STREAMING",
+            url:"https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        }
+    });
     console.log("The International of DIIT Congress is online.");
 });
 
@@ -40,9 +47,9 @@ client.on("message", (message) => {
         let randomColor = Math.floor(Math.random()*16777215).toString(16)
         let date = new Date()
         if (message.content == "$iconic") {
-            for (let index = 0; index < quotes.length; index++) {
+            for (let index = 0; index < db.get('quotes').write().length; index++) {
                 //console.log(quotes[index].Name)
-                names.push(quotes[index].Name)
+                names.push(db.get('quotes').write()[index].Name)
             }
             //console.log(names[parseInt(Math.random() * names.length)])
             console.log("branch1")
@@ -73,8 +80,16 @@ client.on("message", (message) => {
     if(command === "save") {
         message.channel.send(`${message.author}` + ", Do you want to try saving yourself as pdf? It might work though. Saving space as an added bonus")
     }
-    if(command === "dbtest") {
+    if(command === "dbinsert") {
         //let userinput = message.content.replace("iconic" ,"").trim()
+        let embedinstruction = new Discord.MessageEmbed({
+            title: "Instructions",
+            description: "1)Enter the name, then press [ Enter ] to continue\n 2)Enter the quote, press [ Enter ] when complete",
+            footer : {
+                text : "Custom Implementation"
+            }
+        })
+        message.channel.send(embedinstruction)
         const filter = m => m.content
         const collector = message.channel.createMessageCollector(filter, { 
             time: 15000,
@@ -86,28 +101,55 @@ client.on("message", (message) => {
                 message.channel.send("In Progress. Cannot start another instance!")
                 return
             }
-            if(dbinput.length == 0) {
-                message.channel.send("Please enter the second variable")
-            }
             console.log(m.content);
             dbinput.push(m.content)
         });
 
         collector.on('end', m => {
-            message.channel.send("Done")
-            console.log("end")
-            message.channel.send("First input is " + dbinput[0])
-            message.channel.send("2nd " + dbinput[1])
-            dbinput.length = 0
+            let embedcomfirm = new Discord.MessageEmbed({
+                title: "Confirm?",
+                description: "Name : " + dbinput[0] + "\n" + "Quote: " + dbinput[1],
+                footer : {
+                    text : "Are you sure to execute command? Type [ cancel ] to abort"
+                }
+            })
+            message.channel.send(embedcomfirm)
+
+
+            db.get('quotes').find({ Name : "Carlson" }).push("Something").write()
+
+            const filter = comfirm => comfirm.content
+            const comfirmcollector = message.channel.createMessageCollector(filter, { 
+                max:1
+            });
+                comfirmcollector.on("collect", comfirm => {
+                    if(comfirm.content == "accept" || message.author.bot) {
+                        let namesarray = db.get("quotes").map("Name").value()
+                        if(!namesarray.includes(dbinput[0])) {
+                            message.channel.send("Name doesnt exists. Please contact database admin to add into database manually")
+                            return
+                        } else {
+                            message.channel.send(dbinput[0])
+                            message.channel.send(dbinput[1])
+                        }
+                        message.channel.send("Commited to database")
+                    } else {
+                        message.channel.send("Query Aborted")
+                    }
+                })
+                comfirmcollector.on("end" , () => {
+                    message.channel.send("Execution done")
+                    dbinput = []
+                })
         });
     }
     if(command == "dbview") {
-        message.channel.send(quotes)
+        message.channel.send(db.getState())
     }
 })
 
 function query(input){
-    let fuse = new fusejs(quotes, options);
+    let fuse = new fusejs(db.get('quotes').write(), options);
     let closeMatch = fuse.search(input);
     if(closeMatch.length == 0) {
         return ["No user found","", "NULL"]
@@ -116,10 +158,5 @@ function query(input){
 	let randgen = closeMatch[0].item.Quotes[parseInt(Math.random() * closeMatch[0].item.Quotes.length)]
     return [closeMatch[0].item.Name, randgen, closeMatch[0].score] 
 }   
-
-
-
-  
-  
 
 client.login("ODAyMTE4MTAwMjEyMTIxNjAw.YAqksQ.QkVbWD8IDVzJijJBH0SdZYlqAHs");

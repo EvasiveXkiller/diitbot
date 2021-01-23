@@ -1,82 +1,25 @@
 const Discord = require("discord.js")
 const fusejs = require("fuse.js");
+
 const low = require("lowdb");
 const FileSync = require("lowdb/adapters/FileSync");
+const adapter = new FileSync("db.json");
+const db = low(adapter);
+
+
 const client = new Discord.Client();
 const prefix = "$";
+
+let quotes = db.get('quotes').write();
 const options = {
     includeScore:true,
 	keys: ["Name"],
 }
 
-var readline = require('readline');
-var rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-    prompt:"cmd@diit:: "
-})
-
-function cmdinput() {
-    rl.prompt();
-    rl.on('line',(line) => {
-        switch(line) {
-            case "echo":
-                console.log("Replied: " + line)
-                break
-            case stop:
-                console.log("Stopping Immediately")
-                client.destroy();
-                break
-            case "listdb":
-                console.log("testdb")
-            default:
-                console.log("Unknown command")
-                break
-        }
-        rl.prompt();
-    })
-}
-
 let names = []
-let quotes = [
-    {
-        Name: "Yong Xian",
-        Quotes: [
-            "lol let's go",
-            "You Lagging wei",
-            "FOS",
-            "They have but they don't",
-            "Hair can light up the entire kampung wei",
-            "We're here for a good time not a long time",
-            "When you cough right, does your lungs go upwards ah?",
-            "and and",
-        ],
-    },
-    {
-        Name: "Zhen Yick",
-        Quotes: [
-            "Damn tired wei",
-            "Damn treshhhh wei",
-            "Macam mane oh",
-            "My computer dying wei",
-            "Wait WHAAt?",
-            "Eye pad",
-            "I gon go sleep now",
-        ],
-    },
-    {
-        Name: "Carlson",
-        Quotes: [
-            "Hi Back, I'm dad",
-            "I can finish myself also",
-            "Your halal very noisy",
-            "Can you hear the driller",
-        ],
-    },
-]
+
 client.once("ready", () => {
     console.log("The International of DIIT Congress is online.");
-    cmdinput()
 });
 
 client.on("message", (message) => {
@@ -84,13 +27,14 @@ client.on("message", (message) => {
 	if (!message.content.startsWith(prefix) || message.author.bot) {
 		return;
 	}
-	let args = message.content.slice(prefix.length).split(/ +/); // ! i have no idea what it does
+	let args = message.content.slice(prefix.length).split(/ +/); // * splits into words array
 	let command = args.shift().toLowerCase();
 	console.log(message.author.username + "\n");
 	console.log(message.content);
     // * quotes generator and publisher
     if(command === "iconic") {
         let output
+
         let userinput = message.content.replace("iconic" ,"").trim()
         // * random color generator
         let randomColor = Math.floor(Math.random()*16777215).toString(16)
@@ -121,6 +65,7 @@ client.on("message", (message) => {
     }
     if(command === "destroy") {
         client.destroy()
+        process.exit(1);
     }
     if(command === "help") {
         message.channel.send("Helping?  i Guess not")
@@ -128,6 +73,9 @@ client.on("message", (message) => {
     }
     if(command === "save") {
         message.channel.send(`${message.author}` + ", Do you want to try saving yourself as pdf?It might work though. Saving space as an added bonus")
+    }
+    if(command === "dbinsert") {
+        let userinput = message.content.replace("iconic" ,"").trim()
     }
 })
 

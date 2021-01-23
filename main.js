@@ -1,10 +1,9 @@
 const Discord = require("discord.js");
+const search = require('js-search')
 
 const client = new Discord.Client();
 
 const prefix = "$";
-
-
 
 client.once("ready", () => {
 	console.log("The International of DIIT Congress is online.");
@@ -24,6 +23,7 @@ client.on("message", (message) => {
     if(command === "iconic") {
         let quotes = require("./quotes.json")
         let tempvar = Object.values(quotes)
+        tempvar[0]
         let randquotes = tempvar[parseInt(Math.random() * tempvar.length)]
         
 
@@ -31,6 +31,7 @@ client.on("message", (message) => {
         let randomColor = Math.floor(Math.random()*16777215).toString(16);
 
         let date = new Date()
+        
         let output = new Discord.MessageEmbed({
             title: randquotes[0],
             description:"name",
@@ -40,6 +41,7 @@ client.on("message", (message) => {
                 text:"The International Server " + date.getFullYear()
             }
         })
+        let embed = new Discord.MessageEmbed()
         message.channel.send(output);
     }
     if(command === "destroy") {

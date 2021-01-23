@@ -48,7 +48,31 @@ if(message.content === "embed"){
 	} else if (command == "destroy") {
 		message.channel.send("bot going offline");
 		client.destroy();
-    }   
+	}   
+	else if(command === "avatar"){
+		message.reply(message.author.displayAvatarURL());
+	}
+else if(command === "ping"){
+	const timeTaken = Date.now() - message.createdTimestamp;
+    message.reply(`Pong! This message had a latency of ${timeTaken}ms.`);
+	}
+	else if(command === "sum"){
+		const numArgs = args.map(x => parseFloat(x));
+		const sum = numArgs.reduce((counter, x) => counter += x);
+		message.reply(`The sum of all the arguments you provided is ${sum}!`);
+	}
+	else if(command === "pic"){
+let logo = 'https://www.google.com/search?q=yongxian+gif&sxsrf=ALeKk03EH27vRjKX5hEetTQl6sPOsGKaOQ:1611368652726&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiW_5aBgLHuAhW0yDgGHRlzBWIQ_AUoAXoECA4QAw&biw=1536&bih=754#imgrc=1ZHKSg5AOsQqXM'
 
+let hey = new Discord.MessageEmbed()
+.setTitle('Example Text Embed')
+.setURL('https://www.google.com/search?q=yongxian+gif&sxsrf=ALeKk03EH27vRjKX5hEetTQl6sPOsGKaOQ:1611368652726&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiW_5aBgLHuAhW0yDgGHRlzBWIQ_AUoAXoECA4QAw&biw=1536&bih=754#imgrc=1ZHKSg5AOsQqXM')
+.setAuthor(message.author.username)
+.setImage(logo)
+.setThumbnail(logo)
+.setFooter('This is a Footer')
+.setColor('#00AAFF')
+message.channel.send(hey)
+	}
 });
 client.login("ODAyMTE4MTAwMjEyMTIxNjAw.YAqksQ.QkVbWD8IDVzJijJBH0SdZYlqAHs");

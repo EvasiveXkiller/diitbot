@@ -33,30 +33,32 @@ let quotes = [
 			"Can you hear the driller",
 		],
 	},
-]
+];
 
-let userinput = "zhenyick";
+let userinput = "iconic ";
+
+console.log(userinput.replace("iconic" ,"").trim().toLowerCase())
 
 const fusejs = require("fuse.js");
 const options = {
 	includeScore: true,
 	keys: ["Name"],
-}
-let names = []
+};
+let names = [];
 
 if (userinput !== null) {
-    for (let index = 0; index < quotes.length; index++) {
-        //console.log(quotes[index].Name)
-        names.push(quotes[index].Name)
-    }
-    //console.log(names[parseInt(Math.random() * names.length)])
-    query(names[parseInt(Math.random() * names.length)])
+	for (let index = 0; index < quotes.length; index++) {
+		//console.log(quotes[index].Name)
+		names.push(quotes[index].Name);
+	}
+	//console.log(names[parseInt(Math.random() * names.length)])
+	query(names[parseInt(Math.random() * names.length)]);
 } else {
-    query(userinput)
+	query(userinput);
 }
-    
- function query(input){
-    let fuse = new fusejs(quotes, options);
+
+function query(input) {
+	let fuse = new fusejs(quotes, options);
 
 	let closeMatch = fuse.search(userinput);
 	let randgen =
@@ -66,15 +68,17 @@ if (userinput !== null) {
 
 	console.log(randgen);
 	console.log(closeMatch[0].item.Name); //* author output
- }   
+}
 
-// let names = Object.keys(quotes); // * convert json heads to array
-// let values = Object.values(quotes); // * locate the actual quotes
+let prefix = "$"
+let message = {
+	content : "$something here ashefgsjkhefb afkjahebk"
+}
 
-// console.log(values.length);
-// console.log(values[0].length);
-
-// console.log(names[0]);
-// console.log(values[0][0]);
-
-// console.log(names.indexOf(""));
+if (!message.content.startsWith("$")) {
+	return;
+}
+console.log(message.content.slice(prefix.length).split(/ +/))
+console.log(message.content.slice(prefix.length).split(/ +/).shift().toLowerCase())
+console.log(message.content.replace("$something" , ""))
+console.log(message.content)

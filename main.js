@@ -1,13 +1,40 @@
 const Discord = require("discord.js")
 const fusejs = require("fuse.js");
-
+const low = require("lowdb");
+const FileSync = require("lowdb/adapters/FileSync");
 const client = new Discord.Client();
-
 const prefix = "$";
-
 const options = {
     includeScore:true,
 	keys: ["Name"],
+}
+
+var readline = require('readline');
+var rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+    prompt:"cmd@diit:: "
+})
+
+function cmdinput() {
+    rl.prompt();
+    rl.on('line',(line) => {
+        switch(line) {
+            case "echo":
+                console.log("Replied: " + line)
+                break
+            case stop:
+                console.log("Stopping Immediately")
+                client.destroy();
+                break
+            case "listdb":
+                console.log("testdb")
+            default:
+                console.log("Unknown command")
+                break
+        }
+        rl.prompt();
+    })
 }
 
 let names = []
@@ -48,7 +75,8 @@ let quotes = [
     },
 ]
 client.once("ready", () => {
-	console.log("The International of DIIT Congress is online.");
+    console.log("The International of DIIT Congress is online.");
+    cmdinput()
 });
 
 client.on("message", (message) => {
@@ -113,5 +141,10 @@ function query(input){
 	let randgen = closeMatch[0].item.Quotes[parseInt(Math.random() * closeMatch[0].item.Quotes.length)]
     return [closeMatch[0].item.Name, randgen, closeMatch[0].score] 
 }   
+
+
+
+  
+  
 
 client.login("ODAyMTE4MTAwMjEyMTIxNjAw.YAqksQ.QkVbWD8IDVzJijJBH0SdZYlqAHs");

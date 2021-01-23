@@ -11,49 +11,62 @@ let quotes = [
 			"When you cough right, does your lungs go upwards ah?",
 			"and and",
 		],
-    },
-    {
+	},
+	{
 		Name: "Zhen Yick",
 		Quotes: [
-            "Damn tired wei",
-            "Damn treshhhh wei",
-            "Macam mane oh",
-            "My computer dying wei",
-            "Wait WHAAt?",
-            "Eye pad",
-            "I gon go sleep now"
-        ],
+			"Damn tired wei",
+			"Damn treshhhh wei",
+			"Macam mane oh",
+			"My computer dying wei",
+			"Wait WHAAt?",
+			"Eye pad",
+			"I gon go sleep now",
+		],
 	},
-    {
+	{
 		Name: "Carlson",
 		Quotes: [
-            "Hi Back, I'm dad",
-            "I can finish myself also",
-            "Your halal very noisy",
-            "Can you hear the driller"
-        ],
+			"Hi Back, I'm dad",
+			"I can finish myself also",
+			"Your halal very noisy",
+			"Can you hear the driller",
+		],
 	},
 ]
 
-let userinput = "Jack";
+let userinput = "zhenyick";
 
-const fusejs = require("fuse.js")
+const fusejs = require("fuse.js");
 const options = {
-    includeScore: true,
-    keys: ["Name"]
+	includeScore: true,
+	keys: ["Name"],
 }
+let names = []
 
+if (userinput !== null) {
+    for (let index = 0; index < quotes.length; index++) {
+        //console.log(quotes[index].Name)
+        names.push(quotes[index].Name)
+    }
+    //console.log(names[parseInt(Math.random() * names.length)])
+    query(names[parseInt(Math.random() * names.length)])
+} else {
+    query(userinput)
+}
+    
+ function query(input){
+    let fuse = new fusejs(quotes, options);
 
-let fuse = new fusejs(quotes, options)
+	let closeMatch = fuse.search(userinput);
+	let randgen =
+		closeMatch[0].item.Quotes[
+			parseInt(Math.random() * closeMatch[0].item.Quotes.length)
+		];
 
-let closeMatch = fuse.search(userinput)
-let randgen = closeMatch[0].item.Quotes[parseInt(Math.random() * closeMatch[0].item.Quotes.length)]
-
-console.log(randgen)
-console.log(closeMatch[0].item.Name) //* author output
-
-
-
+	console.log(randgen);
+	console.log(closeMatch[0].item.Name); //* author output
+ }   
 
 // let names = Object.keys(quotes); // * convert json heads to array
 // let values = Object.values(quotes); // * locate the actual quotes

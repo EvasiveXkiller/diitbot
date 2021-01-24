@@ -4,8 +4,7 @@ const fusejs = require("fuse.js");
 const low = require("lowdb");
 const FileSync = require("lowdb/adapters/FileSync");
 const adapter = new FileSync("db.json");
-const db = low(adapter);
-
+const db = low(adapter)
 
 const client = new Discord.Client();
 const prefix = "$";
@@ -13,6 +12,17 @@ const prefix = "$";
 const options = {
     includeScore:true,
 	keys: ["Name"],
+}
+
+Array.prototype.remove = function() {
+    var what, a = arguments, L = a.length, ax;
+    while (L && this.length) {
+        what = a[--L];
+        while ((ax = this.indexOf(what)) !== -1) {
+            this.splice(ax, 1);
+        }
+    }
+    return this;
 }
 
 let names = []
@@ -120,14 +130,12 @@ client.on("message", (message) => {
             let embedcomfirm = new Discord.MessageEmbed({
                 title: "Confirm?",
                 description: "Name : " + dbinput[0] + "\n" + "Quote: " + dbinput[1],
+                color:"FF9900",
                 footer : {
                     text : "Are you sure to execute command? Type [ cancel ] to abort"
                 }
             })
             message.channel.send(embedcomfirm)
-
-
-            db.get('quotes').find({ Name : "Carlson" }).push("Something").write()
 
             const filter = comfirm => comfirm.content
             const comfirmcollector = message.channel.createMessageCollector(filter, { 
@@ -140,6 +148,7 @@ client.on("message", (message) => {
                             let embed = new Discord.MessageEmbed({
                                 title: "Commit Aborted",
                                 description : "Name not found in database.\n Please contact admin for more details \nDatabase not modified",
+                                color:"FF0000",
                                 footer :{
                                     text : "nosql"
                                 }
@@ -158,15 +167,18 @@ client.on("message", (message) => {
                         let embed = new Discord.MessageEmbed({
                             title: "Commit Successful",
                             description : "Summary\nName : " + dbinput[0] + "\nData : " + dbinput[1],
+                            color: "00FF00",
                             footer :{
                                 text : "nosql"
                             }
                         })
+                        embed.setTimestamp()
                         message.channel.send(embed)
                     } else {
                         let embed = new Discord.MessageEmbed({
                             title: "Commit Aborted",
                             description : "Database not modified",
+                            color: "0000FF",
                             footer :{
                                 text : "nosql"
                             }
@@ -181,44 +193,73 @@ client.on("message", (message) => {
         });
     }
     if(command == "dbview") {     
-            const yx = db.getState()
-            try {
-                message.channel.send(JSON.stringify(yx).substring(0,1999))
-                message.channel.send(JSON.stringify(yx).substring(1999,JSON.stringify(yx).length-1))
-                // message.channel.send("Inserting")
-                // let userinput = message.content.replace("$dbview" ,"").trim()
-
-                // let edit = db.get('quotes').find({Name :"Hui Shan"}).value()
-                // let old = [...edit.Quotes]
-                // old.push(userinput)
-                // db.get("quotes")
-                //     .find({ Name: "Hui Shan"})
-                //     .assign({ Quotes : old})
-                //     .write()
-
-                // db.read()
-                // let temp = db.get('quotes').find({ Name : "Hui Shan" }).value()
-                // let local = new Discord.MessageEmbed({
-                //     title : temp.Name,
-                //     description : temp.Quotes.toString(),
-                //     footer: {
-                //         text : "Test"
-                //     }
-                // })
-                // message.channel.send(local)
-            } catch (error) {
-                message.channel.send("This is crashing like hell")
-            }
-            
-        // db.get('quotes')
-        //     .find({ Name : "Carlson" })
-        //     .assign({ Quotes :  })
-        //     .write()
+            message.channel.send(JSON.stringify(db.getState())).catch((e) => {
+                message.channel.send("String overload!\n" + e)
+            })
     }
+    if(command == "dbdelete") {
+        let userinputpre = message.content.replace("$dbdelete" ,"").trim()
+        let userinputSplit = userinputpre.split(",")
+        console.log(userinputSplit)
+        // * checking begins here
+        let allnames = db.get("quotes").map("Name").value()
+        if(!allnames.includes(userinputSplit[0])) {
+            let messagelocal = new Discord.MessageEmbed({
+                title: "Commit Error",
+                description: userinputSplit[0] + " is not a valid user in the database\nPlease check the syntax",
+                color : "FF0000",
+                footer : {
+                    text : "nosql"
+                }
+            })
+            messagelocal.setTimestamp()
+            message.channel.send(messagelocal)
+            return
+        }
+        let localquotes = db.get("quotes").find({Name : userinputSplit[0]}).get("Quotes").value()
+        if(!localquotes.includes(userinputSplit[1])) {
+            let messagelocal = new Discord.MessageEmbed({
+                title: "Commit Error",
+                description: "Quote not found in database\nPlease check the syntax",
+                color : "FF0000",
+                footer : {
+                    text : "nosql"
+                }
+            })
+            messagelocal.setTimestamp()
+            message.channel.send(messagelocal)
+            return
+        }
+        let updatedquotes = localquotes.remove(userinputSplit[1])
+            db.get("quotes")
+            .find({ Name: userinputSplit[0]})
+            .assign({ Quotes : updatedquotes})
+            .write()
+        let messagelocal = new Discord.MessageEmbed({
+            title: "Commit Successful",
+            description: userinputSplit[0] + " has been removed",
+            color : "00FF00",
+            footer : {
+                text : "nosql"
+            }
+        })
+        messagelocal.setTimestamp()
+        message.channel.send(messagelocal)
+    }
+    // if(command === "jacktest") {
+    //     let result = dbjack.get("Monday")
+    //     let sendcurrent = ""
+    //     let preprocess = Object.entries(result)
+    //     for (let index = 0; index < preprocess.length; index++) {
+    //         for (let index2 = 0; index2 < preprocess[index].length; index2++) {
+    //             sendcurrent + preprocess[index][index2]
+    //         }
+    //     message.channel.send(sendcurrent)
+    //     }
+    // }
 })
-
 function query(input){
-    let fuse = new fusejs(db.get('quotes').write(), options);
+    let fuse = new fusejs(db.get('quotes').write(), options)
     let closeMatch = fuse.search(input);
     if(closeMatch.length == 0) {
         return ["No user found","", "NULL"]
@@ -230,4 +271,4 @@ function query(input){
     return result
 }   
 
-client.login("ODAyMTE4MTAwMjEyMTIxNjAw.YAqksQ.QkVbWD8IDVzJijJBH0SdZYlqAHs");
+client.login("ODAyMTE4MTAwMjEyMTIxNjAw.YAqksQ.QkVbWD8IDVzJijJBH0SdZYlqAHs")

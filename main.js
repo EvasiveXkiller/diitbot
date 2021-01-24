@@ -30,6 +30,7 @@ client.once("ready", () => {
 });
 
 client.on("message", (message) => {
+    db.read()
 	// * Breaks if the input is not valid
 	if (!message.content.startsWith(prefix) || message.author.bot) {
 		return;
@@ -144,9 +145,30 @@ client.on("message", (message) => {
         });
     }
     if(command == "dbview") {     
-            const yx = db.get('quotes').find({ Name : "Carlson" }).write()
+            const yx = db.getState()
             try {
-                message.channel.send(yx)
+                message.channel.send(JSON.stringify(yx))
+                message.channel.send("Inserting")
+                let userinput = message.content.replace("$dbview" ,"").trim()
+
+                let edit = db.get('quotes').find({Name :"Hui Shan"}).value()
+                let old = [...edit.Quotes]
+                old.push(userinput)
+                db.get("quotes")
+                    .find({ Name: "Hui Shan"})
+                    .assign({ Quotes : old})
+                    .write()
+
+                db.read()
+                let temp = db.get('quotes').find({ Name : "Hui Shan" }).value()
+                let local = new Discord.MessageEmbed({
+                    title : temp.Name,
+                    description : temp.Quotes.toString(),
+                    footer: {
+                        text : "Test"
+                    }
+                })
+                message.channel.send(local)
             } catch (error) {
                 message.channel.send("This is crashing like hell")
             }

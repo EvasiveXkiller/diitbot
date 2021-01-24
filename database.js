@@ -5,27 +5,32 @@ const adapter = new FileSync("db.json");
 const db = low(adapter);
 
 // Set some defaults
-db.defaults({ quotes: []}).write();
+// db.defaults({ quotes: []}).write();
 
-db.get('quotes').push({
-    Name: "Hui Shan",
-    Quotes: [
-        "This is a test"
-    ]
-})
-
+// db.get('quotes').push({
+//     Name: "Hui Shan",
+//     Quotes: [
+//         "This is a test"
+//     ]
+// })
+db.read()
 let string = "i want to watch "
 // apa luuuuuu
-let edit = db.get('quotes').find({Name :"Zhen Yick"}).value()
+let edit = db.get('quotes').find({Name :"Hui Shan"}).value()
 
-console.log(edit)
-let newEntry = edit.Quotes.push(string)
+let old = [...edit.Quotes]
 
-console.log(edit)
+console.log(old)
 
-db.get('quotes').find({ Name : "Zhen Yick" }).push(string)
+old.push("Something")
 
-console.log(db.get("quotes").map("Name").value())
-console.log(db.get('quotes').find({ Name : "Carlson" }).value())
-// Set a user using Lodash shorthand syntax
-console.log(db.getState())
+console.log(old)
+
+db.get("quotes")
+    .find({ Name: "Hui Shan"})
+    .assign({ Quotes : old})
+    .write()
+
+
+//console.log(db.get("quotes").map("Name").value()) // * find all root keys
+//console.log(db.get('quotes').find({ Name : "Hui Shan" }).value())

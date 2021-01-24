@@ -132,6 +132,14 @@ client.on("message", (message) => {
                         } else {
                             message.channel.send(dbinput[0])
                             message.channel.send(dbinput[1])
+
+                            let edit = db.get('quotes').find({Name : dbinput[0]}).value()
+                            let newdata = [...edit.Quotes]
+                            newdata.push(dbinput[1])
+                            db.get("quotes")
+                                .find({ Name: dbinput[0]})
+                                .assign({ Quotes : newdata})
+                                .write()
                         }
                         message.channel.send("Commited to database")
                     } else {
@@ -148,27 +156,27 @@ client.on("message", (message) => {
             const yx = db.getState()
             try {
                 message.channel.send(JSON.stringify(yx))
-                message.channel.send("Inserting")
-                let userinput = message.content.replace("$dbview" ,"").trim()
+                // message.channel.send("Inserting")
+                // let userinput = message.content.replace("$dbview" ,"").trim()
 
-                let edit = db.get('quotes').find({Name :"Hui Shan"}).value()
-                let old = [...edit.Quotes]
-                old.push(userinput)
-                db.get("quotes")
-                    .find({ Name: "Hui Shan"})
-                    .assign({ Quotes : old})
-                    .write()
+                // let edit = db.get('quotes').find({Name :"Hui Shan"}).value()
+                // let old = [...edit.Quotes]
+                // old.push(userinput)
+                // db.get("quotes")
+                //     .find({ Name: "Hui Shan"})
+                //     .assign({ Quotes : old})
+                //     .write()
 
-                db.read()
-                let temp = db.get('quotes').find({ Name : "Hui Shan" }).value()
-                let local = new Discord.MessageEmbed({
-                    title : temp.Name,
-                    description : temp.Quotes.toString(),
-                    footer: {
-                        text : "Test"
-                    }
-                })
-                message.channel.send(local)
+                // db.read()
+                // let temp = db.get('quotes').find({ Name : "Hui Shan" }).value()
+                // let local = new Discord.MessageEmbed({
+                //     title : temp.Name,
+                //     description : temp.Quotes.toString(),
+                //     footer: {
+                //         text : "Test"
+                //     }
+                // })
+                // message.channel.send(local)
             } catch (error) {
                 message.channel.send("This is crashing like hell")
             }

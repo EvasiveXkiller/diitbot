@@ -41,7 +41,7 @@ client.on("message", (message) => {
 	console.log(message.content);
     // * quotes generator and publisher
     if(command === "iconic") {
-        let output
+        let output, localoutput
 
         let userinput = message.content.replace("iconic" ,"").trim()
         // * random color generator
@@ -54,19 +54,29 @@ client.on("message", (message) => {
             }
             //console.log(names[parseInt(Math.random() * names.length)])
             console.log("branch1")
-            output = query(names[parseInt(Math.random() * names.length)])
+                while(true) {
+                    localoutput = query(names[parseInt(Math.random() * names.length)])
+                    if(typeof localoutput[1] !== "undefined") {
+                        break
+                    }
+                    localoutput = []
+                }
+                output = localoutput
         } else {
             console.log("branch2")
-            output = query(userinput)
-        }
-
+            localoutput = query(userinput)
+            if(typeof localoutput[1] === "undefined") {
+                localoutput[1] = "[ Empty ]"
+            }
+            output = localoutput
+        }   
         let embed = new Discord.MessageEmbed({
             title: output[1],
-            description:output[0],
+            description: "--*" + output[0] + "*",
             color: randomColor.toUpperCase(),//colors[getRandomArbitrary(0,99)],
             url:"https://www.youtube.com/watch?v=cvh0nX08nRw",
             footer: {
-                text:"*The International Server " + date.getFullYear() + "*\n Confidence: " + output[2]
+                text:"The International Server " + date.getFullYear() + "\n Confidence: " + output[2]
             }
         })
         message.channel.send(embed);
@@ -87,7 +97,7 @@ client.on("message", (message) => {
             title: "Instructions",
             description: "1)Enter the name, then press [ Enter ] to continue\n 2)Enter the quote, press [ Enter ] when complete",
             footer : {
-                text : "Custom Implementation"
+                text : "nosql"
             }
         })
         message.channel.send(embedinstruction)
@@ -98,7 +108,7 @@ client.on("message", (message) => {
         });
 
         collector.on('collect', m => {
-            if(m.content == "$dbtest") {
+            if(m.content == "$dbinsert") {
                 message.channel.send("In Progress. Cannot start another instance!")
                 return
             }
@@ -127,12 +137,16 @@ client.on("message", (message) => {
                     if(comfirm.content == "accept" || message.author.bot) {
                         let namesarray = db.get("quotes").map("Name").value()
                         if(!namesarray.includes(dbinput[0])) {
-                            message.channel.send("Name doesnt exists. Please contact database admin to add into database manually")
+                            let embed = new Discord.MessageEmbed({
+                                title: "Commit Aborted",
+                                description : "Name not found in database.\n Please contact admin for more details \nDatabase not modified",
+                                footer :{
+                                    text : "nosql"
+                                }
+                            })
+                            message.channel.send(embed)
                             return
                         } else {
-                            message.channel.send(dbinput[0])
-                            message.channel.send(dbinput[1])
-
                             let edit = db.get('quotes').find({Name : dbinput[0]}).value()
                             let newdata = [...edit.Quotes]
                             newdata.push(dbinput[1])
@@ -141,13 +155,27 @@ client.on("message", (message) => {
                                 .assign({ Quotes : newdata})
                                 .write()
                         }
-                        message.channel.send("Commited to database")
+                        let embed = new Discord.MessageEmbed({
+                            title: "Commit Successful",
+                            description : "Summary\nName : " + dbinput[0] + "\nData : " + dbinput[1],
+                            footer :{
+                                text : "nosql"
+                            }
+                        })
+                        message.channel.send(embed)
                     } else {
-                        message.channel.send("Query Aborted")
+                        let embed = new Discord.MessageEmbed({
+                            title: "Commit Aborted",
+                            description : "Database not modified",
+                            footer :{
+                                text : "nosql"
+                            }
+                        })
+                        message.channel.send(embed)
                     }
                 })
                 comfirmcollector.on("end" , () => {
-                    message.channel.send("Execution done")
+                    //message.channel.send("Execution done")
                     dbinput = []
                 })
         });
@@ -155,7 +183,8 @@ client.on("message", (message) => {
     if(command == "dbview") {     
             const yx = db.getState()
             try {
-                message.channel.send(JSON.stringify(yx))
+                message.channel.send(JSON.stringify(yx).substring(0,1999))
+                message.channel.send(JSON.stringify(yx).substring(1999,JSON.stringify(yx).length-1))
                 // message.channel.send("Inserting")
                 // let userinput = message.content.replace("$dbview" ,"").trim()
 
@@ -195,8 +224,10 @@ function query(input){
         return ["No user found","", "NULL"]
     }
     console.log(closeMatch)
-	let randgen = closeMatch[0].item.Quotes[parseInt(Math.random() * closeMatch[0].item.Quotes.length)]
-    return [closeMatch[0].item.Name, randgen, closeMatch[0].score] 
+    let randgen = closeMatch[0].item.Quotes[parseInt(Math.random() * closeMatch[0].item.Quotes.length)]
+    let result = [closeMatch[0].item.Name, randgen, closeMatch[0].score] 
+    console.log(result)
+    return result
 }   
 
 client.login("ODAyMTE4MTAwMjEyMTIxNjAw.YAqksQ.QkVbWD8IDVzJijJBH0SdZYlqAHs");

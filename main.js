@@ -8,6 +8,8 @@ const adapter = new FileSync("db.json");
 const db = low(adapter);
 
 // > DB Connection on Jack
+const adapterjack = new FileSync("dbjack.json");
+const dbjack = low(adapterjack);
 
 // > DB Connection on Ken
 const adapterken = new FileSync("dbken.json");
@@ -331,7 +333,7 @@ client.on("message", (message) => {
 			);
 		message.channel.send(example);
 	}
-	if (command === "timetable") {
+	if (command === "timetablepic") {
 		// * This is to display timetable schedule for semester three. It's done for the code.
 		// > Ken
 		message.channel.send("Here you go, " + `${message.author},`);
@@ -382,6 +384,7 @@ client.on("message", (message) => {
 		message.channel.send(exampleEmbed);
     }
     if(command === "gif") {
+        //  > ken
         let userinput = message.content.replace("$gif" ,"").trim()
         let fuse = new fusejs(dbken.get("gifs").value(), optionsken)
         let closeMatch = fuse.search(userinput)
@@ -397,6 +400,37 @@ client.on("message", (message) => {
         console.log(closeMatch[0].item.link)
         message.channel.send(closeMatch[0].item.link)
     }
+    if (command === "timetable") {
+        // > jack
+		let userinput = message.content.replace("$timetable", "").trim().toLowerCase()
+		let arraychecker = Object.keys(dbjack.getState())
+		if (!arraychecker.includes(userinput)){
+			message.channel.send("Please check your syntax!")
+			return	
+		}
+		let preprocess = Object.entries(dbjack.get(userinput).value());
+        let sendcurrent = "\n"
+
+		for (let index = 0; index < preprocess.length; index++) {
+			sendcurrent += preprocess[index].toString() + "\n\n"
+        }
+
+		let rawstring = userinput + " Schedule\n\n"
+        let embed = new Discord.MessageEmbed({
+            title: toTitleCase(rawstring),
+            description : sendcurrent,
+            footer : {
+                text : "Good luck for the day!"
+            }
+        })
+        message.channel.send(embed)
+    }
+    if(command==="memes"){
+        // > jack
+		let items=dbjack.get('meme').value()
+		var memearray = items[Math.floor(Math.random() * items.length-1).toString()];
+		message.channel.send(memearray)
+	}
 });
 
 // > External Functions
@@ -416,13 +450,20 @@ function query(input) {
 	console.log(result);
 	return result;
 }
-
+function toTitleCase(str) {    //Title case for schedule
+	return str.replace(
+	  /\w\S*/g,
+	  function(txt) {
+		return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+	  }
+	);
+}
 // > Once the bot is ready set discord status and log in console
 client.once("ready", () => {
 	client.user.setPresence({
 		status: "dnd",
 		activity: {
-			name: "dead",
+			name: "anything you like",
 			type: "STREAMING",
 			url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
 		},

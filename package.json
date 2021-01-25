@@ -10,6 +10,8 @@
   "author": "Ken Soon",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^12.5.1"
+    "discord.js": "^12.5.1",
+    "fuse.js": "^6.4.6",
+    "lowdb": "^1.0.0"
   }
 }

@@ -13,6 +13,7 @@
   - Integrated Gif finder
   - Integrated Memes finder
   - Dark Mode Friendly
+  - Explode
   - Much More...
 
 > The best discord bot is a bot that is system that is designed from the ground up

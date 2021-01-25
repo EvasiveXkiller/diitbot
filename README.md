@@ -28,7 +28,7 @@ The International of DIIT uses a number of open source projects to work properly
 
 ### Backend
 
-Dillinger requires [Node.js](https://nodejs.org/) v4+ to run.
+The International of DIIT requires [Node.js](https://nodejs.org/) v4+ to run.
 
 Install the dependencies and devDependencies and start the server.
 
@@ -42,9 +42,9 @@ $ npm start
 
 > Below are those who dedicated their time and effort to make this bot a sustainable project
 - Tong Ken Soon - Project Initiator [Instagram](https://www.instagram.com/ikenot__/) [Github](https://github.com/TongKenSoon)
-- Carlson Tan - Database Implementer [Instagram](https://www.instagram.com/carlson.x.destroyed/) [Github](https://github.com/EvasiveXkiller/)
+- Carlson Tan - Database and Search Engine Implementer [Instagram](https://www.instagram.com/carlson.x.destroyed/) [Github](https://github.com/EvasiveXkiller/)
 - Jack Tok - Database Coder [Instagram](hhttps://www.instagram.com/jack_tok_/) [Github](https://github.com/OptimalLego)
-- Tong Yong Xian - Coder [Instagram](https://www.instagram.com/_yong_xian_/) [Github](https://github.com/YongXian1202)
+- Tong Yong Xian - Databse Maintainer [Instagram](https://www.instagram.com/_yong_xian_/) [Github](https://github.com/YongXian1202)
 
 ### Todos
 

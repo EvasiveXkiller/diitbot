@@ -21,7 +21,7 @@
 
 The International of DIIT uses a number of open source projects to work properly:
 
-* [node.js] - evented I/O for the backend
+* [node.js](https://nodejs.org/en/) - evented I/O for the backend
 * [lowdb](https://github.com/typicode/lowdb) - NoSQL Database for all stored data
 * [discord.js](https://discord.js.org/#/) - duh
 

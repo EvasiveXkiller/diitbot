@@ -277,7 +277,24 @@ client.on("message", (message) => {
             message.channel.send("You dont have enough permissions to stop the bot")
             return
         }
-        client.destroy()
+        let offlinemessage = new Discord.MessageEmbed({
+            description : "Going Offline Immediately!",
+            color : "FF0000",
+            footer : {
+                text : message.author.username
+            }
+        })
+        offlinemessage.setTimestamp()
+        message.channel.send(offlinemessage).then(() => {
+            client.destroy()
+        })
+    }
+    if (command === 'ping') {  
+        let pingmessage = new Discord.MessageEmbed({
+            description : `API Latency is ${Math.round(client.ws.ping)}ms`,
+        })
+        pingmessage.setTimestamp()
+        message.channel.send(pingmessage)
     }
 });
 

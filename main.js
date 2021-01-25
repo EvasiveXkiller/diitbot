@@ -385,6 +385,15 @@ client.on("message", (message) => {
         let userinput = message.content.replace("$gif" ,"").trim()
         let fuse = new fusejs(dbken.get("gifs").value(), optionsken)
         let closeMatch = fuse.search(userinput)
+        if (closeMatch.length == 0) {
+            let sendlocal = new Discord.MessageEmbed({
+                title : "Error",
+                description : "No matching keywords found"
+            })
+            sendlocal.setTimestamp();
+            message.channel.send(sendlocal)
+            return;
+        }
         console.log(closeMatch[0].item.link)
         message.channel.send(closeMatch[0].item.link)
     }

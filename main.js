@@ -14,14 +14,15 @@ const db = low(adapter);
 // > Important Constants
 const client = new Discord.Client();
 
-const options = { // * Carlson param for search system
-    includeScore:true,
+const options = {
+	// * Carlson param for search system
+	includeScore: true,
 	keys: ["Name"],
-}
+};
 
 // > Important Variables
-let names = []
-let dbinput = []
+let names = [];
+let dbinput = [];
 // > Prefix that triggers the bot
 const prefix = "$";
 
@@ -209,13 +210,13 @@ client.on("message", (message) => {
 			});
 		});
 	}
-	if (command == "dbview") {
+	if (command === "dbview") {
 		message.channel.send(JSON.stringify(db.getState()).substring(0, 1999));
 		message.channel.send(
 			JSON.stringify(db.getState()).substring(2000, 3999)
 		);
 	}
-	if (command == "dbdelete") {
+	if (command === "dbdelete") {
 		let userinputpre = message.content.replace("$dbdelete", "").trim();
 		let userinputSplit = userinputpre.split(",");
 		console.log(userinputSplit);
@@ -270,32 +271,34 @@ client.on("message", (message) => {
 		});
 		messagelocal.setTimestamp();
 		message.channel.send(messagelocal);
-    }
-    if(command === "destroy") {
-        let mods = ["EvasiveXkiller", "ikenot" , "Araric"]
-        if(!mods.includes(message.author.username)){
-            message.channel.send("You dont have enough permissions to stop the bot")
-            return
-        }
-        let offlinemessage = new Discord.MessageEmbed({
-            description : "Going Offline Immediately!",
-            color : "FF0000",
-            footer : {
-                text : message.author.username
-            }
-        })
-        offlinemessage.setTimestamp()
-        message.channel.send(offlinemessage).then(() => {
-            client.destroy()
-        })
-    }
-    if (command === 'ping') {  
-        let pingmessage = new Discord.MessageEmbed({
-            description : `API Latency is ${Math.round(client.ws.ping)}ms`,
-        })
-        pingmessage.setTimestamp()
-        message.channel.send(pingmessage)
-    }
+	}
+	if (command === "destroy") {
+		let mods = ["EvasiveXkiller", "ikenot", "Araric"];
+		if (!mods.includes(message.author.username)) {
+			message.channel.send(
+				"You dont have enough permissions to stop the bot"
+			);
+			return;
+		}
+		let offlinemessage = new Discord.MessageEmbed({
+			description: "Going Offline Immediately!",
+			color: "FF0000",
+			footer: {
+				text: message.author.username,
+			},
+		});
+		offlinemessage.setTimestamp();
+		message.channel.send(offlinemessage).then(() => {
+			client.destroy();
+		});
+	}
+	if (command === "ping") {
+		let pingmessage = new Discord.MessageEmbed({
+			description: `API Latency is ${Math.round(client.ws.ping)}ms`,
+		});
+		pingmessage.setTimestamp();
+		message.channel.send(pingmessage);
+	}
 });
 
 // > External Functions

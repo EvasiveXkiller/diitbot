@@ -23,13 +23,13 @@ const options = {
 	// * Carlson param for search system
 	includeScore: true,
 	keys: ["Name"],
-}
+};
 const optionsken = {
-    // * Ken param for search system
-    includeScore: true,
-    // Search in `author` and in `tags` array
-    keys: ['tags']
-}
+	// * Ken param for search system
+	includeScore: true,
+	// Search in `author` and in `tags` array
+	keys: ["tags"],
+};
 
 // > Important Variables
 let names = [];
@@ -311,8 +311,8 @@ client.on("message", (message) => {
 		message.channel.send(pingmessage);
 	}
 	if (command === "help") {
-        // * This is an embed list of nevigator for user to guide the user to type command they want. You can take this for now
-        // > Ken
+		// * This is an embed list of nevigator for user to guide the user to type command they want. You can take this for now
+		// > Ken
 		// > ken
 		const example = new Discord.MessageEmbed()
 			.setColor("#0099ff")
@@ -342,8 +342,8 @@ client.on("message", (message) => {
 		);
 	}
 	if (command === "description") {
-        // * This is an embed description to let the user read our server description and bot credits. This is okay for now.
-        // > Ken
+		// * This is an embed description to let the user read our server description and bot credits. This is okay for now.
+		// > Ken
 		const exampleEmbed = new Discord.MessageEmbed()
 			.setColor("#0099ff")
 			.setTitle("The DIIT Description Board")
@@ -382,54 +382,58 @@ client.on("message", (message) => {
 				"https://media.discordapp.net/attachments/802119940966449152/802432617005187092/diit.jpg?width=670&height=670"
 			);
 		message.channel.send(exampleEmbed);
-    }
-    if(command === "gif") {
-        //  > ken
-        let userinput = message.content.replace("$gif" ,"").trim()
-        let fuse = new fusejs(dbken.get("gifs").value(), optionsken)
-        let closeMatch = fuse.search(userinput)
-        if (closeMatch.length == 0) {
-            let sendlocal = new Discord.MessageEmbed({
-                title : "Error",
-                description : "No matching keywords found"
-            })
-            sendlocal.setTimestamp();
-            message.channel.send(sendlocal)
-            return;
-        }
-        console.log(closeMatch[0].item.link)
-        message.channel.send(closeMatch[0].item.link)
-    }
-    if (command === "timetable") {
-        // > jack
-		let userinput = message.content.replace("$timetable", "").trim().toLowerCase()
-		let arraychecker = Object.keys(dbjack.getState())
-		if (!arraychecker.includes(userinput)){
-			message.channel.send("Please check your syntax!")
-			return	
+	}
+	if (command === "gif") {
+		//  > ken
+		let userinput = message.content.replace("$gif", "").trim();
+		let fuse = new fusejs(dbken.get("gifs").value(), optionsken);
+		let closeMatch = fuse.search(userinput);
+		if (closeMatch.length == 0) {
+			let sendlocal = new Discord.MessageEmbed({
+				title: "Error",
+				description: "No matching keywords found",
+			});
+			sendlocal.setTimestamp();
+			message.channel.send(sendlocal);
+			return;
+		}
+		console.log(closeMatch[0].item.link);
+		message.channel.send(closeMatch[0].item.link);
+	}
+	if (command === "timetable") {
+		// > jack
+		let userinput = message.content
+			.replace("$timetable", "")
+			.trim()
+			.toLowerCase();
+		let arraychecker = Object.keys(dbjack.getState());
+		if (!arraychecker.includes(userinput)) {
+			message.channel.send("Please check your syntax!");
+			return;
 		}
 		let preprocess = Object.entries(dbjack.get(userinput).value());
-        let sendcurrent = "\n"
+		let sendcurrent = "\n";
 
 		for (let index = 0; index < preprocess.length; index++) {
-			sendcurrent += preprocess[index].toString() + "\n\n"
-        }
+			sendcurrent += preprocess[index].toString() + "\n\n";
+		}
 
-		let rawstring = userinput + " Schedule\n\n"
-        let embed = new Discord.MessageEmbed({
-            title: toTitleCase(rawstring),
-            description : sendcurrent,
-            footer : {
-                text : "Good luck for the day!"
-            }
-        })
-        message.channel.send(embed)
-    }
-    if(command==="memes"){
-        // > jack
-		let items=dbjack.get('meme').value()
-		var memearray = items[Math.floor(Math.random() * items.length-1).toString()];
-		message.channel.send(memearray)
+		let rawstring = userinput + " Schedule\n\n";
+		let embed = new Discord.MessageEmbed({
+			title: toTitleCase(rawstring),
+			description: sendcurrent,
+			footer: {
+				text: "Good luck for the day!",
+			},
+		});
+		message.channel.send(embed);
+	}
+	if (command === "memes") {
+		// > jack
+		let items = dbjack.get("meme").value();
+		var memearray =
+			items[Math.floor(Math.random() * items.length - 1).toString()];
+		message.channel.send(memearray);
 	}
 });
 
@@ -450,13 +454,11 @@ function query(input) {
 	console.log(result);
 	return result;
 }
-function toTitleCase(str) {    //Title case for schedule
-	return str.replace(
-	  /\w\S*/g,
-	  function(txt) {
+function toTitleCase(str) {
+	//Title case for schedule
+	return str.replace(/\w\S*/g, function (txt) {
 		return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-	  }
-	);
+	});
 }
 // > Once the bot is ready set discord status and log in console
 client.once("ready", () => {

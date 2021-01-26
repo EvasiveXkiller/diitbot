@@ -34,6 +34,7 @@ const optionsken = {
 // > Important Variables
 let names = [];
 let dbinput = [];
+let verbosedebug = 0;
 // > Prefix that triggers the bot
 const prefix = "$";
 
@@ -222,12 +223,18 @@ client.on("message", (message) => {
 		});
 	}
 	if (command === "dbview") {
+		if (verbosedebug == 0) {
+			return;
+		}
 		message.channel.send(JSON.stringify(db.getState()).substring(0, 1999));
 		message.channel.send(
 			JSON.stringify(db.getState()).substring(2000, 3999)
 		);
 	}
 	if (command === "dbdelete") {
+		if (verbosedebug == 0) {
+			return;
+		}
 		let userinputpre = message.content.replace("$dbdelete", "").trim();
 		let userinputSplit = userinputpre.split(",");
 		console.log(userinputSplit);
@@ -351,8 +358,12 @@ client.on("message", (message) => {
 				"Welcome to Diit Community where our collaborative work will be share together and we are pleased to welcome you into the association. As part of our team is the part of our journey. Let`s treasure the moments we spend together. "
 			)
 			.addFields(
-				{ name: "Server Rules", value: "rules: " },
-				{ name: "\u200B", value: "\u200B" },
+				{
+					name: "Official Docs",
+					value:
+						"https://github.com/EvasiveXkiller/diitbot-public/blob/main/README.md",
+				},
+				{ name: "Server Rules", value: "Rules: " },
 				{
 					name: "Rule 1",
 					value: "Do not attempt to spam or flood channels",
@@ -434,6 +445,39 @@ client.on("message", (message) => {
 		var memearray =
 			items[Math.floor(Math.random() * items.length - 1).toString()];
 		message.channel.send(memearray);
+	}
+	if (command === "debug") {
+		let userinput = message.content.replace("$debug", "").trim();
+		if (userinput == 1) {
+			let embed = new Discord.MessageEmbed({
+				description: "Debug Enabled",
+				footer: {
+					text: message.author.username,
+				},
+			});
+			embed.setTimestamp();
+			verbosedebug = 1;
+			message.channel.send(embed);
+		} else if (userinput == 0) {
+			let embed = new Discord.MessageEmbed({
+				description: "Debug Disabled",
+				footer: {
+					text: message.author.username,
+				},
+			});
+			embed.setTimestamp();
+			verbosedebug = 0;
+			message.channel.send(embed);
+		} else {
+			let embed = new Discord.MessageEmbed({
+				description: "err",
+				footer: {
+					text: message.author.username,
+				},
+			});
+			embed.setTimestamp();
+			message.channel.send(embed);
+		}
 	}
 	if (message.content.startsWith(`${prefix}profile ken`)) {
 		// To display ken profile. It works . 1
@@ -538,9 +582,7 @@ client.on("message", (message) => {
 		// To display carlson profile. It works . 4
 		const profile = new Discord.MessageEmbed()
 			.setTitle("notcarlson`s Profile")
-			.setDescription(
-				"what are we exactly? particles? matter? do we even exists "
-			)
+			.setDescription("Time lost is never found again")
 			.setColor("RANDOM")
 			.addFields(
 				{

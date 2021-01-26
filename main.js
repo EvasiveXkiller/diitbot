@@ -455,7 +455,7 @@ function query(input) {
 	return result;
 }
 function toTitleCase(str) {
-	//Title case for schedule
+	// * Title case for schedule
 	return str.replace(/\w\S*/g, function (txt) {
 		return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
 	});

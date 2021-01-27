@@ -113,6 +113,7 @@ client.on("message", (message) => {
 					output[2],
 			},
 		});
+		embed.setThumbnail(output[3])
 		message.channel.send(embed);
 	}
 	if (command === "dbinsert") {
@@ -1262,7 +1263,8 @@ function query(input) {
 		closeMatch[0].item.Quotes[
 			parseInt(Math.random() * closeMatch[0].item.Quotes.length)
 		];
-	let result = [closeMatch[0].item.Name, randgen, closeMatch[0].score];
+	let pic = closeMatch[0].item.img[parseInt(Math.random() * closeMatch[0].item.img.length)]
+	let result = [closeMatch[0].item.Name, randgen, closeMatch[0].score, pic];
 	console.log(result);
 	return result;
 }

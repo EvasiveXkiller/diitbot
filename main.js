@@ -362,7 +362,8 @@ client.on("message", (message) => {
 					"👥\t " +
 					"profile - To display certain DIIT member`s profile \n" +
 					"📊\t " +
-					"timetable - To display current timetable"
+					"timetable - To display current timetable \n" +
+					"For syntax please refer to our [GitHub](https://github.com/EvasiveXkiller/diitbot-public/blob/main/README.md) page"
 			);
 		message.channel.send(example);
 	}
@@ -550,7 +551,7 @@ client.on("message", (message) => {
 				return;
 			}
 			let botchannel = client.voice.connections.toJSON();
-			console.log(botchannel);
+			//console.log(botchannel);
 			if (connecteduser.id !== botchannel[0].channel) {
 				// * if user is not in the same channel
 				let diffchannelembed = new Discord.MessageEmbed({
@@ -597,7 +598,7 @@ client.on("message", (message) => {
 						});
 					client.player.getQueue(message.guild.id).on("end", () => {
 						// * end bot status
-						console.log("end");
+						//console.log("end");
 						client.user.setPresence({
 							activity: {
 								name: "Silence",
@@ -640,7 +641,7 @@ client.on("message", (message) => {
 					})
 					.then((song) => {
 						let preprocess = song.song;
-						console.log(preprocess.name);
+						//console.log(preprocess.name);
 						client.user.setPresence({
 							activity: {
 								name: preprocess.name,
@@ -732,7 +733,7 @@ client.on("message", (message) => {
 			return;
 		}
 		let botchannel = client.voice.connections.toJSON();
-		console.log(botchannel);
+		//console.log(botchannel);
 		//console.log(connecteduser)
 		if (botchannel.length == 0) {
 			// * if bot is not in a channel
@@ -1786,7 +1787,7 @@ function query(input) {
 	if (closeMatch.length == 0) {
 		return ["No user found", "", "NULL"];
 	}
-	console.log(closeMatch);
+	//console.log(closeMatch);
 	let randgen =
 		closeMatch[0].item.Quotes[
 			parseInt(Math.random() * closeMatch[0].item.Quotes.length)
@@ -1796,7 +1797,7 @@ function query(input) {
 			parseInt(Math.random() * closeMatch[0].item.img.length)
 		];
 	let result = [closeMatch[0].item.Name, randgen, closeMatch[0].score, pic];
-	console.log(result);
+	//console.log(result);
 	return result;
 }
 function toTitleCase(str) {

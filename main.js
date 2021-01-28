@@ -3,6 +3,7 @@ const fusejs = require("fuse.js");
 const low = require("lowdb");
 const FileSync = require("lowdb/adapters/FileSync");
 const { Player } = require("discord-music-player");
+const { DateTime } = require("luxon");
 
 // > DB Connection on Carlson
 const adapter = new FileSync("db.json");
@@ -337,9 +338,11 @@ client.on("message", (message) => {
 		});
 	}
 	if (command === "ping") {
-		// * Ping Message on round trip latency
+		// * v2 Ping Message with round trip latency and api latency
 		let pingmessage = new Discord.MessageEmbed({
-			description: `API Latency is ${Math.round(client.ws.ping)}ms`,
+			description: `API Latency is ${Math.round(
+				client.ws.ping
+			)}ms \n Rountrip : ${Date.now() - message.createdTimestamp}ms`,
 		});
 		pingmessage.setTimestamp();
 		message.channel.send(pingmessage);
@@ -440,31 +443,73 @@ client.on("message", (message) => {
 	}
 	if (command === "timetable") {
 		// > jack
+		// * V.2 allows user to type $timetable today to print out today's schedule. Also allows user to type $timetable / $timetable help
 		let userinput = message.content
 			.replace("$timetable", "")
 			.trim()
 			.toLowerCase();
-		let arraychecker = Object.keys(dbjack.getState());
-		if (!arraychecker.includes(userinput)) {
-			message.channel.send("Please check your syntax!");
-			return;
-		}
-		let preprocess = Object.entries(dbjack.get(userinput).value());
-		let sendcurrent = "\n";
+		if (userinput === "" || userinput === "help") {
+			//this is when user types $timetable or $timetable help then it will print a syntax to guide them for usage
+			let embed = new Discord.MessageEmbed({
+				title: "How To Use $timetable",
+				description:
+					"Type $timetable [insert a weekday here].\n\n Note that we only have Monday-Friday",
+				footer: {
+					text:
+						"Don't try to be funny and put a weekend there. I know you want to but don't. It won't do anything.",
+				},
+			});
+			message.channel.send(embed);
+		} else if (userinput === "today") {
+			// this is if the user types $timetable today
+			let datetoday = DateTime.local(); // gets today's date
+			let daytoday = datetoday.toFormat("EEEE").toLowerCase(); //changes date to day e.g Wednesday
+			let preprocess = Object.entries(dbjack.get(daytoday).value());
+			let sendcurrent = "\n";
 
-		for (let index = 0; index < preprocess.length; index++) {
-			sendcurrent += preprocess[index].toString() + "\n\n";
-		}
+			for (let index = 0; index < preprocess.length; index++) {
+				//apphends the stuff in the array to become one big string
+				sendcurrent += preprocess[index].toString() + "\n\n";
+			}
 
-		let rawstring = userinput + " Schedule\n\n";
-		let embed = new Discord.MessageEmbed({
-			title: toTitleCase(rawstring),
-			description: sendcurrent,
-			footer: {
-				text: "Good luck for the day!",
-			},
-		});
-		message.channel.send(embed);
+			let rawstring = daytoday + " Schedule\n\n";
+			let embed = new Discord.MessageEmbed({
+				//for the discord embed message
+				title: toTitleCase(rawstring),
+				description: sendcurrent,
+				footer: {
+					text: "Good luck for the day!",
+				},
+			});
+			message.channel.send(embed); //prints the whole embed message
+		} else if (
+			userinput !== "today" ||
+			userinput !== "" ||
+			userinput !== "help"
+		) {
+			//this is if the user types $timetable [weekday]
+			let arraychecker = Object.keys(dbjack.getState()); //this checks the user's input to prevent them from typing any other random stuff
+			if (!arraychecker.includes(userinput)) {
+				message.channel.send("Please check your syntax!");
+				return;
+			}
+			let preprocess = Object.entries(dbjack.get(userinput).value()); //if user enters $timetable wednesday this will pull out the wednesday object from database
+			let sendcurrent = "\n";
+			for (let index = 0; index < preprocess.length; index++) {
+				//apphends the stuff in the array to become one big string
+				sendcurrent += preprocess[index].toString() + "\n\n";
+			}
+
+			let rawstring = userinput + " Schedule\n\n";
+			let embed = new Discord.MessageEmbed({
+				title: toTitleCase(rawstring),
+				description: sendcurrent,
+				footer: {
+					text: "Good luck for the day!",
+				},
+			});
+			message.channel.send(embed);
+		}
 	}
 	if (command === "memes") {
 		// > jack
@@ -990,6 +1035,79 @@ client.on("message", (message) => {
 				message.channel.send(addone.toString());
 			})
 			.catch(console.error);
+	}
+	if (command === "events") {
+		if (command === "events") {
+			//this displays upcoming events
+			let x = dbjack.get("events").value(); //refers to the events array
+			for (i = 0; i < x.length; i++) {
+				//this loop is to call out all the objects in the events array
+				let s = x[i].date; //gets the time out from database
+				let luxonformat = DateTime.fromISO(s); //processes time to luxon
+				let now = DateTime.local(); //gets local time
+				let difference = luxonformat.diff(now, [
+					"days",
+					"hours",
+					"minutes",
+					"seconds",
+				]); //requests what type of time info
+				let differenceobject = difference.toObject(); //this is needed to change it to an object
+				let subjecttitle = dbjack.get("events").value()[i].event; //subjecttitle refers to the event section in the events array in database
+				let embed = new Discord.MessageEmbed({
+					title: "Events",
+					footer: {
+						text:
+							"This is a countdown timer. Take note of the date.",
+					},
+				});
+				embed.addFields(
+					{
+						name: subjecttitle,
+						value: "(" + luxonformat.toISODate() + ")\n",
+					}, //Using the add fields code thing to adjust the output of embed message
+					{ name: "Days", value: differenceobject.days },
+					{ name: "Hours", value: differenceobject.hours },
+					{ name: "Minutes", value: differenceobject.minutes },
+					{ name: "Seconds", value: differenceobject.seconds }
+				);
+				message.channel.send(embed); //outputs the entire embed
+			}
+		}
+	}
+	if (command === "replacements") {
+		let x = dbjack.get("reminder").value(); //refers to the reminder array
+		for (i = 0; i < x.length; i++) {
+			//this loop is to call out all the objects in the reminder array
+			let s = x[i].date; //gets the time out from database
+			let luxonformat = DateTime.fromISO(s); //processes time to luxon
+			let now = DateTime.local(); //gets local time
+			let difference = luxonformat.diff(now, [
+				"days",
+				"hours",
+				"minutes",
+				"seconds",
+			]); //requests what type of time info
+			let differenceobject = difference.toObject(); //this is needed to change it to an object
+			let subjecttitle = dbjack.get("reminder").value()[i].event; //subjecttitle refers to the event section in the reminder array in database
+			let embed = new Discord.MessageEmbed({
+				title: "Replacement Classes",
+				footer: {
+					text: "This is a countdown timer. Take note of the date.",
+				},
+			});
+			embed.addFields(
+				{
+					name: subjecttitle,
+					value:
+						"(" + luxonformat.toISODate() + ")\n Replacement Class",
+				}, //Using the add fields code thing to adjust the output of embed message
+				{ name: "Days", value: differenceobject.days },
+				{ name: "Hours", value: differenceobject.hours },
+				{ name: "Minutes", value: differenceobject.minutes },
+				{ name: "Seconds", value: differenceobject.seconds }
+			);
+			message.channel.send(embed); //outputs the entire embed
+		}
 	}
 	if (message.content.startsWith(prefix + "avatar")) {
 		// * display avatar

@@ -109,7 +109,7 @@ client.on("message", (message) => {
 				text:
 					"The International Server " +
 					date.getFullYear() +
-					"\n Confidence: " +
+					"\nConfidence: " +
 					output[2],
 			},
 		});

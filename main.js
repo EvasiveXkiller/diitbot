@@ -576,10 +576,6 @@ client.on("message", (message) => {
 				},
 			});
 			message.channel.send(userfindembed);
-		} else if (!userinput.startsWith("https://www.youtube")) {
-			// * check valid url yt only
-			message.channel.send("link invalid");
-			return;
 		}
 		if (isPlaying) {
 			// * add to queue if playing
@@ -678,13 +674,13 @@ client.on("message", (message) => {
 				message.channel.send(usernotconnectedembed);
 				return;
 			}
-			try {
-				client.player
-					.play(message.member.voice.channel, userinput, {
-						// * plays the song immediately when the queue is empty
-						sortBy: "relevance",
-					})
-					.then((song) => {
+			client.player
+				.play(message.member.voice.channel, userinput, {
+					// * plays the song immediately when the queue is empty
+					sortBy: "relevance",
+				})
+				.then((song) => {
+					try {
 						let preprocess = song.song;
 						//console.log(preprocess.name);
 						client.user.setPresence({
@@ -706,20 +702,20 @@ client.on("message", (message) => {
 							},
 						});
 						message.channel.send(playembed);
-					});
-			} catch (err) {
-				// * If something wents wrong
-				let errembed = new Discord.MessageEmbed({
-					description:
-						"Something went wrong internally but its probably your fault",
-					footer: {
-						text: "International music bot",
-					},
+					} catch (err) {
+						// * If something wents wrong
+						let errembed = new Discord.MessageEmbed({
+							description:
+								"Something went wrong internally but its probably your fault",
+							footer: {
+								text: "International music bot",
+							},
+						});
+						message.channel.send(errembed);
+						console.log(err);
+						return;
+					}
 				});
-				message.channel.send(errembed);
-				console.log(err);
-				return;
-			}
 		}
 	}
 	if (command === "volume") {
@@ -762,7 +758,25 @@ client.on("message", (message) => {
 			return;
 		}
 		let userinput = message.content.replace("$volume", "").trim();
+		if (isNaN(userinput)) {
+			let volumerror = new Discord.MessageEmbed({
+				description:
+					"Thats not a number, what did u do during maths class?",
+				footer: {
+					text: "International music bot",
+				},
+			});
+			message.channel.send(volumerror);
+			return;
+		}
 		client.player.setVolume(message.guild.id, parseInt(userinput));
+		let volumesuccess = new Discord.MessageEmbed({
+			description: "Volume is set to " + userinput + "%",
+			footer: {
+				text: "Volume is not persistent across restarts (yet)",
+			},
+		});
+		message.channel.send(volumesuccess);
 	}
 	if (command === "stop") {
 		let connecteduser = message.member.voice.channel;

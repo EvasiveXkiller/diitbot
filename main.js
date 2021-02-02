@@ -1123,6 +1123,82 @@ client.on("message", (message) => {
 			message.channel.send(embed); //outputs the entire embed
 		}
 	}
+	if (command === "eventinsert") {
+		dbjack.read();
+		let userinputpre = message.content.replace("$eventinsert", "").trim();
+		let userinputSplit = userinputpre.split(",");
+		console.log(userinputSplit);
+		// * checking begins here
+		let checkDate = DateTime.fromISO(userinputSplit[1])
+		if(!checkDate.isValid) {
+			let dateinvalidembed = new Discord.MessageEmbed({
+				title : "Date Invalid",
+				description: "Type in the date properly",
+				footer: {
+					text: "nosql",
+				},
+			});
+			message.channel.send(dateinvalidembed);
+			return;
+		}
+		let comfirmembed = new Discord.MessageEmbed({
+			title: "Comfirm?",
+			description:
+			"Event : " + userinputSplit[0] + "\n" + "Time: " + checkDate.toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS),
+			color: "FF9900",
+			footer: {
+				text:
+					"Are you sure to execute command? Type [ cancel ] to abort",
+			},
+		});
+		message.channel.send(comfirmembed)
+		.then(() =>{
+			const filter = (comfirm) => comfirm.content;
+			const comfirmcollector = message.channel.createMessageCollector(
+				filter,
+				{
+					max: 1,
+				}
+			);
+			comfirmcollector.on("collect", (comfirm) => {
+				if (comfirm.content == "accept" || message.author.bot) {
+					dbjack
+					.get("events")
+					.push({
+						event: userinputSplit[0],
+						date : userinputSplit[1]
+					})
+					.write()
+					let embed = new Discord.MessageEmbed({
+						// * Success message
+						title: "Commit Successful",
+						description:
+							"Summary\nEvent : " +
+							userinputSplit[0] +
+							"\nTime : " +
+							checkDate.toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS),
+						color: "00FF00",
+						footer: {
+							text: "nosql",
+						},
+					});
+					embed.setTimestamp();
+					message.channel.send(embed)
+				} else {
+					let embed = new Discord.MessageEmbed({
+						title: "Commit Aborted",
+						description: "Database not modified",
+						color: "0000FF",
+						footer: {
+							text: "nosql",
+						},
+					});
+					message.channel.send(embed);
+				}
+			});
+		})
+		
+	}
 	if (message.content.startsWith(prefix + "avatar")) {
 		// * display avatar
 		const user = message.mentions.users.first() || message.author;

@@ -1051,41 +1051,39 @@ client.on("message", (message) => {
 			.catch(console.error);
 	}
 	if (command === "events") {
-		if (command === "events") {
-			//this displays upcoming events
-			let x = dbjack.get("events").value(); //refers to the events array
-			for (i = 0; i < x.length; i++) {
-				//this loop is to call out all the objects in the events array
-				let s = x[i].date; //gets the time out from database
-				let luxonformat = DateTime.fromISO(s); //processes time to luxon
-				let now = DateTime.local(); //gets local time
-				let difference = luxonformat.diff(now, [
-					"days",
-					"hours",
-					"minutes",
-					"seconds",
-				]); //requests what type of time info
-				let differenceobject = difference.toObject(); //this is needed to change it to an object
-				let subjecttitle = dbjack.get("events").value()[i].event; //subjecttitle refers to the event section in the events array in database
-				let embed = new Discord.MessageEmbed({
-					title: "Events",
-					footer: {
-						text:
-							"This is a countdown timer. Take note of the date.",
-					},
-				});
-				embed.addFields(
-					{
-						name: subjecttitle,
-						value: "(" + luxonformat.toISODate() + ")\n",
-					}, //Using the add fields code thing to adjust the output of embed message
-					{ name: "Days", value: differenceobject.days },
-					{ name: "Hours", value: differenceobject.hours },
-					{ name: "Minutes", value: differenceobject.minutes },
-					{ name: "Seconds", value: differenceobject.seconds }
-				);
-				message.channel.send(embed); //outputs the entire embed
-			}
+		//this displays upcoming events
+		dbjack.read();
+		let x = dbjack.get("events").value(); //refers to the events array
+		for (i = 0; i < x.length; i++) {
+			//this loop is to call out all the objects in the events array
+			let s = x[i].date; //gets the time out from database
+			let luxonformat = DateTime.fromISO(s); //processes time to luxon
+			let now = DateTime.local(); //gets local time
+			let difference = luxonformat.diff(now, [
+				"days",
+				"hours",
+				"minutes",
+				"seconds",
+			]); //requests what type of time info
+			let differenceobject = difference.toObject(); //this is needed to change it to an object
+			let subjecttitle = dbjack.get("events").value()[i].event; //subjecttitle refers to the event section in the events array in database
+			let embed = new Discord.MessageEmbed({
+				title: "Events",
+				footer: {
+					text: "This is a countdown timer. Take note of the date.",
+				},
+			});
+			embed.addFields(
+				{
+					name: subjecttitle,
+					value: "(" + luxonformat.toISODate() + ")\n",
+				}, //Using the add fields code thing to adjust the output of embed message
+				{ name: "Days", value: differenceobject.days },
+				{ name: "Hours", value: differenceobject.hours },
+				{ name: "Minutes", value: differenceobject.minutes },
+				{ name: "Seconds", value: differenceobject.seconds }
+			);
+			message.channel.send(embed); //outputs the entire embed
 		}
 	}
 	if (command === "replacements") {
@@ -1129,10 +1127,10 @@ client.on("message", (message) => {
 		let userinputSplit = userinputpre.split(",");
 		console.log(userinputSplit);
 		// * checking begins here
-		let checkDate = DateTime.fromISO(userinputSplit[1])
-		if(!checkDate.isValid) {
+		let checkDate = DateTime.fromISO(userinputSplit[1]);
+		if (!checkDate.isValid) {
 			let dateinvalidembed = new Discord.MessageEmbed({
-				title : "Date Invalid",
+				title: "Date Invalid",
 				description: "Type in the date properly",
 				footer: {
 					text: "nosql",
@@ -1144,15 +1142,18 @@ client.on("message", (message) => {
 		let comfirmembed = new Discord.MessageEmbed({
 			title: "Comfirm?",
 			description:
-			"Event : " + userinputSplit[0] + "\n" + "Time: " + checkDate.toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS),
+				"Event : " +
+				userinputSplit[0] +
+				"\n" +
+				"Time: " +
+				checkDate.toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS),
 			color: "FF9900",
 			footer: {
 				text:
 					"Are you sure to execute command? Type [ cancel ] to abort",
 			},
 		});
-		message.channel.send(comfirmembed)
-		.then(() =>{
+		message.channel.send(comfirmembed).then(() => {
 			const filter = (comfirm) => comfirm.content;
 			const comfirmcollector = message.channel.createMessageCollector(
 				filter,
@@ -1163,12 +1164,12 @@ client.on("message", (message) => {
 			comfirmcollector.on("collect", (comfirm) => {
 				if (comfirm.content == "accept" || message.author.bot) {
 					dbjack
-					.get("events")
-					.push({
-						event: userinputSplit[0],
-						date : userinputSplit[1]
-					})
-					.write()
+						.get("events")
+						.push({
+							event: userinputSplit[0],
+							date: userinputSplit[1],
+						})
+						.write();
 					let embed = new Discord.MessageEmbed({
 						// * Success message
 						title: "Commit Successful",
@@ -1176,14 +1177,16 @@ client.on("message", (message) => {
 							"Summary\nEvent : " +
 							userinputSplit[0] +
 							"\nTime : " +
-							checkDate.toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS),
+							checkDate.toLocaleString(
+								DateTime.DATETIME_FULL_WITH_SECONDS
+							),
 						color: "00FF00",
 						footer: {
 							text: "nosql",
 						},
 					});
 					embed.setTimestamp();
-					message.channel.send(embed)
+					message.channel.send(embed);
 				} else {
 					let embed = new Discord.MessageEmbed({
 						title: "Commit Aborted",
@@ -1196,8 +1199,7 @@ client.on("message", (message) => {
 					message.channel.send(embed);
 				}
 			});
-		})
-		
+		});
 	}
 	if (message.content.startsWith(prefix + "avatar")) {
 		// * display avatar

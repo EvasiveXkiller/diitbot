@@ -17,7 +17,27 @@
   - Much More...
 
 # Documentation
-
+> Capable Functions include:
+- [Iconic](###iconic)
+- [Ping](###ping)
+- [Help](###help)
+- [Timetable Picture](###Timetable (Picture))
+- [Timetable](###Timetable)
+- [Description](###Description)
+- [Gif](###Gif)
+- [Memes](###Memes)
+- [Play](###Play)
+- [Volume](###Volume)
+- [Stop](###Stop)
+- [Skip](###Skip)
+- [Queue](###Queue)
+- [Remove from Queue](###Remove&#32;Queue)
+- [Disconnect](###Disconnect)
+- [Event](###Event)
+- [Replacements](###Replacements)
+- [Avatar](###Avatar)
+- [Profile](###Profile)
+---
 ### Iconic
 ```
 $iconic [name]
@@ -155,7 +175,7 @@ returns:
 ```
 
 ---
-### Remove from Queue
+### Remove Queue
 ```
 $remove [integer]
 

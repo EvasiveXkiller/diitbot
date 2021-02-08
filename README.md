@@ -26,7 +26,7 @@
 - [Description](###Description)
 - [Gif](###Gif)
 - [Memes](###Memes)
-- [Play](###Play)
+- [Play](#Play)
 - [Volume](###Volume)
 - [Stop](###Stop)
 - [Skip](###Skip)

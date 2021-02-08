@@ -317,7 +317,7 @@ $ npm start
 > Below are those who dedicated their time and effort to make this bot a sustainable project
 - Tong Ken Soon - Project Initiator [Instagram](https://www.instagram.com/ikenot__/) [Github](https://github.com/TongKenSoon)
 - Carlson Tan - Database and Search Engine Implementer [Instagram](https://www.instagram.com/carlson.x.destroyed/) [Github](https://github.com/EvasiveXkiller/)
-- Jack Tok - Database Coder [Instagram](hhttps://www.instagram.com/jack_tok_/) [Github](https://github.com/OptimalLego)
+- Jack Tok - Database Coder [Instagram](https://www.instagram.com/jack_tok_/) [Github](https://github.com/OptimalLego)
 - Tong Yong Xian - Databse Maintainer [Instagram](https://www.instagram.com/_yong_xian_/) [Github](https://github.com/YongXian1202)
 
 # Todos

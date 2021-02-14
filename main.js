@@ -50,6 +50,7 @@ let verbosedebug = 0;
 let enableuno = 0;
 let queuetoggle = false;
 let songtoggle = false;
+let opstatsmusic = false;
 // > Prefix that triggers the bot
 const prefix = "$";
 
@@ -560,6 +561,11 @@ client.on("message", (message) => {
 		}
 	}
 	if (command === "play" || command === "p") {
+		if (opstatsmusic == true) {
+			console.log("something is going on in the search algo");
+			return;
+		}
+		opstatsmusic = true;
 		// * Music player
 		let userinput = message.content
 			.replace("$play", "")
@@ -602,8 +608,10 @@ client.on("message", (message) => {
 				return;
 			}
 			let botchannel = client.voice.connections.toJSON();
-			//console.log(botchannel);
-			if (connecteduser.id !== botchannel[0].channel) {
+			if (
+				botchannel[0] == undefined ||
+				connecteduser.id !== botchannel[0].channel
+			) {
 				// * if user is not in the same channel
 				let diffchannelembed = new Discord.MessageEmbed({
 					description:
@@ -635,7 +643,10 @@ client.on("message", (message) => {
 							text: "International music bot",
 						},
 					});
-					message.channel.send(queueembed);
+					message.channel.send(queueembed).then(() => {
+						opstatsmusic = false;
+					});
+
 					client.player
 						.getQueue(message.guild.id)
 						.on("songChanged", (oldSong, newSong) => {
@@ -711,7 +722,9 @@ client.on("message", (message) => {
 								text: "International music bot",
 							},
 						});
-						message.channel.send(playembed);
+						message.channel.send(playembed).then(() => {
+							opstatsmusic = false;
+						});
 					} catch (err) {
 						// * If something wents wrong
 						let errembed = new Discord.MessageEmbed({
@@ -789,6 +802,11 @@ client.on("message", (message) => {
 		message.channel.send(volumesuccess);
 	}
 	if (command === "stop") {
+		if (opstatsmusic == true) {
+			console.log("something is going on in the search algo");
+			return;
+		}
+		opstatsmusic = true;
 		let connecteduser = message.member.voice.channel;
 		if (!connecteduser) {
 			// * if user is not connected
@@ -827,14 +845,18 @@ client.on("message", (message) => {
 			return;
 		} else {
 			client.player.stop(message.guild.id); // * Stop the song and deletes the queue
-			client.user.setPresence({
-				// * Set the bot status
-				status: "dnd",
-				activity: {
-					name: "Silence",
-					type: "LISTENING",
-				},
-			});
+			client.user
+				.setPresence({
+					// * Set the bot status
+					status: "dnd",
+					activity: {
+						name: "Silence",
+						type: "LISTENING",
+					},
+				})
+				.then(() => {
+					opstatsmusic = false;
+				});
 		}
 	}
 	if (command === "repeatsong" || command === "repeattrack") {
@@ -900,7 +922,7 @@ client.on("message", (message) => {
 			return;
 		}
 		let botchannel = client.voice.connections.toJSON();
-		console.log(botchannel);
+		//console.log(botchannel);
 		//console.log(connecteduser)
 		if (botchannel.length == 0) {
 			let botnotconnectedembed = new Discord.MessageEmbed({
@@ -1149,6 +1171,10 @@ client.on("message", (message) => {
 		command === "leave" ||
 		command === "dc"
 	) {
+		if (opstatsmusic == true) {
+			console.log("something is going on in the search algo");
+			return;
+		}
 		let connecteduser = message.member.voice.channel;
 		if (!connecteduser) {
 			// * if user is not connected
@@ -1195,11 +1221,12 @@ client.on("message", (message) => {
 					text: "International music bot",
 				},
 			});
-			message.channel.send(disembed);
-		}
-		client.player.stop(message.guild.id); // * stops the bot before disconnecting
-		if (message.member.voice.channel) {
-			message.member.voice.channel.leave();
+			client.player.stop(message.guild.id); // * stops the bot before disconnecting
+			message.channel.send(disembed).then(() => {
+				if (message.member.voice.channel) {
+					message.member.voice.channel.leave();
+				}
+			});
 		}
 		client.user.setPresence({
 			status: "dnd",
@@ -2258,11 +2285,13 @@ client.on("message", async (message) => {
 	if (command === "unoplay") {
 		if (enableuno == 1) {
 			await discordUNO.playCard(message);
+			await discordUNO.viewTable(message);
 		}
 	}
 	if (command === "unodraw") {
 		if (enableuno == 1) {
 			await discordUNO.draw(message);
+			await discordUNO.viewTable(message);
 		}
 	}
 	if (command === "uno!") {

@@ -7,11 +7,27 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ."
   },
-  "author": "Ken Soon",
-  "license": "ISC",
+  "contributors": [
+    {
+      "name": "Tong Ken Soon"
+    },
+    {
+      "name" : "Jack Tok"
+    },
+    {
+      "name" : "Carlson"
+    }
+  ],
+  "license": "UNLICENSED",
   "dependencies": {
+    "@discordjs/opus": "^0.4.0",
+    "discord-music-player": "^6.4.1",
+    "discord-tictactoe": "^2.0.8",
+    "discord-uno": "^2.0.21",
     "discord.js": "^12.5.1",
+    "discord.js-poll-embed": "^1.0.2",
     "fuse.js": "^6.4.6",
-    "lowdb": "^1.0.0"
+    "lowdb": "^1.0.0",
+    "luxon": "^1.26.0"
   }
 }

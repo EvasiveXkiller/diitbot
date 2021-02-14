@@ -4,6 +4,9 @@ const low = require("lowdb");
 const FileSync = require("lowdb/adapters/FileSync");
 const { Player } = require("discord-music-player");
 const { DateTime } = require("luxon");
+const pollEmbed = require("discord.js-poll-embed");
+const { DiscordUNO } = require("discord-uno");
+const TicTacToe = require("discord-tictactoe");
 
 // > DB Connection on Carlson
 const adapter = new FileSync("db.json");
@@ -19,7 +22,7 @@ const dbken = low(adapterken);
 
 // > Important Constants
 const client = new Discord.Client();
-
+const discordUNO = new DiscordUNO();
 // * Options for search engine
 const options = {
 	// * Carlson param for search system
@@ -44,6 +47,9 @@ client.player = player;
 let names = [];
 let dbinput = [];
 let verbosedebug = 0;
+let enableuno = 0;
+let queuetoggle = false;
+let songtoggle = false;
 // > Prefix that triggers the bot
 const prefix = "$";
 
@@ -62,6 +68,7 @@ Array.prototype.remove = function () {
 	return this;
 };
 
+// > Sync Branch
 client.on("message", (message) => {
 	db.read(); // * master read on carlson branch
 
@@ -552,9 +559,12 @@ client.on("message", (message) => {
 			message.channel.send(embed);
 		}
 	}
-	if (command === "play") {
+	if (command === "play" || command === "p") {
 		// * Music player
-		let userinput = message.content.replace("$play", "").trim();
+		let userinput = message.content
+			.replace("$play", "")
+			.replace("$p", "")
+			.trim();
 		if (userinput.length == 0) {
 			let noparamembed = new Discord.MessageEmbed({
 				description: "No Parameters Given",
@@ -827,6 +837,106 @@ client.on("message", (message) => {
 			});
 		}
 	}
+	if (command === "repeatsong" || command === "repeattrack") {
+		let connecteduser = message.member.voice.channel;
+		if (!connecteduser) {
+			let usernotconnectedembed = new Discord.MessageEmbed({
+				description: "You not in a voice channel dummy",
+				footer: {
+					text: "International music bot",
+				},
+			});
+			message.channel.send(usernotconnectedembed);
+			return;
+		}
+		let botchannel = client.voice.connections.toJSON();
+		console.log(botchannel);
+		//console.log(connecteduser)
+		if (botchannel.length == 0) {
+			let botnotconnectedembed = new Discord.MessageEmbed({
+				description: "Bot not alive, just like your life",
+				footer: {
+					text: "International music bot",
+				},
+			});
+			message.channel.send(botnotconnectedembed);
+			return;
+		}
+		if (connecteduser.id !== botchannel[0].channel) {
+			let diffchannelembed = new Discord.MessageEmbed({
+				description: "Dont try and troll other people, get other bots",
+				footer: {
+					text: "International music bot",
+				},
+			});
+			message.channel.send(diffchannelembed);
+			return;
+		}
+		songtoggle = client.player.toggleLoop(message.guild.id);
+		if (songtoggle) {
+			let tempembed = new Discord.MessageEmbed({
+				description: "Repeat Current track: True",
+				color: "PURPLE",
+			});
+			message.channel.send(tempembed);
+		} else {
+			let tempembed = new Discord.MessageEmbed({
+				description: "Repeat Current track: False",
+				color: "PURPLE",
+			});
+			message.channel.send(tempembed);
+		}
+	}
+	if (command === "repeatqueue") {
+		let connecteduser = message.member.voice.channel;
+		if (!connecteduser) {
+			let usernotconnectedembed = new Discord.MessageEmbed({
+				description: "You not in a voice channel dummy",
+				footer: {
+					text: "International music bot",
+				},
+			});
+			message.channel.send(usernotconnectedembed);
+			return;
+		}
+		let botchannel = client.voice.connections.toJSON();
+		console.log(botchannel);
+		//console.log(connecteduser)
+		if (botchannel.length == 0) {
+			let botnotconnectedembed = new Discord.MessageEmbed({
+				description: "Bot not alive, just like your life",
+				footer: {
+					text: "International music bot",
+				},
+			});
+			message.channel.send(botnotconnectedembed);
+			return;
+		}
+		if (connecteduser.id !== botchannel[0].channel) {
+			let diffchannelembed = new Discord.MessageEmbed({
+				description: "Dont try and troll other people, get other bots",
+				footer: {
+					text: "International music bot",
+				},
+			});
+			message.channel.send(diffchannelembed);
+			return;
+		}
+		queuetoggle = client.player.toggleQueueLoop(message.guild.id);
+		if (queuetoggle) {
+			let tempembed = new Discord.MessageEmbed({
+				description: "Repeat Queue: True",
+				color: "PURPLE",
+			});
+			message.channel.send(tempembed);
+		} else {
+			let tempembed = new Discord.MessageEmbed({
+				description: "Repeat Queue: False",
+				color: "PURPLE",
+			});
+			message.channel.send(tempembed);
+		}
+	}
 	if (command === "skip") {
 		let connecteduser = message.member.voice.channel;
 		if (!connecteduser) {
@@ -874,10 +984,9 @@ client.on("message", (message) => {
 		});
 		message.channel.send(skipembed);
 	}
-	if (command === "queue") {
+	if (command === "queue" || command === "q") {
 		let queue = client.player.getQueue(message.guild.id);
 		if (!queue) {
-			// * if queue is empty
 			let queueempty = new Discord.MessageEmbed({
 				description: "No more songs in queue bruh",
 				footer: {
@@ -896,11 +1005,20 @@ client.on("message", (message) => {
 					} | ${song.author}\``;
 				})
 				.join("\n`");
+		let state =
+			"`Repeat Track: " +
+			songtoggle +
+			"`\n" +
+			"`Repeat Queue: " +
+			queuetoggle +
+			"`";
 		message.channel.send(
 			rawq +
 				"\n\nCurrent Song Progress\n`" +
 				client.player.createProgressBar(message.guild.id, 20) +
-				"`"
+				"`" +
+				"\n" +
+				state
 		);
 	}
 	if (command === "remove") {
@@ -951,7 +1069,7 @@ client.on("message", (message) => {
 			return;
 		}
 		client.player.remove(message.guild.id, SongID);
-		message.channel.send("Removed song " + userinput + "from the Queue!");
+		message.channel.send("Removed song " + userinput + " from the Queue!");
 		let queue = client.player.getQueue(message.guild.id);
 		message.channel.send(
 			// * Get the current queue track
@@ -965,7 +1083,72 @@ client.on("message", (message) => {
 					.join("\n`")
 		);
 	}
-	if (command === "dis") {
+	if (command === "seek") {
+		let connecteduser = message.member.voice.channel;
+		if (!connecteduser) {
+			// * if user is not connected
+			let usernotconnectedembed = new Discord.MessageEmbed({
+				description: "You not in a voice channel dummy",
+				footer: {
+					text: "International music bot",
+				},
+			});
+			message.channel.send(usernotconnectedembed);
+			return;
+		}
+		let botchannel = client.voice.connections.toJSON();
+		//console.log(botchannel);
+		//console.log(connecteduser)
+		if (botchannel.length == 0) {
+			// * if bot is not in a channel
+			let botnotconnectedembed = new Discord.MessageEmbed({
+				description: "Bot not alive, just like your life",
+				footer: {
+					text: "International music bot",
+				},
+			});
+			message.channel.send(botnotconnectedembed);
+			return;
+		}
+		if (connecteduser.id !== botchannel[0].channel) {
+			// * if user is not in the same channel
+			let diffchannelembed = new Discord.MessageEmbed({
+				description: "Dont try and troll other people, get other bots",
+				footer: {
+					text: "International music bot",
+				},
+			});
+			message.channel.send(diffchannelembed);
+			return;
+		}
+		let userinput = message.content.replace("$seek", "").trim();
+		if (!/^\d+$/.test(userinput)) {
+			let seekerr = new Discord.MessageEmbed({
+				description:
+					"Thats not a number, what did u do during maths class?",
+				footer: {
+					text: "International music bot",
+				},
+			});
+			message.channel.send(seekerr);
+			return;
+		}
+		client.player.seek(message.guild.id, parseInt(userinput * 1000));
+		let seeksuccessembed = new Discord.MessageEmbed({
+			description: "Seeked to " + msToTime(userinput * 1000),
+			footer: {
+				text: "International music bot",
+			},
+		});
+		message.channel.send(seeksuccessembed);
+		return;
+	}
+	if (
+		command === "dis" ||
+		command === "fuckoff" ||
+		command === "leave" ||
+		command === "dc"
+	) {
 		let connecteduser = message.member.voice.channel;
 		if (!connecteduser) {
 			// * if user is not connected
@@ -1200,6 +1383,48 @@ client.on("message", (message) => {
 				}
 			});
 		});
+	}
+	if (command === "voteinit") {
+		let userinput = message.content.replace("$voteinit", "").trim();
+		console.log(userinput);
+		let jsonnify;
+		try {
+			jsonnify = JSON.parse(userinput);
+			if (typeof jsonnify.time != "number") {
+				throw "NaN at position: Time";
+			}
+		} catch (error) {
+			let errsend = new Discord.MessageEmbed({
+				title: "Error",
+				description: "Parameters Incorrect",
+				color: "RED",
+				footer: {
+					text: "votesys",
+				},
+			});
+			errsend.setTimestamp();
+			message.channel.send(errsend);
+			console.log(error);
+			return;
+		}
+		pollEmbed(message, jsonnify.title, jsonnify.options, jsonnify.time);
+	}
+	if (command === "vote") {
+		let voteemebed = new Discord.MessageEmbed({
+			title: "Voting System Docs",
+			description:
+				"The parameters are as follows: \n\n " +
+				'`{"title" : "YourTitleHere", "options" : ["option 1", "option 2"], "time" : 0}` \n\n ' +
+				"Options is any valid string or integer array. Up to 10 elements are allowed\n" +
+				"Time is any valid integer, unit is in seconds, optional parameter, default value is 0\n\n" +
+				"Use command `$voteinit @params` to start the vote",
+			color: "GREEN",
+			footer: {
+				text:
+					"You can copy and paste the code for faster poll creation",
+			},
+		});
+		message.channel.send(voteemebed);
 	}
 	if (message.content.startsWith(prefix + "avatar")) {
 		// * display avatar
@@ -1974,6 +2199,120 @@ client.on("message", (message) => {
 	}
 });
 
+// > Async Branch
+// ! There are some bad practices here so please do not follow 100%
+client.on("message", async (message) => {
+	// * Breaks if the input is not valid
+	if (!message.content.startsWith(prefix) || message.author.bot) {
+		return;
+	}
+	let args = message.content.slice(prefix.length).split(/ +/); // * splits into words array
+	let command = args.shift().toLowerCase();
+	console.log(message.author.username + "\n");
+	console.log(message.content);
+
+	if (command === "uno") {
+		enableuno = 1;
+		let unoembed = new Discord.MessageEmbed({
+			title: "Uno has been enabled",
+			description: `The following commands have been enabled:
+ \`$unocreate\`  Create a new uno game
+ \`$unojoin\` Join the created uno game
+ \`$unostart\` Start the uno game
+ \`$unoplay\` Play your cards
+ \`$unodraw\` Draw a new card if unable to play
+ \`$uno!\` Protect yourself from UNO!
+ \`$unoviewself\` View your current cards
+ \`$unoviewtable\` View what is on the table
+ \`$unoend\` Ends the current game
+ \`$unosettings\` Configure game settings
+ \`$unoviewsetting\` View Game Settings`,
+			color: "GREEN",
+			footer: {
+				text:
+					"There is a hard limit of 10 players for now. Will be fixed later",
+			},
+		});
+		message.channel.send(unoembed);
+	}
+	if (command === "unocreate") {
+		if (enableuno == 1) {
+			await discordUNO.createGame(message);
+		}
+	}
+	if (command === "unojoin") {
+		if (enableuno == 1) {
+			await discordUNO.addUser(message);
+		}
+	}
+	if (command === "unostart") {
+		if (enableuno == 1) {
+			await discordUNO.startGame(message);
+		}
+	}
+	if (command === "unoend") {
+		if (enableuno == 1) {
+			await discordUNO.endGame(message);
+		}
+	}
+	if (command === "unoplay") {
+		if (enableuno == 1) {
+			await discordUNO.playCard(message);
+		}
+	}
+	if (command === "unodraw") {
+		if (enableuno == 1) {
+			await discordUNO.draw(message);
+		}
+	}
+	if (command === "uno!") {
+		if (enableuno == 1) {
+			await discordUNO.UNO(message);
+		}
+	}
+	if (command === "unoviewself") {
+		if (enableuno == 1) {
+			await discordUNO.viewCards(message);
+		}
+	}
+	if (command === "unoviewtable") {
+		if (enableuno == 1) {
+			await discordUNO.viewTable(message);
+		}
+	}
+	if (command === "unoviewsettings") {
+		if (enableuno == 1) {
+			await discordUNO.viewSettings(message);
+		}
+	}
+	if (command === "unosettings") {
+		if (enableuno == 1) {
+			await discordUNO.updateSettings(message);
+		}
+	}
+	if (command === "ttt") {
+		tttgame = new TicTacToe(
+			{
+				language: "en",
+				command: "!ttt",
+			},
+			client
+		);
+		let tttembed = new Discord.MessageEmbed({
+			title: "TicTacToe successfully initalized",
+			description:
+				"Play TicTacToe with the following command: \n " +
+				"`!ttt @player` \n\n" +
+				"if `@player` is not provided, AI will be your opponent",
+			footer: {
+				text: "Class Instantiated",
+			},
+			color: "GREEN",
+		});
+		tttembed.setTimestamp(), message.channel.send(tttembed);
+	}
+});
+
 client.on("voiceStateUpdate", (oldstate, newstate) => {
 	// * Change bot status if bot leaves the voice channel
 	let botchannel = client.voice.connections.toJSON();
@@ -2016,7 +2355,6 @@ function toTitleCase(str) {
 		return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
 	});
 }
-
 function validURL(str) {
 	// * detection of real url
 	var pattern = new RegExp(
@@ -2029,6 +2367,18 @@ function validURL(str) {
 		"i"
 	); // fragment locator
 	return !!pattern.test(str);
+}
+function msToTime(duration) {
+	var milliseconds = parseInt((duration % 1000) / 100),
+		seconds = parseInt((duration / 1000) % 60),
+		minutes = parseInt((duration / (1000 * 60)) % 60),
+		hours = parseInt((duration / (1000 * 60 * 60)) % 24);
+
+	hours = hours < 10 ? "0" + hours : hours;
+	minutes = minutes < 10 ? "0" + minutes : minutes;
+	seconds = seconds < 10 ? "0" + seconds : seconds;
+
+	return hours + " : " + minutes + " : " + seconds + " . " + milliseconds;
 }
 // > Once the bot is ready set discord status and log in console
 client.once("ready", () => {

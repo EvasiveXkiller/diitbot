@@ -472,24 +472,29 @@ client.on("message", (message) => {
 			// this is if the user types $timetable today
 			let datetoday = DateTime.local(); // gets today's date
 			let daytoday = datetoday.toFormat("EEEE").toLowerCase(); //changes date to day e.g Wednesday
-			let preprocess = Object.entries(dbjack.get(daytoday).value());
-			let sendcurrent = "\n";
+			console.log(typeof daytoday);
+			if (daytoday === "saturday" || daytoday === "sunday") {
+				message.channel.send("We don't have class on weekends!");
+			} else {
+				let preprocess = Object.entries(db.get(daytoday).value());
+				let sendcurrent = "\n";
 
-			for (let index = 0; index < preprocess.length; index++) {
-				//apphends the stuff in the array to become one big string
-				sendcurrent += preprocess[index].toString() + "\n\n";
+				for (let index = 0; index < preprocess.length; index++) {
+					//apphends the stuff in the array to become one big string
+					sendcurrent += preprocess[index].toString() + "\n\n";
+				}
+
+				let rawstring = daytoday + " Schedule\n\n";
+				let embed = new Discord.MessageEmbed({
+					//for the discord embed message
+					title: toTitleCase(rawstring),
+					description: sendcurrent,
+					footer: {
+						text: "Good luck for the day!",
+					},
+				});
+				message.channel.send(embed);
 			}
-
-			let rawstring = daytoday + " Schedule\n\n";
-			let embed = new Discord.MessageEmbed({
-				//for the discord embed message
-				title: toTitleCase(rawstring),
-				description: sendcurrent,
-				footer: {
-					text: "Good luck for the day!",
-				},
-			});
-			message.channel.send(embed); //prints the whole embed message
 		} else if (
 			userinput !== "today" ||
 			userinput !== "" ||
@@ -566,6 +571,11 @@ client.on("message", (message) => {
 			return;
 		}
 		opstatsmusic = true;
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			opstatsmusic = false;
+			return;
+		}
 		// * Music player
 		let userinput = message.content
 			.replace("$play", "")
@@ -742,7 +752,16 @@ client.on("message", (message) => {
 		}
 	}
 	if (command === "volume") {
+		if (opstatsmusic == true) {
+			console.log("something is going on in the search algo");
+			return;
+		}
 		// * controls volume globally
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			opstatsmusic = false;
+			return;
+		}
 		let connecteduser = message.member.voice.channel;
 		if (!connecteduser) {
 			// * if user is not connected
@@ -802,6 +821,11 @@ client.on("message", (message) => {
 		message.channel.send(volumesuccess);
 	}
 	if (command === "stop") {
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			opstatsmusic = false;
+			return;
+		}
 		if (opstatsmusic == true) {
 			console.log("something is going on in the search algo");
 			return;
@@ -860,6 +884,15 @@ client.on("message", (message) => {
 		}
 	}
 	if (command === "repeatsong" || command === "repeattrack") {
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			opstatsmusic = false;
+			return;
+		}
+		if (opstatsmusic == true) {
+			console.log("something is going on in the search algo");
+			return;
+		}
 		let connecteduser = message.member.voice.channel;
 		if (!connecteduser) {
 			let usernotconnectedembed = new Discord.MessageEmbed({
@@ -910,6 +943,15 @@ client.on("message", (message) => {
 		}
 	}
 	if (command === "repeatqueue") {
+		if (opstatsmusic == true) {
+			console.log("something is going on in the search algo");
+			return;
+		}
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			opstatsmusic = false;
+			return;
+		}
 		let connecteduser = message.member.voice.channel;
 		if (!connecteduser) {
 			let usernotconnectedembed = new Discord.MessageEmbed({
@@ -960,6 +1002,15 @@ client.on("message", (message) => {
 		}
 	}
 	if (command === "skip") {
+		if (opstatsmusic == true) {
+			console.log("something is going on in the search algo");
+			return;
+		}
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			opstatsmusic = false;
+			return;
+		}
 		let connecteduser = message.member.voice.channel;
 		if (!connecteduser) {
 			// * if user is not connected
@@ -1007,6 +1058,15 @@ client.on("message", (message) => {
 		message.channel.send(skipembed);
 	}
 	if (command === "queue" || command === "q") {
+		if (opstatsmusic == true) {
+			console.log("something is going on in the search algo");
+			return;
+		}
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			opstatsmusic = false;
+			return;
+		}
 		let queue = client.player.getQueue(message.guild.id);
 		if (!queue) {
 			let queueempty = new Discord.MessageEmbed({
@@ -1044,6 +1104,15 @@ client.on("message", (message) => {
 		);
 	}
 	if (command === "remove") {
+		if (opstatsmusic == true) {
+			console.log("something is going on in the search algo");
+			return;
+		}
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			opstatsmusic = false;
+			return;
+		}
 		let userinput = message.content.replace("$remove", "").trim();
 		let connecteduser = message.member.voice.channel;
 		if (!connecteduser) {
@@ -1106,6 +1175,15 @@ client.on("message", (message) => {
 		);
 	}
 	if (command === "seek") {
+		if (opstatsmusic == true) {
+			console.log("something is going on in the search algo");
+			return;
+		}
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			opstatsmusic = false;
+			return;
+		}
 		let connecteduser = message.member.voice.channel;
 		if (!connecteduser) {
 			// * if user is not connected
@@ -1171,6 +1249,11 @@ client.on("message", (message) => {
 		command === "leave" ||
 		command === "dc"
 	) {
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			opstatsmusic = false;
+			return;
+		}
 		if (opstatsmusic == true) {
 			console.log("something is going on in the search algo");
 			return;
@@ -2239,6 +2322,10 @@ client.on("message", async (message) => {
 	console.log(message.content);
 
 	if (command === "uno") {
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			return;
+		}
 		enableuno = 1;
 		let unoembed = new Discord.MessageEmbed({
 			title: "Uno has been enabled",
@@ -2263,63 +2350,111 @@ client.on("message", async (message) => {
 		message.channel.send(unoembed);
 	}
 	if (command === "unocreate") {
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			return;
+		}
 		if (enableuno == 1) {
 			await discordUNO.createGame(message);
 		}
 	}
 	if (command === "unojoin") {
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			return;
+		}
 		if (enableuno == 1) {
 			await discordUNO.addUser(message);
 		}
 	}
 	if (command === "unostart") {
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			return;
+		}
 		if (enableuno == 1) {
 			await discordUNO.startGame(message);
 		}
 	}
 	if (command === "unoend") {
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			return;
+		}
 		if (enableuno == 1) {
 			await discordUNO.endGame(message);
 		}
 	}
 	if (command === "unoplay") {
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			return;
+		}
 		if (enableuno == 1) {
 			await discordUNO.playCard(message);
 			await discordUNO.viewTable(message);
 		}
 	}
 	if (command === "unodraw") {
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			return;
+		}
 		if (enableuno == 1) {
 			await discordUNO.draw(message);
 			await discordUNO.viewTable(message);
 		}
 	}
 	if (command === "uno!") {
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			return;
+		}
 		if (enableuno == 1) {
 			await discordUNO.UNO(message);
 		}
 	}
 	if (command === "unoviewself") {
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			return;
+		}
 		if (enableuno == 1) {
 			await discordUNO.viewCards(message);
 		}
 	}
 	if (command === "unoviewtable") {
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			return;
+		}
 		if (enableuno == 1) {
 			await discordUNO.viewTable(message);
 		}
 	}
 	if (command === "unoviewsettings") {
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			return;
+		}
 		if (enableuno == 1) {
 			await discordUNO.viewSettings(message);
 		}
 	}
 	if (command === "unosettings") {
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			return;
+		}
 		if (enableuno == 1) {
 			await discordUNO.updateSettings(message);
 		}
 	}
 	if (command === "ttt") {
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			return;
+		}
 		tttgame = new TicTacToe(
 			{
 				language: "en",

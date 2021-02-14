@@ -21,7 +21,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@discordjs/opus": "^0.4.0",
-    "discord-music-player": "^6.4.0",
+    "discord-music-player": "^6.4.1",
     "discord-tictactoe": "^2.0.8",
     "discord-uno": "^2.0.21",
     "discord.js": "^12.5.1",

@@ -2403,7 +2403,7 @@ client.on("message", async (message) => {
 			await discordUNO.viewTable(message);
 		}
 	}
-	if(command === "unoleave") {
+	if (command === "unoleave") {
 		if (message.channel.type == "dm" || message.channel.type == "group") {
 			message.channel.send("DMs are not supported!");
 			return;
@@ -2493,27 +2493,27 @@ client.on("message", async (message) => {
 		tttembed.setTimestamp();
 		message.channel.send(tttembed);
 	}
-	if (command === "playlist") {
-		if (opstatsmusic == true) {
-			console.log("something is going on in the search algo");
-			return;
-		}
-		let playlist = await client.player.playlist(
-			message.guild.id,
-			args.join(" "),
-			message.member.voice.channel,
-			-1,
-			message.author.tag
-		);
-		console.log(playlist);
-		playlist = playlist.playlist;
-		let playlistsuccess = new Discord.MessageEmbed({
-			description: `Queued **${playlist.videoCount} songs**`,
-		});
-		playlistsuccess.setTimestamp();
-		message.channel.send(playlistsuccess);
-		opstatsmusic = false;
-	}
+	// if (command === "playlist") {
+	// 	if (opstatsmusic == true) {
+	// 		console.log("something is going on in the search algo");
+	// 		return;
+	// 	}
+	// 	let playlist = await client.player.playlist(
+	// 		message.guild.id,
+	// 		args.join(" "),
+	// 		message.member.voice.channel,
+	// 		-1,
+	// 		message.author.tag
+	// 	);
+	// 	console.log(playlist);
+	// 	playlist = playlist.playlist;
+	// 	let playlistsuccess = new Discord.MessageEmbed({
+	// 		description: `Queued **${playlist.videoCount} songs**`,
+	// 	});
+	// 	playlistsuccess.setTimestamp();
+	// 	message.channel.send(playlistsuccess);
+	// 	opstatsmusic = false;
+	// }
 });
 
 client.on("voiceStateUpdate", (oldstate, newstate) => {

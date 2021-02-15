@@ -69,6 +69,14 @@ Array.prototype.remove = function () {
 	return this;
 };
 
+// > class for IPC
+class respond {
+	constructor(restitle, resdata) {
+		this.title = restitle;
+		this.respond = resdata;
+	}
+}
+
 // > Sync Branch
 client.on("message", (message) => {
 	db.read(); // * master read on carlson branch
@@ -343,7 +351,39 @@ client.on("message", (message) => {
 		offlinemessage.setTimestamp();
 		message.channel.send(offlinemessage).then(() => {
 			client.destroy();
+			setTimeout(() => {
+				process.exit();
+			}, 1000);
 		});
+	}
+	if (command === "reset") {
+		if (message.content === "$reset %reset%") {
+			let resetstart = new Discord.MessageEmbed({
+				description: "Resetting...",
+				color: "RED",
+				footer: {
+					text: "Please allow up to 2 mins",
+				},
+			});
+			resetstart.setTimestamp();
+			message.channel.send(resetstart).then(() => {
+				process.send(
+					new respond("reset", { author: message.author.id })
+				);
+			});
+		} else {
+			let reseterr = new Discord.MessageEmbed({
+				description:
+					"Reset Command Failed! \n The reset command is :\n `$reset %reset%`",
+				color: "RED",
+				footer: {
+					text:
+						"Ensure that a reset is absolutely necessary before running",
+				},
+			});
+			reseterr.setTimestamp();
+			message.channel.send(reseterr);
+		}
 	}
 	if (command === "ping") {
 		// * v2 Ping Message with round trip latency and api latency
@@ -589,6 +629,7 @@ client.on("message", (message) => {
 				},
 			});
 			message.channel.send(noparamembed);
+			opstatsmusic = false;
 			return;
 		}
 		let isPlaying = client.player.isPlaying(message.guild.id);
@@ -615,6 +656,7 @@ client.on("message", (message) => {
 					},
 				});
 				message.channel.send(usernotconnectedembed);
+				opstatsmusic = false;
 				return;
 			}
 			let botchannel = client.voice.connections.toJSON();
@@ -692,6 +734,7 @@ client.on("message", (message) => {
 						opstatsmusic = false;
 					});
 					console.error(err);
+					opstatsmusic = false;
 					return;
 				});
 		} else {
@@ -705,6 +748,7 @@ client.on("message", (message) => {
 					},
 				});
 				message.channel.send(usernotconnectedembed);
+				opstatsmusic = false;
 				return;
 			}
 			client.player
@@ -844,6 +888,7 @@ client.on("message", (message) => {
 				},
 			});
 			message.channel.send(usernotconnectedembed);
+			opstatsmusic = false;
 			return;
 		}
 		let botchannel = client.voice.connections.toJSON();
@@ -858,6 +903,7 @@ client.on("message", (message) => {
 				},
 			});
 			message.channel.send(botnotconnectedembed);
+			opstatsmusic = false;
 			return;
 		}
 		if (connecteduser.id !== botchannel[0].channel) {
@@ -869,6 +915,7 @@ client.on("message", (message) => {
 				},
 			});
 			message.channel.send(diffchannelembed);
+			opstatsmusic = false;
 			return;
 		} else {
 			client.player.stop(message.guild.id); // * Stop the song and deletes the queue
@@ -2326,8 +2373,7 @@ client.on("message", async (message) => {
 	}
 	let args = message.content.slice(prefix.length).split(/ +/); // * splits into words array
 	let command = args.shift().toLowerCase();
-	console.log(message.author.username + "\n");
-	console.log(message.content);
+	console.log(`${message.author.username} => ${message.content}`);
 
 	if (command === "uno") {
 		if (message.channel.type == "dm" || message.channel.type == "group") {
@@ -2594,6 +2640,40 @@ client.once("ready", () => {
 		},
 	});
 	console.log("The International of DIIT Congress is online.");
+});
+
+// > IPC with parent process
+process.on("message", (comm) => {
+	if (comm === "memusage") {
+		process.send(new respond("memusage", process.memoryUsage()));
+	}
+	if (comm === "kill") {
+		client.channels
+			.fetch("802128735473893426", false, true)
+			.then((channel) => {
+				let offlinemessage = new Discord.MessageEmbed({
+					description: "Going Offline Immediately!",
+					color: "FF0000",
+					footer: {
+						text: "Console",
+					},
+				});
+				offlinemessage.setTimestamp();
+				channel.send(offlinemessage).then(() => {
+					client.destroy();
+					setTimeout(() => {
+						process.exit();
+					}, 1000);
+				});
+			})
+			.catch(console.error);
+	}
+	if (comm === "userkill") {
+		client.destroy();
+		setTimeout(() => {
+			process.exit();
+		}, 5000);
+	}
 });
 
 // > API key to login to start the bot

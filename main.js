@@ -688,7 +688,9 @@ client.on("message", (message) => {
 							text: "International music bot",
 						},
 					});
-					message.channel.send(errembed);
+					message.channel.send(errembed).then(() => {
+						opstatsmusic = false;
+					});
 					console.error(err);
 					return;
 				});
@@ -746,6 +748,7 @@ client.on("message", (message) => {
 						});
 						message.channel.send(errembed);
 						console.log(err);
+						opstatsmusic = false;
 						return;
 					}
 				});
@@ -1325,6 +1328,11 @@ client.on("message", (message) => {
 		if (verbosedebug == 0) {
 			return;
 		}
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			opstatsmusic = false;
+			return;
+		}
 		let guild = client.guilds.cache.get(message.guild.id);
 		let users = message.mentions.users.first() || message.author;
 		console.log(users.username);
@@ -1524,10 +1532,10 @@ client.on("message", (message) => {
 			title: "Voting System Docs",
 			description:
 				"The parameters are as follows: \n\n " +
-				'`{"title" : "YourTitleHere", "options" : ["option 1", "option 2"], "time" : 0}` \n\n ' +
+				'`$voteinit {"title" : "YourTitleHere", "options" : ["option 1", "option 2"], "time" : 0}` \n\n ' +
 				"Options is any valid string or integer array. Up to 10 elements are allowed\n" +
 				"Time is any valid integer, unit is in seconds, optional parameter, default value is 0\n\n" +
-				"Use command `$voteinit @params` to start the vote",
+				"Use command above, replace the parameters,to start the vote",
 			color: "GREEN",
 			footer: {
 				text:
@@ -2395,6 +2403,15 @@ client.on("message", async (message) => {
 			await discordUNO.viewTable(message);
 		}
 	}
+	if(command === "unoleave") {
+		if (message.channel.type == "dm" || message.channel.type == "group") {
+			message.channel.send("DMs are not supported!");
+			return;
+		}
+		if (enableuno == 1) {
+			await discordUNO.endGame(message);
+		}
+	}
 	if (command === "unodraw") {
 		if (message.channel.type == "dm" || message.channel.type == "group") {
 			message.channel.send("DMs are not supported!");
@@ -2473,7 +2490,29 @@ client.on("message", async (message) => {
 			},
 			color: "GREEN",
 		});
-		tttembed.setTimestamp(), message.channel.send(tttembed);
+		tttembed.setTimestamp();
+		message.channel.send(tttembed);
+	}
+	if (command === "playlist") {
+		if (opstatsmusic == true) {
+			console.log("something is going on in the search algo");
+			return;
+		}
+		let playlist = await client.player.playlist(
+			message.guild.id,
+			args.join(" "),
+			message.member.voice.channel,
+			-1,
+			message.author.tag
+		);
+		console.log(playlist);
+		playlist = playlist.playlist;
+		let playlistsuccess = new Discord.MessageEmbed({
+			description: `Queued **${playlist.videoCount} songs**`,
+		});
+		playlistsuccess.setTimestamp();
+		message.channel.send(playlistsuccess);
+		opstatsmusic = false;
 	}
 });
 

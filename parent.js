@@ -11,46 +11,48 @@ let mainInstance;
 let userkill;
 
 function launch() {
-    if (mainInstance != null) {
-        console.log("An instance is running, stop manually before executing it");
-    }
+	if (mainInstance != null) {
+		console.log(
+			"An instance is running, stop manually before executing it"
+		);
+	}
 	// mainInstance = spawn("node", ["main.js"], {
 	// 	stdio: ["pipe", "pipe", "pipe", "ipc"],
 	// });
-	mainInstance = fork("./main.js",[],{ silent: true })
+	mainInstance = fork("./main.js", [], { silent: true });
 	mainInstance.stdout.on("data", (data) => {
 		console.log("stdout: " + data);
 	});
 
 	mainInstance.stderr.on("data", (data) => {
 		console.log(data.toString());
-        console.log("> ")
+		console.log("> ");
 	});
 
 	mainInstance.on("message", (data) => {
-        if(data.title == "memusage") {
-            let localdata = data.respond;
-            let localmem = {
-                rss: `${formatMemoryUsage(
-                    localdata.rss
-                )} -> Resident Set Size - total memory allocated for the process execution`,
-                heapTotal: `${formatMemoryUsage(
-                    localdata.heapTotal
-                )} -> total size of the allocated heap`,
-                heapUsed: `${formatMemoryUsage(
-                    localdata.heapUsed
-                )} -> actual memory used during the execution`,
-                external: `${formatMemoryUsage(
-                    localdata.external
-                )} -> V8 external memory`,
-            };
-            console.log(localmem);
-        }
-        if(data.title == "reset") {
-            console.log(data);
-            mainInstance.send("userkill");
-            userkill = true;
-        }
+		if (data.title == "memusage") {
+			let localdata = data.respond;
+			let localmem = {
+				rss: `${formatMemoryUsage(
+					localdata.rss
+				)} -> Resident Set Size - total memory allocated for the process execution`,
+				heapTotal: `${formatMemoryUsage(
+					localdata.heapTotal
+				)} -> total size of the allocated heap`,
+				heapUsed: `${formatMemoryUsage(
+					localdata.heapUsed
+				)} -> actual memory used during the execution`,
+				external: `${formatMemoryUsage(
+					localdata.external
+				)} -> V8 external memory`,
+			};
+			console.log(localmem);
+		}
+		if (data.title == "reset") {
+			console.log(data);
+			mainInstance.send("userkill");
+			userkill = true;
+		}
 	});
 
 	mainInstance.on("error", (err) => {
@@ -58,11 +60,11 @@ function launch() {
 	});
 
 	mainInstance.on("exit", () => {
-        if(userkill == true) {
-            relaunch();
+		if (userkill == true) {
+			relaunch();
 			userkill = false;
-        }
-        console.log("Status: Exited successfully");
+		}
+		console.log("Status: Exited successfully");
 		process.stdout.write("> ");
 		mainInstance = undefined;
 	});
@@ -80,7 +82,7 @@ rl.on("line", (data) => {
 		}
 	}
 	if (data === "start") {
-        if (mainInstance == null) {
+		if (mainInstance == null) {
 			launch();
 		}
 	}
@@ -91,13 +93,15 @@ rl.on("line", (data) => {
 			console.log("No Instance running");
 		}
 	}
-    if(data == "parentexit")  {
-        if (mainInstance != null) {
-			console.log("An instance is running, stop manually before executing it");
+	if (data == "parentexit") {
+		if (mainInstance != null) {
+			console.log(
+				"An instance is running, stop manually before executing it"
+			);
 		} else {
-            process.exit();
-        }
-    }
+			process.exit();
+		}
+	}
 	process.stdout.write("> ");
 });
 
@@ -108,9 +112,9 @@ function onBoot() {
 }
 
 function relaunch() {
-    setTimeout(() => {
-        launch();
-    }, 30000);
+	setTimeout(() => {
+		launch();
+	}, 30000);
 }
 
 onBoot();

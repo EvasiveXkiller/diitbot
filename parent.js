@@ -1,4 +1,4 @@
-const { spawn } = require("child_process");
+const { spawn, fork } = require("child_process");
 const readline = require("readline"); // * for command line control;
 
 const formatMemoryUsage = (data) =>
@@ -14,15 +14,16 @@ function launch() {
     if (mainInstance != null) {
         console.log("An instance is running, stop manually before executing it");
     }
-	mainInstance = spawn("node", ["main.js"], {
-		stdio: ["pipe", "pipe", "pipe", "ipc"],
-	});
+	// mainInstance = spawn("node", ["main.js"], {
+	// 	stdio: ["pipe", "pipe", "pipe", "ipc"],
+	// });
+	mainInstance = fork("./main.js",[],{ silent: true })
 	mainInstance.stdout.on("data", (data) => {
 		console.log("stdout: " + data);
 	});
 
 	mainInstance.stderr.on("data", (data) => {
-		console.log(data);
+		console.log(data.toString());
         console.log("> ")
 	});
 
@@ -59,6 +60,7 @@ function launch() {
 	mainInstance.on("exit", () => {
         if(userkill == true) {
             relaunch();
+			userkill = false;
         }
         console.log("Status: Exited successfully");
 		process.stdout.write("> ");

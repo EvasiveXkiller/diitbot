@@ -2366,6 +2366,7 @@ client.on("message", (message) => {
 
 // > Async Branch
 // ! There are some bad practices here so please do not follow 100%
+// TODO Fork all the blocking processes to multithread
 client.on("message", async (message) => {
 	// * Breaks if the input is not valid
 	if (!message.content.startsWith(prefix) || message.author.bot) {
@@ -2373,7 +2374,7 @@ client.on("message", async (message) => {
 	}
 	let args = message.content.slice(prefix.length).split(/ +/); // * splits into words array
 	let command = args.shift().toLowerCase();
-	console.log(`${message.author.username} => ${message.content}`);
+	//console.log(`${message.author.username} => ${message.content}`);
 
 	if (command === "uno") {
 		if (message.channel.type == "dm" || message.channel.type == "group") {
@@ -2455,7 +2456,7 @@ client.on("message", async (message) => {
 			return;
 		}
 		if (enableuno == 1) {
-			await discordUNO.endGame(message);
+			await discordUNO.removeUser(message);
 		}
 	}
 	if (command === "unodraw") {

@@ -12,20 +12,31 @@
   - Iconic Quotes in Embedded format
   - Integrated Gif finder
   - Integrated Memes finder
+  - Music Player
+  - Uno and Tic Tac Toe
   - Dark Mode Friendly
-  - Explode
-  - Much More...
 
 # Documentation
-> Capable Functions include:
-- [Iconic](#iconic)
-- [Ping](#ping)
-- [Help](#help)
+> Capable Functions include but not limited to:
+
+General
 - [Timetable Picture](#Timetable (Picture))
 - [Timetable](#Timetable)
-- [Description](#Description)
+- [Iconic](#iconic)
 - [Gif](#Gif)
 - [Memes](#Memes)
+- [Event](#Event)
+- [Replacements](#Replacements)
+- [Avatar](#Avatar)
+- [Profile](#Profile)
+- [Vote](#Vote)
+
+Tools
+- [Ping](#ping)
+- [Help](#help)
+- [Description](#Description)
+
+Music
 - [Play](#Play)
 - [Volume](#Volume)
 - [Stop](#Stop)
@@ -33,10 +44,12 @@
 - [Queue](#Queue)
 - [Remove from Queue](#Remove&#32;Queue)
 - [Disconnect](#Disconnect)
-- [Event](#Event)
-- [Replacements](#Replacements)
-- [Avatar](#Avatar)
-- [Profile](#Profile)
+
+Games
+- [UNO](#UNO)
+- [Tic Tac Toe](#Tic&#32Tac&#32Toe)
+
+Please read the  at the end of this page.
 ---
 ### Iconic
 ```
@@ -236,6 +249,31 @@ returns:
   A custom crafted profile board with various links to other social media pages.
 ```
 ---
+### UNO
+```
+$uno
+
+returns:
+  A help message board to initiate the UNO game.
+```
+An UNO game instance can be created on seperate channels. Although this is possible, it is not recommended. Please see "Known Issues" for furthur details.
+
+---
+### Tic Tac Toe
+```
+$ttt
+
+returns:
+  A help message board to initiate the tic tac toe game.
+```
+### Vote
+```
+$vote
+
+returns:
+  An instruction board on how to use the voting system.
+```
+---
 # Data Manipulation
 
 ### Iconic Quotes insert
@@ -289,6 +327,13 @@ where:
 
 ```
 
+# Known Issues
+
+There are a few known issues that may occur during the operation of the bot.
+- The `$play` command does not support playlists yet. This will be resolved in a future update when and shall neccessary.
+- Uno "skip" card sometimes behaves wierdly. Known Issue.
+- There might be a chance that the UNO game might behave wierdly and not accept any more cards. This is due to the games subsystem running out of RAM. Use the `$reset` command to reset the bot. Please do note that all progress is lost at this point.
+- 
 
 # Tech
 > The best discord bot is a bot that is system that is designed from the ground up

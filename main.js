@@ -4,7 +4,6 @@ const low = require("lowdb");
 const FileSync = require("lowdb/adapters/FileSync");
 const { DateTime } = require("luxon");
 const pollEmbed = require("discord.js-poll-embed");
-const { DiscordUNO } = require("discord-uno");
 const TicTacToe = require("discord-tictactoe");
 
 // > DB Connection on Carlson
@@ -21,7 +20,6 @@ const dbken = low(adapterken);
 
 // > Important Constants
 const client = new Discord.Client();
-const discordUNO = new DiscordUNO();
 // * Options for search engine
 const options = {
 	// * Carlson param for search system
@@ -97,14 +95,10 @@ client.on("message", (message) => {
 			}
 			//console.log(names[parseInt(Math.random() * names.length)])
 			//console.log("branch1");
-			while (true) {
+			while (typeof localoutput[1] === "undefined") {
 				localoutput = query(
 					names[parseInt(Math.random() * names.length)]
 				);
-				if (typeof localoutput[1] !== "undefined") {
-					// * if the person has no quotes
-					break;
-				}
 				localoutput = [];
 			}
 			output = localoutput;
@@ -162,7 +156,7 @@ client.on("message", (message) => {
 			dbinput.push(m.content); // * push into array
 		});
 
-		collector.on("end", (m) => {
+		collector.on("end", () => {
 			// * Comfirm on insert into database
 			let embedcomfirm = new Discord.MessageEmbed({
 				title: "Confirm?",
@@ -625,7 +619,7 @@ client.on("message", (message) => {
 		//this displays upcoming events
 		dbjack.read();
 		let x = dbjack.get("events").value(); //refers to the events array
-		for (i = 0; i < x.length; i++) {
+		for (let i = 0; i < x.length; i++) {
 			//this loop is to call out all the objects in the events array
 			let s = x[i].date; //gets the time out from database
 			let luxonformat = DateTime.fromISO(s); //processes time to luxon
@@ -659,7 +653,7 @@ client.on("message", (message) => {
 	}
 	if (command === "replacements") {
 		let x = dbjack.get("reminder").value(); //refers to the reminder array
-		for (i = 0; i < x.length; i++) {
+		for (let i = 0; i < x.length; i++) {
 			//this loop is to call out all the objects in the reminder array
 			let s = x[i].date; //gets the time out from database
 			let luxonformat = DateTime.fromISO(s); //processes time to luxon
@@ -819,7 +813,7 @@ client.on("message", (message) => {
 			message.channel.send("DMs are not supported!");
 			return;
 		}
-		tttgame = new TicTacToe(
+		new TicTacToe(
 			{
 				language: "en",
 				command: "!ttt",

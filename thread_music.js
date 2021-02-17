@@ -844,7 +844,7 @@ client.on("ready", () => {
 	console.log("thread_music ready");
 });
 
-client.on("voiceStateUpdate", (oldstate, newstate) => {
+client.on("voiceStateUpdate", () => {
 	// * Change bot status if bot leaves the voice channel
 	let botchannel = client.voice.connections.toJSON();
 	if (botchannel.length == 0) {

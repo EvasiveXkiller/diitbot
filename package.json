@@ -29,5 +29,8 @@
     "fuse.js": "^6.4.6",
     "lowdb": "^1.0.0",
     "luxon": "^1.26.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.20.0"
   }
 }

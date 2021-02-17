@@ -1,4 +1,4 @@
-const { spawn, fork } = require("child_process");
+const { fork } = require("child_process");
 const readline = require("readline"); // * for command line control;
 
 const formatMemoryUsage = (data) =>

@@ -1,6 +1,5 @@
 const Discord = require("discord.js");
 const { DiscordUNO } = require("discord-uno");
-const TicTacToe = require("discord-tictactoe");
 
 const client = new Discord.Client();
 const discordUNO = new DiscordUNO();

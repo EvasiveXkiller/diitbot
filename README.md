@@ -35,6 +35,7 @@ Tools
 - [Ping](#ping)
 - [Help](#help)
 - [Description](#Description)
+- [Reset](#reset)
 
 Music
 - [Play](#Play)
@@ -42,14 +43,20 @@ Music
 - [Stop](#Stop)
 - [Skip](#Skip)
 - [Queue](#Queue)
-- [Remove from Queue](#Remove&#32;Queue)
+- [Remove from Queue](#Remove_Queue)
 - [Disconnect](#Disconnect)
 
 Games
 - [UNO](#UNO)
-- [Tic Tac Toe](#Tic&#32Tac&#32Toe)
+- [Tic Tac Toe](#Tic_Tac_Toe)
 
-Please read the  at the end of this page.
+Data Manipulation
+- [Iconic Insert](#Iconic_Quotes_Insert)
+- [Iconic Delete](#Iconic_Quotes_Delete)
+- [Events Insert](#Events_Insert)
+
+Please read the [Known Issues](#issues) at the end of this page.
+---
 ---
 ### Iconic
 ```
@@ -137,7 +144,7 @@ returns:
 ---
 ### Play
 ```
-$play [link || songname]
+$play || $p [link || songname]
 
 where:
   link : Can be any valid link. See below for compatability
@@ -181,14 +188,14 @@ returns:
 ---
 ### Queue
 ```
-$skip
+$queue || $q
 
 returns:
   Display the current song queue. A progress bar is also displayed for the current playing song.
 ```
 
 ---
-### Remove Queue
+### Remove_Queue
 ```
 $remove [integer]
 
@@ -203,7 +210,7 @@ The user is unable to remove the currently playing song from the queue.
 ---
 ### Disconnect
 ```
-$dis
+$dis || $dc || $fuckoff || $leave
 
 returns:
   Stops the bot, clears the currently playing queue and disconnects from the channel
@@ -249,6 +256,16 @@ returns:
   A custom crafted profile board with various links to other social media pages.
 ```
 ---
+### Reset
+```
+$reset %reset%
+
+returns:
+  Resets the bot.
+```
+This command will immediately terminate all ongoing operations(including music playback). The reset process takes about 1min to complete. Please ensure that a reset is absolutely necessary before using this command.
+
+---
 ### UNO
 ```
 $uno
@@ -259,7 +276,7 @@ returns:
 An UNO game instance can be created on seperate channels. Although this is possible, it is not recommended. Please see "Known Issues" for furthur details.
 
 ---
-### Tic Tac Toe
+### Tic_Tac_Toe
 ```
 $ttt
 
@@ -276,7 +293,7 @@ returns:
 ---
 # Data Manipulation
 
-### Iconic Quotes insert
+### Iconic_Quotes_insert
 ```
 $dbinsert
 
@@ -284,7 +301,7 @@ returns:
   Instructions on how to insert data into the iconic quotes database. Session limited to 15 seconds. Any input typed is accepted, including those from other channels.
 ```
 ---
-### Iconic Quotes Delete
+### Iconic_Quotes_Delete
 ```
 $dbdelete [name],[quote]
 
@@ -297,7 +314,7 @@ returns:
 ```
 ---
 
-### Events Insert
+### Events_Insert
 ```
 $eventinsert [eventName],[timecode]
 
@@ -312,7 +329,7 @@ returns:
 ```
 ---
 
-# Debug Commands
+# Debug_Commands
 ```
 $debug [integer]
 
@@ -327,13 +344,12 @@ where:
 
 ```
 
-# Known Issues
+# Issues
 
 There are a few known issues that may occur during the operation of the bot.
 - The `$play` command does not support playlists yet. This will be resolved in a future update when and shall neccessary.
 - Uno "skip" card sometimes behaves wierdly. Known Issue.
 - There might be a chance that the UNO game might behave wierdly and not accept any more cards. This is due to the games subsystem running out of RAM. Use the `$reset` command to reset the bot. Please do note that all progress is lost at this point.
-- 
 
 # Tech
 > The best discord bot is a bot that is system that is designed from the ground up

@@ -1653,7 +1653,7 @@ process.on("message", (comm) => {
 	}
 	if (comm === "kill") {
 		client.channels
-			.fetch("802128735473893426", false, true)
+			.fetch("755263209824321629", false, true)
 			.then((channel) => {
 				let offlinemessage = new Discord.MessageEmbed({
 					description: "Going Offline Immediately!",

@@ -86,10 +86,7 @@ client.on("message", (message) => {
 				return;
 			}
 			let botchannel = client.voice.connections.toJSON();
-			if (
-				botchannel[0] == undefined ||
-				connecteduser.id !== botchannel[0].channel
-			) {
+			if (connecteduser.id !== botchannel[0].channel) {
 				// * if user is not in the same channel
 				let diffchannelembed = new Discord.MessageEmbed({
 					description:
@@ -99,6 +96,7 @@ client.on("message", (message) => {
 					},
 				});
 				message.channel.send(diffchannelembed);
+				opstatsmusic = false;
 				return;
 			}
 			client.player
@@ -806,10 +804,10 @@ client.on("message", (message) => {
 			);
 			return;
 		}
-			client.destroy();
-			setTimeout(() => {
-				process.exit();
-			}, 1000);
+		client.destroy();
+		setTimeout(() => {
+			process.exit();
+		}, 1000);
 	}
 	// if (command === "playlist") {
 	// 	if (opstatsmusic == true) {

@@ -44,6 +44,8 @@ Music
 - [Skip](#Skip)
 - [Queue](#Queue)
 - [Remove from Queue](#Remove_Queue)
+- [Repeat Song](#RepeatSong)
+- [Repeat Queue](#RepeatQueue)
 - [Disconnect](#Disconnect)
 
 Games
@@ -206,6 +208,24 @@ returns:
   Removes the selected song from the queue.
 ```
 The user is unable to remove the currently playing song from the queue.
+
+---
+### RepeatSong
+```
+$repeatsong || $repeattrack
+
+returns:
+  Sets the repeat song to on/off (toggle)
+```
+
+---
+### RepeatQueue
+```
+$repeatqueue
+
+returns:
+  Sets the repeat queue to on/off (toggle)
+```
 
 ---
 ### Disconnect

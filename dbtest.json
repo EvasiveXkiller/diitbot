@@ -2,105 +2,305 @@
   "rawdata": {
     "storage": [
       {
-        "guild": "812901883408547841",
-        "channel": "812901883408547844",
-        "creator": "727367215489482845",
+        "guild": "754343242224631808",
+        "channel": "755238583413112973",
+        "creator": "274549075586842624",
         "active": true,
         "users": [
           {
-            "id": "727367215489482845",
+            "id": "274549075586842624",
+            "name": "EvasiveXkiller",
             "hand": [
               {
-                "name": "Green One",
-                "color": "green",
-                "value": 1,
-                "count": 2,
-                "inPlay": 1,
-                "image": "./node_modules/discord-uno/src/data/assets/cards/green/Green_1.png"
-              },
-              {
-                "name": "Yellow Three",
-                "color": "yellow",
-                "value": 3,
-                "count": 2,
-                "inPlay": 1,
-                "image": "./node_modules/discord-uno/src/data/assets/cards/yellow/Yellow_3.png"
-              },
-              {
-                "name": "Yellow Six",
-                "color": "yellow",
-                "value": 6,
-                "count": 2,
-                "inPlay": 1,
-                "image": "./node_modules/discord-uno/src/data/assets/cards/yellow/Yellow_6.png"
-              },
-              {
-                "name": "Yellow Two",
-                "color": "yellow",
-                "value": 2,
-                "count": 2,
-                "inPlay": 1,
-                "image": "./node_modules/discord-uno/src/data/assets/cards/yellow/Yellow_2.png"
-              },
-              {
-                "name": "Yellow Five",
-                "color": "yellow",
-                "value": 5,
-                "count": 2,
-                "inPlay": 2,
-                "image": "./node_modules/discord-uno/src/data/assets/cards/yellow/Yellow_5.png"
-              },
-              {
-                "name": "Red Six",
+                "name": "Red Draw Two",
                 "color": "red",
-                "value": 6,
+                "value": "Draw Two",
                 "count": 2,
                 "inPlay": 2,
-                "image": "./node_modules/discord-uno/src/data/assets/cards/red/Red_6.png"
+                "image": "./assets/cards/red/Red_Draw.png"
               },
               {
-                "name": "Green Five",
-                "color": "green",
+                "name": "Wild",
+                "color": "null",
+                "value": "Wild",
+                "count": 4,
+                "inPlay": 1,
+                "image": "./assets/cards/wild/Wild.png"
+              },
+              {
+                "name": "Blue Five",
+                "color": "blue",
                 "value": 5,
                 "count": 2,
+                "inPlay": 2,
+                "image": "./assets/cards/blue/Blue_5.png"
+              },
+              {
+                "name": "Red Four",
+                "color": "red",
+                "value": 4,
+                "count": 2,
                 "inPlay": 1,
-                "image": "./node_modules/discord-uno/src/data/assets/cards/green/Green_5.png"
+                "image": "./assets/cards/red/Red_4.png"
+              },
+              {
+                "name": "Red Skip",
+                "color": "red",
+                "value": "Skip",
+                "count": 2,
+                "inPlay": 2,
+                "image": "./assets/cards/red/Red_Skip.png"
+              },
+              {
+                "name": "Blue Five",
+                "color": "blue",
+                "value": 5,
+                "count": 2,
+                "inPlay": 2,
+                "image": "./assets/cards/blue/Blue_5.png"
+              },
+              {
+                "name": "Blue Seven",
+                "color": "blue",
+                "value": 7,
+                "count": 2,
+                "inPlay": 2,
+                "image": "./assets/cards/blue/Blue_7.png"
+              },
+              {
+                "name": "Red Seven",
+                "color": "red",
+                "value": 7,
+                "count": 2,
+                "inPlay": 1,
+                "image": "./assets/cards/red/Red_7.png"
+              }
+            ],
+            "safe": false
+          },
+          {
+            "id": "326644071927906306",
+            "name": "~Masta~",
+            "hand": [
+              {
+                "name": "Red Nine",
+                "color": "red",
+                "value": 9,
+                "count": 2,
+                "inPlay": 1,
+                "image": "./assets/cards/red/Red_9.png"
+              },
+              {
+                "name": "Yellow Skip",
+                "color": "yellow",
+                "value": "Skip",
+                "count": 2,
+                "inPlay": 1,
+                "image": "./assets/cards/yellow/Yellow_Skip.png"
+              },
+              {
+                "name": "Green Seven",
+                "color": "green",
+                "value": 7,
+                "count": 2,
+                "inPlay": 2,
+                "image": "./assets/cards/green/Green_7.png"
+              },
+              {
+                "name": "Yellow Seven",
+                "color": "yellow",
+                "value": 7,
+                "count": 2,
+                "inPlay": 1,
+                "image": "./assets/cards/yellow/Yellow_7.png"
+              },
+              {
+                "name": "Green Nine",
+                "color": "green",
+                "value": 9,
+                "count": 2,
+                "inPlay": 2,
+                "image": "./assets/cards/green/Green_9.png"
               },
               {
                 "name": "Green Skip",
                 "color": "green",
                 "value": "Skip",
                 "count": 2,
-                "inPlay": 2,
-                "image": "./node_modules/discord-uno/src/data/assets/cards/green/Green_Skip.png"
+                "inPlay": 1,
+                "image": "./assets/cards/green/Green_Skip.png"
               },
               {
-                "name": "Red Draw Two",
+                "name": "Green Nine",
+                "color": "green",
+                "value": 9,
+                "count": 2,
+                "inPlay": 2,
+                "image": "./assets/cards/green/Green_9.png"
+              },
+              {
+                "name": "Red Skip",
                 "color": "red",
-                "value": "Draw Two",
+                "value": "Skip",
+                "count": 2,
+                "inPlay": 2,
+                "image": "./assets/cards/red/Red_Skip.png"
+              },
+              {
+                "name": "Yellow Four",
+                "color": "yellow",
+                "value": 4,
                 "count": 2,
                 "inPlay": 1,
-                "image": "./node_modules/discord-uno/src/data/assets/cards/red/Red_Draw.png"
+                "image": "./assets/cards/yellow/Yellow_4.png"
+              },
+              {
+                "name": "Blue Nine",
+                "color": "blue",
+                "value": 9,
+                "count": 2,
+                "inPlay": 1,
+                "image": "./assets/cards/blue/Blue_9.png"
               }
             ],
             "safe": false
           },
           {
-            "id": "274549075586842624",
+            "id": "411823248406347777",
+            "name": "zhen yick",
             "hand": [
               {
-                "name": "Yellow One",
-                "color": "yellow",
-                "value": 1,
+                "name": "Green Four",
+                "color": "green",
+                "value": 4,
+                "count": 2,
+                "inPlay": 2,
+                "image": "./assets/cards/green/Green_4.png"
+              },
+              {
+                "name": "Red Three",
+                "color": "red",
+                "value": 3,
                 "count": 2,
                 "inPlay": 1,
-                "image": "./node_modules/discord-uno/src/data/assets/cards/yellow/Yellow_1.png"
+                "image": "./assets/cards/red/Red_3.png"
+              },
+              {
+                "name": "Blue Seven",
+                "color": "blue",
+                "value": 7,
+                "count": 2,
+                "inPlay": 2,
+                "image": "./assets/cards/blue/Blue_7.png"
+              }
+            ],
+            "safe": false
+          },
+          {
+            "id": "708881979705262130",
+            "name": "pseudoexist",
+            "hand": [
+              {
+                "name": "Green Seven",
+                "color": "green",
+                "value": 7,
+                "count": 2,
+                "inPlay": 2,
+                "image": "./assets/cards/green/Green_7.png"
+              },
+              {
+                "name": "Blue Four",
+                "color": "blue",
+                "value": 4,
+                "count": 2,
+                "inPlay": 2,
+                "image": "./assets/cards/blue/Blue_4.png"
+              },
+              {
+                "name": "Yellow Three",
+                "color": "yellow",
+                "value": 3,
+                "count": 2,
+                "inPlay": 2,
+                "image": "./assets/cards/yellow/Yellow_3.png"
+              },
+              {
+                "name": "Green Four",
+                "color": "green",
+                "value": 4,
+                "count": 2,
+                "inPlay": 2,
+                "image": "./assets/cards/green/Green_4.png"
+              },
+              {
+                "name": "Green Six",
+                "color": "green",
+                "value": 6,
+                "count": 2,
+                "inPlay": 2,
+                "image": "./assets/cards/green/Green_6.png"
+              },
+              {
+                "name": "Green Six",
+                "color": "green",
+                "value": 6,
+                "count": 2,
+                "inPlay": 2,
+                "image": "./assets/cards/green/Green_6.png"
+              },
+              {
+                "name": "Yellow Six",
+                "color": "yellow",
+                "value": 6,
+                "count": 2,
+                "inPlay": 2,
+                "image": "./assets/cards/yellow/Yellow_6.png"
+              },
+              {
+                "name": "Blue Reverse",
+                "color": "blue",
+                "value": "Reverse",
+                "count": 2,
+                "inPlay": 2,
+                "image": "./assets/cards/blue/Blue_Reverse.png"
+              },
+              {
+                "name": "Green Two",
+                "color": "green",
+                "value": 2,
+                "count": 2,
+                "inPlay": 1,
+                "image": "./assets/cards/green/Green_2.png"
+              },
+              {
+                "name": "Yellow Three",
+                "color": "yellow",
+                "value": 3,
+                "count": 2,
+                "inPlay": 2,
+                "image": "./assets/cards/yellow/Yellow_3.png"
+              },
+              {
+                "name": "Blue Four",
+                "color": "blue",
+                "value": 4,
+                "count": 2,
+                "inPlay": 2,
+                "image": "./assets/cards/blue/Blue_4.png"
+              },
+              {
+                "name": "Green Eight",
+                "color": "green",
+                "value": 8,
+                "count": 2,
+                "inPlay": 1,
+                "image": "./assets/cards/green/Green_8.png"
               }
             ],
             "safe": false
           }
         ],
-        "currentPlayer": 1
+        "currentPlayer": 2
       }
     ],
     "gameCards": [
@@ -111,16 +311,16 @@
             "color": "red",
             "value": 0,
             "count": 1,
-            "inPlay": 1,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/red/Red_0.png"
+            "inPlay": 0,
+            "image": "./assets/cards/red/Red_0.png"
           },
           {
             "name": "Red One",
             "color": "red",
             "value": 1,
             "count": 2,
-            "inPlay": 1,
-            "image": "./node_modules/discord-uno/src/data/assets/cardsred/Red_1.png"
+            "inPlay": 0,
+            "image": "./assets/cards/red/Red_1.png"
           },
           {
             "name": "Red Two",
@@ -128,7 +328,7 @@
             "value": 2,
             "count": 2,
             "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/red/Red_2.png"
+            "image": "./assets/cards/red/Red_2.png"
           },
           {
             "name": "Red Three",
@@ -136,39 +336,39 @@
             "value": 3,
             "count": 2,
             "inPlay": 1,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/red/Red_3.png"
+            "image": "./assets/cards/red/Red_3.png"
           },
           {
             "name": "Red Four",
             "color": "red",
             "value": 4,
             "count": 2,
-            "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/red/Red_4.png"
+            "inPlay": 1,
+            "image": "./assets/cards/red/Red_4.png"
           },
           {
             "name": "Red Five",
             "color": "red",
             "value": 5,
             "count": 2,
-            "inPlay": 2,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/red/Red_5.png"
+            "inPlay": 0,
+            "image": "./assets/cards/red/Red_5.png"
           },
           {
             "name": "Red Six",
             "color": "red",
             "value": 6,
             "count": 2,
-            "inPlay": 2,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/red/Red_6.png"
+            "inPlay": 0,
+            "image": "./assets/cards/red/Red_6.png"
           },
           {
             "name": "Red Seven",
             "color": "red",
             "value": 7,
             "count": 2,
-            "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/red/Red_7.png"
+            "inPlay": 1,
+            "image": "./assets/cards/red/Red_7.png"
           },
           {
             "name": "Red Eight",
@@ -176,15 +376,15 @@
             "value": 8,
             "count": 2,
             "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/red/Red_8.png"
+            "image": "./assets/cards/red/Red_8.png"
           },
           {
             "name": "Red Nine",
             "color": "red",
             "value": 9,
             "count": 2,
-            "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/red/Red_9.png"
+            "inPlay": 1,
+            "image": "./assets/cards/red/Red_9.png"
           },
           {
             "name": "Red Skip",
@@ -192,23 +392,23 @@
             "value": "Skip",
             "count": 2,
             "inPlay": 2,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/red/Red_Skip.png"
+            "image": "./assets/cards/red/Red_Skip.png"
           },
           {
             "name": "Red Reverse",
             "color": "red",
             "value": "Reverse",
             "count": 2,
-            "inPlay": 2,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/red/Red_Reverse.png"
+            "inPlay": 1,
+            "image": "./assets/cards/red/Red_Reverse.png"
           },
           {
             "name": "Red Draw Two",
             "color": "red",
             "value": "Draw Two",
             "count": 2,
-            "inPlay": 1,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/red/Red_Draw.png"
+            "inPlay": 2,
+            "image": "./assets/cards/red/Red_Draw.png"
           }
         ],
         "yellow": [
@@ -218,63 +418,63 @@
             "value": 0,
             "count": 1,
             "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/yellow/Yellow_0.png"
+            "image": "./assets/cards/yellow/Yellow_0.png"
           },
           {
             "name": "Yellow One",
             "color": "yellow",
             "value": 1,
             "count": 2,
-            "inPlay": 1,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/yellow/Yellow_1.png"
+            "inPlay": 0,
+            "image": "./assets/cards/yellow/Yellow_1.png"
           },
           {
             "name": "Yellow Two",
             "color": "yellow",
             "value": 2,
             "count": 2,
-            "inPlay": 1,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/yellow/Yellow_2.png"
+            "inPlay": 0,
+            "image": "./assets/cards/yellow/Yellow_2.png"
           },
           {
             "name": "Yellow Three",
             "color": "yellow",
             "value": 3,
             "count": 2,
-            "inPlay": 1,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/yellow/Yellow_3.png"
+            "inPlay": 2,
+            "image": "./assets/cards/yellow/Yellow_3.png"
           },
           {
             "name": "Yellow Four",
             "color": "yellow",
             "value": 4,
             "count": 2,
-            "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/yellow/Yellow_4.png"
+            "inPlay": 1,
+            "image": "./assets/cards/yellow/Yellow_4.png"
           },
           {
             "name": "Yellow Five",
             "color": "yellow",
             "value": 5,
             "count": 2,
-            "inPlay": 2,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/yellow/Yellow_5.png"
+            "inPlay": 0,
+            "image": "./assets/cards/yellow/Yellow_5.png"
           },
           {
             "name": "Yellow Six",
             "color": "yellow",
             "value": 6,
             "count": 2,
-            "inPlay": 1,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/yellow/Yellow_6.png"
+            "inPlay": 2,
+            "image": "./assets/cards/yellow/Yellow_6.png"
           },
           {
             "name": "Yellow Seven",
             "color": "yellow",
             "value": 7,
             "count": 2,
-            "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/yellow/Yellow_7.png"
+            "inPlay": 1,
+            "image": "./assets/cards/yellow/Yellow_7.png"
           },
           {
             "name": "Yellow Eight",
@@ -282,7 +482,7 @@
             "value": 8,
             "count": 2,
             "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/yellow/Yellow_8.png"
+            "image": "./assets/cards/yellow/Yellow_8.png"
           },
           {
             "name": "Yellow Nine",
@@ -290,7 +490,7 @@
             "value": 9,
             "count": 2,
             "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/yellow/Yellow_9.png"
+            "image": "./assets/cards/yellow/Yellow_9.png"
           },
           {
             "name": "Yellow Skip",
@@ -298,23 +498,23 @@
             "value": "Skip",
             "count": 2,
             "inPlay": 1,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/yellow/Yellow_Skip.png"
+            "image": "./assets/cards/yellow/Yellow_Skip.png"
           },
           {
             "name": "Yellow Reverse",
             "color": "yellow",
             "value": "Reverse",
             "count": 2,
-            "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/yellow/Yellow_Reverse.png"
+            "inPlay": 1,
+            "image": "./assets/cards/yellow/Yellow_Reverse.png"
           },
           {
             "name": "Yellow Draw Two",
             "color": "yellow",
             "value": "Draw Two",
             "count": 2,
-            "inPlay": 1,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/yellow/Yellow_Draw.png"
+            "inPlay": 0,
+            "image": "./assets/cards/yellow/Yellow_Draw.png"
           }
         ],
         "green": [
@@ -323,24 +523,24 @@
             "color": "green",
             "value": 0,
             "count": 1,
-            "inPlay": 1,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/green/Green_0.png"
+            "inPlay": 0,
+            "image": "./assets/cards/green/Green_0.png"
           },
           {
             "name": "Green One",
             "color": "green",
             "value": 1,
             "count": 2,
-            "inPlay": 1,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/green/Green_1.png"
+            "inPlay": 0,
+            "image": "./assets/cards/green/Green_1.png"
           },
           {
             "name": "Green Two",
             "color": "green",
             "value": 2,
             "count": 2,
-            "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/green/Green_2.png"
+            "inPlay": 1,
+            "image": "./assets/cards/green/Green_2.png"
           },
           {
             "name": "Green Three",
@@ -348,63 +548,63 @@
             "value": 3,
             "count": 2,
             "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/green/Green_3.png"
+            "image": "./assets/cards/green/Green_3.png"
           },
           {
             "name": "Green Four",
             "color": "green",
             "value": 4,
             "count": 2,
-            "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/green/Green_4.png"
+            "inPlay": 2,
+            "image": "./assets/cards/green/Green_4.png"
           },
           {
             "name": "Green Five",
             "color": "green",
             "value": 5,
             "count": 2,
-            "inPlay": 1,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/green/Green_5.png"
+            "inPlay": 0,
+            "image": "./assets/cards/green/Green_5.png"
           },
           {
             "name": "Green Six",
             "color": "green",
             "value": 6,
             "count": 2,
-            "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/green/Green_6.png"
+            "inPlay": 2,
+            "image": "./assets/cards/green/Green_6.png"
           },
           {
             "name": "Green Seven",
             "color": "green",
             "value": 7,
             "count": 2,
-            "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/green/Green_7.png"
+            "inPlay": 2,
+            "image": "./assets/cards/green/Green_7.png"
           },
           {
             "name": "Green Eight",
             "color": "green",
             "value": 8,
             "count": 2,
-            "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/green/Green_8.png"
+            "inPlay": 1,
+            "image": "./assets/cards/green/Green_8.png"
           },
           {
             "name": "Green Nine",
             "color": "green",
             "value": 9,
             "count": 2,
-            "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/green/Green_9.png"
+            "inPlay": 2,
+            "image": "./assets/cards/green/Green_9.png"
           },
           {
             "name": "Green Skip",
             "color": "green",
             "value": "Skip",
             "count": 2,
-            "inPlay": 2,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/green/Green_Skip.png"
+            "inPlay": 1,
+            "image": "./assets/cards/green/Green_Skip.png"
           },
           {
             "name": "Green Reverse",
@@ -412,7 +612,7 @@
             "value": "Reverse",
             "count": 2,
             "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/green/Green_Reverse.png"
+            "image": "./assets/cards/green/Green_Reverse.png"
           },
           {
             "name": "Green Draw Two",
@@ -420,7 +620,7 @@
             "value": "Draw Two",
             "count": 2,
             "inPlay": 1,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/green/Green_Draw.png"
+            "image": "./assets/cards/green/Green_Draw.png"
           }
         ],
         "blue": [
@@ -430,7 +630,7 @@
             "value": 0,
             "count": 1,
             "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/blue/Blue_0.png"
+            "image": "./assets/cards/blue/Blue_0.png"
           },
           {
             "name": "Blue One",
@@ -438,7 +638,7 @@
             "value": 1,
             "count": 2,
             "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/blue/Blue_1.png"
+            "image": "./assets/cards/blue/Blue_1.png"
           },
           {
             "name": "Blue Two",
@@ -446,31 +646,31 @@
             "value": 2,
             "count": 2,
             "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/blue/Blue_2.png"
+            "image": "./assets/cards/blue/Blue_2.png"
           },
           {
             "name": "Blue Three",
             "color": "blue",
             "value": 3,
             "count": 2,
-            "inPlay": 1,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/blue/Blue_3.png"
+            "inPlay": 0,
+            "image": "./assets/cards/blue/Blue_3.png"
           },
           {
             "name": "Blue Four",
             "color": "blue",
             "value": 4,
             "count": 2,
-            "inPlay": 1,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/blue/Blue_4.png"
+            "inPlay": 2,
+            "image": "./assets/cards/blue/Blue_4.png"
           },
           {
             "name": "Blue Five",
             "color": "blue",
             "value": 5,
             "count": 2,
-            "inPlay": 1,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/blue/Blue_5.png"
+            "inPlay": 2,
+            "image": "./assets/cards/blue/Blue_5.png"
           },
           {
             "name": "Blue Six",
@@ -478,31 +678,31 @@
             "value": 6,
             "count": 2,
             "inPlay": 1,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/blue/Blue_6.png"
+            "image": "./assets/cards/blue/Blue_6.png"
           },
           {
             "name": "Blue Seven",
             "color": "blue",
             "value": 7,
             "count": 2,
-            "inPlay": 1,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/blue/Blue_7.png"
+            "inPlay": 2,
+            "image": "./assets/cards/blue/Blue_7.png"
           },
           {
             "name": "Blue Eight",
             "color": "blue",
             "value": 8,
             "count": 2,
-            "inPlay": 1,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/blue/Blue_8.png"
+            "inPlay": 0,
+            "image": "./assets/cards/blue/Blue_8.png"
           },
           {
             "name": "Blue Nine",
             "color": "blue",
             "value": 9,
             "count": 2,
-            "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/blue/Blue_9.png"
+            "inPlay": 1,
+            "image": "./assets/cards/blue/Blue_9.png"
           },
           {
             "name": "Blue Skip",
@@ -510,15 +710,15 @@
             "value": "Skip",
             "count": 2,
             "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/blue/Blue_Skip.png"
+            "image": "./assets/cards/blue/Blue_Skip.png"
           },
           {
             "name": "Blue Reverse",
             "color": "blue",
             "value": "Reverse",
             "count": 2,
-            "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/blue/Blue_Reverse.png"
+            "inPlay": 2,
+            "image": "./assets/cards/blue/Blue_Reverse.png"
           },
           {
             "name": "Blue Draw Two",
@@ -526,25 +726,25 @@
             "value": "Draw Two",
             "count": 2,
             "inPlay": 0,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/blue/Blue_Draw.png"
+            "image": "./assets/cards/blue/Blue_Draw.png"
           }
         ],
         "wild": [
           {
             "name": "Wild",
-            "color": "red",
+            "color": "null",
             "value": "Wild",
             "count": 4,
             "inPlay": 1,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/wild/Wild.png"
+            "image": "./assets/cards/wild/Wild.png"
           },
           {
             "name": "Wild Draw Four",
-            "color": "yellow",
+            "color": "blue",
             "value": "Wild Draw Four",
             "count": 4,
-            "inPlay": 3,
-            "image": "./node_modules/discord-uno/src/data/assets/cards/wild/Wild_Draw.png"
+            "inPlay": 2,
+            "image": "./assets/cards/wild/Wild_Draw.png"
           }
         ]
       }
@@ -555,7 +755,7 @@
     "settings": [
       {
         "jumpIns": false,
-        "reverse": false,
+        "reverse": true,
         "seven": false,
         "stacking": false,
         "wildChallenge": false,

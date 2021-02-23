@@ -95,10 +95,14 @@ client.on("message", (message) => {
 			}
 			//console.log(names[parseInt(Math.random() * names.length)])
 			//console.log("branch1");
-			while (typeof localoutput[1] === "undefined") {
+			while (true) {
 				localoutput = query(
 					names[parseInt(Math.random() * names.length)]
 				);
+				if (typeof localoutput[1] !== "undefined") {
+					// * if the person has no quotes
+					break;
+				}
 				localoutput = [];
 			}
 			output = localoutput;

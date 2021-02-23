@@ -162,24 +162,6 @@ client.on("message", async (message) => {
 			await viewTable(message);
 		}
 	}
-	if (command === "unoviewsettings") {
-		if (message.channel.type == "dm" || message.channel.type == "group") {
-			message.channel.send("DMs are not supported!");
-			return;
-		}
-		if (enableuno == 1) {
-			await discordUNO.viewSettings(message);
-		}
-	}
-	if (command === "unosettings") {
-		if (message.channel.type == "dm" || message.channel.type == "group") {
-			message.channel.send("DMs are not supported!");
-			return;
-		}
-		if (enableuno == 1) {
-			await discordUNO.updateSettings(message);
-		}
-	}
 	if (command === "destroy") {
 		// * Killing the bot, only users below can do it
 		let mods = ["EvasiveXkiller", "ikenot", "Araric"];
@@ -201,6 +183,7 @@ client.once("ready", () => {
 });
 
 async function createGame(message) {
+	// * Should be stable
 	if (!discordUNO.settings.get(message.channel.id)) {
 		discordUNO.settings.set(message.channel.id, {
 			jumpIns: false,
@@ -231,6 +214,7 @@ async function createGame(message) {
 		users: [
 			{
 				id: message.author.id,
+				name: message.author.username,
 				hand: createCards(message, 7, false),
 				safe: false,
 			},
@@ -248,6 +232,7 @@ async function createGame(message) {
 }
 
 async function addUser(message) {
+	// * Should be stable
 	const foundGame = discordUNO.storage.get(message.channel.id);
 	if (!foundGame)
 		return message.channel.send(
@@ -263,6 +248,7 @@ async function addUser(message) {
 		);
 	foundGame.users.push({
 		id: message.author.id,
+		name: message.author.username,
 		hand: createCards(message, 7, false),
 		safe: false,
 	});
@@ -328,33 +314,53 @@ async function addUser(message) {
 }
 
 async function removeUser(message) {
+	// * Should be stable
 	const foundGame = discordUNO.storage.get(message.channel.id);
 	if (!foundGame)
-		return message.channel.send("There is no game to leave from, try creating one instead!");
-	if (!foundGame.users.some(data => data.id === message.author.id))
-		return message.channel.send("You can't leave a game that you haven't joined.");
+		return message.channel.send(
+			"There is no game to leave from, try creating one instead!"
+		);
+	if (!foundGame.users.some((data) => data.id === message.author.id))
+		return message.channel.send(
+			"You can't leave a game that you haven't joined."
+		);
 	if (foundGame.creator === message.author.id)
-		return message.channel.send("You can't leave your own game. Try ending the game instead.");
-	const msg = await message.channel.send(`${message.author}, are you sure you want to leave the game?`);
+		return message.channel.send(
+			"You can't leave your own game. Try ending the game instead."
+		);
+	const msg = await message.channel.send(
+		`${message.author}, are you sure you want to leave the game?`
+	);
 	await Promise.all([msg.react("✅"), msg.react("❌")]);
-	const filter = (reaction, user) => user.id === message.author.id && ["✅", "❌"].includes(reaction.emoji.name);
+	const filter = (reaction, user) =>
+		user.id === message.author.id &&
+		["✅", "❌"].includes(reaction.emoji.name);
 	const response = await msg.awaitReactions(filter, { max: 1 });
 	if (response.size > 0) {
 		const reaction = response.first();
 		if (reaction.emoji.name === "✅") {
-			const userHand = foundGame.users.find(user => user.id === message.author.id).hand;
+			const userHand = foundGame.users.find(
+				(user) => user.id === message.author.id
+			).hand;
 			returnCards(message, userHand);
-			foundGame.users.splice(foundGame.users.findIndex(data => data.id === message.author.id), 1);
+			foundGame.users.splice(
+				foundGame.users.findIndex(
+					(data) => data.id === message.author.id
+				),
+				1
+			);
 			discordUNO.storage.set(message.channel.id, foundGame);
-			msg.edit(`${message.author} has been successfully removed from the game.`);
-		}
-		else {
+			msg.edit(
+				`${message.author} has been successfully removed from the game.`
+			);
+		} else {
 			msg.edit("Cancelled removal.");
 		}
 	}
 }
 
 async function viewCards(message) {
+	// * should be stable
 	const foundGame = discordUNO.storage.get(message.channel.id);
 	if (!foundGame)
 		return message.channel.send(
@@ -502,21 +508,15 @@ async function playCard(message) {
 		discordUNO.storage.set(message.channel.id, foundGame);
 		const Embed = new Discord.MessageEmbed()
 			.setDescription(
-				`${
-					message.client.users.cache.get(
-						foundGame.users[lastPlayer].id
-					).tag
-				} played a ${cardObject.name}. It is now ${
-					message.client.users.cache.get(
-						foundGame.users[foundGame.currentPlayer].id
-					).tag
+				`${foundGame.users[lastPlayer].name} played a ${
+					cardObject.name
+				}. It is now ${
+					foundGame.users[foundGame.currentPlayer].name
 				}'s turn.`
 			)
 			.setColor(discordUNO.embedColor)
 			.setAuthor(
-				message.client.users.cache.get(
-					foundGame.users[foundGame.currentPlayer].id
-				).username,
+				foundGame.users[foundGame.currentPlayer].name,
 				message.client.users.cache
 					.get(foundGame.users[foundGame.currentPlayer].id)
 					.displayAvatarURL({ format: "png" })
@@ -546,9 +546,7 @@ async function playCard(message) {
 				.setColor(discordUNO.embedColor)
 				.setDescription(
 					`${message.author} went out with 0 cards! It is now ${
-						message.client.users.cache.get(
-							foundGame.users[foundGame.currentPlayer].id
-						).tag
+						foundGame.users[foundGame.currentPlayer].name
 					}'s turn!`
 				);
 			if (foundGame.users.length > 1)
@@ -607,6 +605,7 @@ async function playCard(message) {
 }
 
 function checkTop(topCard, playedCard) {
+	// * Should be stable
 	if (
 		topCard.color === playedCard.color ||
 		topCard.value === playedCard.value ||
@@ -618,42 +617,51 @@ function checkTop(topCard, playedCard) {
 }
 
 function nextTurn(player, type, settings, storage) {
+	// * should be stable
 	switch (type) {
 		case "normal":
 			if (settings.reverse) {
-				if (player - 1 < 0) return storage.users.length - 1;
-				else return player - 1;
+				if (player - 1 < 0) {
+					return storage.users.length - 1;
+				} else {
+					return player - 1;
+				}
 			} else if (player + 1 >= storage.users.length) {
 				return 0;
 			} else {
 				return player + 1;
 			}
-			return settings.reverse
-				? player - 1 < 0
-					? storage.users.length - 1
-					: player - 1
-				: player + 1 >= storage.users.length
-				? 0
-				: player + 1;
 		case "skip":
 			if (settings.reverse) {
 				if (storage.users.length == 2) {
 					return player;
 				} else {
-					if (player + 2 > storage.users.length) {
-						return 1;
+					if (player - 2 == 0) {
+						return 0;
+					} else if (player - 2 == -1) {
+						return storage.users.length - 1;
+					} else if (player - 2 == -2) {
+						return storage.users.length - 2;
 					} else {
-						player + 2;
+						return player - 2;
 					}
 				}
 			} else {
 				if (storage.users.length == 2) {
 					return player;
 				} else {
-					if (player - 2 < 0) {
-						storage.users.length - 2;
-					} else {
-						player - 2;
+					if (player + 2 == storage.users.length) {
+						return 0;
+					} else if (player + 2 > storage.users.length) {
+						return 1;
+					} else if (player == 0 && storage.users.length >= 3) {
+						return 2;
+					}
+					// else if (player - 2 < 0) {
+					// 	return storage.users.length - 2;
+					// }
+					else {
+						return player + 2;
 					}
 				}
 			}
@@ -661,6 +669,7 @@ function nextTurn(player, type, settings, storage) {
 }
 
 async function viewTable(message) {
+	// * should be stable
 	const foundGame = discordUNO.storage.get(message.channel.id);
 	if (!foundGame)
 		return message.channel.send(
@@ -854,11 +863,7 @@ async function viewTable(message) {
 	ctx.fillStyle = "#ffffff";
 	const WIDTH = ctx.measureText("Turn: ").width;
 	ctx.fillText(
-		`${
-			message.guild.members.cache.get(
-				foundGame.users[foundGame.currentPlayer].id
-			).user.username
-		}`,
+		`${foundGame.users[foundGame.currentPlayer].name}`,
 		WIDTH + 105 + 10,
 		canvas.height - 50
 	);
@@ -868,6 +873,7 @@ async function viewTable(message) {
 }
 
 function draw(message) {
+	// * Should be stable
 	const foundGame = discordUNO.storage.get(message.channel.id);
 	if (!foundGame)
 		return message.channel.send(
@@ -986,6 +992,7 @@ function draw(message) {
 		);
 	return msg.edit("", { embed: Embed });
 }
+
 async function doSpecialCardAbility(message, card, data) {
 	let special = false;
 	const settings = discordUNO.settings.get(message.channel.id);
@@ -1004,8 +1011,8 @@ async function doSpecialCardAbility(message, card, data) {
 		data.users[nextTurn(data.currentPlayer, "normal", settings, data)].DM
 			.messageId
 	);
-	// const skipNextUserChannel = <DMChannel>message.client.channels.cache.get(data.users[this.nextTurn(data.currentPlayer, "skip", settings, data)].DM.channelId)
-	// const skipNextUserMsg = skipNextUserChannel.messages.cache.get(data.users[this.nextTurn(data.currentPlayer, "skip", settings, data)].DM.messageId);
+	// * const skipNextUserChannel = <DMChannel>message.client.channels.cache.get(data.users[this.nextTurn(data.currentPlayer, "skip", settings, data)].DM.channelId)
+	// * const skipNextUserMsg = skipNextUserChannel.messages.cache.get(data.users[this.nextTurn(data.currentPlayer, "skip", settings, data)].DM.messageId);
 	const Embed = new Discord.MessageEmbed().setColor(discordUNO.embedColor);
 	if (card.name.toLowerCase() === "wild draw four") {
 		// Done
@@ -1048,6 +1055,7 @@ async function doSpecialCardAbility(message, card, data) {
 		const nextUser = nextTurn(data.currentPlayer, "normal", settings, data);
 		const user = message.client.users.cache.get(data.users[nextUser].id);
 		let challenge = false;
+		// ! notused wild challenge
 		if (settings.wildChallenge) {
 			const ChallEmbed = new Discord.MessageEmbed()
 				.setColor(discordUNO.embedColor)
@@ -1082,12 +1090,13 @@ async function doSpecialCardAbility(message, card, data) {
 			}
 			const challenged = message.author;
 			const challenger = user;
-			const nextTurnUser = message.guild.members.cache.get(
+			const nextTurnUser = await client.users.fetch(
 				data.users[nextTurn(data.currentPlayer, "skip", settings, data)]
 					.id
-			).user;
+			).username;
 			let challengeWIN;
 			if (challenge) {
+				// ! not implemented
 				if (
 					data.users
 						.find((user) => user.id === challenged.id)
@@ -1184,9 +1193,7 @@ async function doSpecialCardAbility(message, card, data) {
 				settings,
 				data
 			);
-			const nextTurnUser = await message.guild.members.fetch(
-				data.users[nextIndex].id
-			);
+			const nextTurnUser = data.users[nextIndex].name;
 			console.log(nextTurnUser);
 			type = "skip";
 			let newCards = createCards(message, 4, false);
@@ -1204,13 +1211,13 @@ async function doSpecialCardAbility(message, card, data) {
 					nextUser
 				].hand
 					.map((c) => c.name)
-					.join(" - ")}`
+					.join(" | ")}`
 			);
 			nextUserMsg.edit("", { embed: Embed });
 			nextUserMsg.channel.send(`${userToSend}`).then((m) => m.delete());
 			const RegEmbed = new Discord.MessageEmbed()
 				.setDescription(
-					`${message.author.tag} just played a ${card.name} on ${userToSend.tag} and ${userToSend.tag} drew 4 cards. It is now ${nextTurnUser.user.username}\# ${nextTurnUser.user.discriminator}'s turn.`
+					`${message.author.tag} just played a ${card.name} on ${userToSend.tag} and ${userToSend.tag} drew 4 cards. It is now ${nextTurnUser}'s turn.`
 				)
 				.setColor(discordUNO.embedColor)
 				.setAuthor(
@@ -1286,16 +1293,9 @@ async function doSpecialCardAbility(message, card, data) {
 				`${message.author.tag} played a ${
 					card.name
 				} and switched the color to ${color}. It is now ${
-					message.guild.members.cache.get(
-						data.users[
-							nextTurn(
-								data.currentPlayer,
-								"normal",
-								settings,
-								data
-							)
-						].id
-					).user.tag
+					data.users[
+						nextTurn(data.currentPlayer, "normal", settings, data)
+					].name
 				}'s turn`
 			)
 			.setColor(discordUNO.embedColor)
@@ -1341,11 +1341,9 @@ async function doSpecialCardAbility(message, card, data) {
 		const MsgEmbed = new Discord.MessageEmbed()
 			.setDescription(
 				`${message.author.tag} played a ${card.name}. It is now ${
-					message.client.users.cache.get(
-						data.users[
-							nextTurn(data.currentPlayer, type, settings, data)
-						].id
-					).tag
+					data.users[
+						nextTurn(data.currentPlayer, type, settings, data)
+					].name
 				}'s turn`
 			)
 			.setAuthor(
@@ -1384,22 +1382,13 @@ async function doSpecialCardAbility(message, card, data) {
 		const SendEmbed = new Discord.MessageEmbed()
 			.setDescription(
 				`${message.author.tag} skipped ${
-					message.client.users.cache.get(
-						data.users[
-							nextTurn(
-								data.currentPlayer,
-								"normal",
-								settings,
-								data
-							)
-						].id
-					).tag
+					data.users[
+						nextTurn(data.currentPlayer, "normal", settings, data)
+					].name
 				} with a ${card.name}. It is now ${
-					message.client.users.cache.get(
-						data.users[
-							nextTurn(data.currentPlayer, "skip", settings, data)
-						].id
-					).tag
+					data.users[
+						nextTurn(data.currentPlayer, "skip", settings, data)
+					].name
 				}'s turn!`
 			)
 			.setAuthor(
@@ -1420,6 +1409,7 @@ async function doSpecialCardAbility(message, card, data) {
 		message.channel.send("", { embed: SendEmbed });
 	} else if (card.name.toLowerCase().includes("zero")) {
 		// Done
+		// ! not using this card, ignoring
 		if (settings.zero) {
 			type = "normal";
 			special = true;
@@ -1519,6 +1509,7 @@ async function doSpecialCardAbility(message, card, data) {
 		}
 	} else if (card.name.toLowerCase().includes("seven")) {
 		// Done
+		// ! not using this card, ignoring
 		if (settings.seven) {
 			type = "normal";
 			special = true;
@@ -1702,20 +1693,18 @@ async function doSpecialCardAbility(message, card, data) {
 				skippedUser.hand.length
 			} cards.\n\n${skippedUser.hand.map((c) => c.name).join(" | ")}`
 		).setAuthor(
-			message.client.users.cache.get(skippedUser.id).username,
+			skippedUser.username,
 			message.client.users.cache
 				.get(skippedUser.id)
 				.displayAvatarURL({ format: "png" })
 		);
 		nextUserMsg.edit("", { embed: Embed });
 		nextUserChannel.send("Attention.").then((m) => m.delete());
+		let counter = nextTurn(data.currentPlayer, "skip", settings, data);
+		console.log(counter);
 		const SendEmbed = new Discord.MessageEmbed()
 			.setAuthor(
-				message.client.users.cache.get(
-					data.users[
-						nextTurn(data.currentPlayer, "skip", settings, data)
-					].id
-				).username,
+				data.users[counter].name,
 				message.client.users.cache
 					.get(
 						data.users[
@@ -1727,13 +1716,11 @@ async function doSpecialCardAbility(message, card, data) {
 			.setColor(discordUNO.embedColor)
 			.setDescription(
 				`${message.author.tag} played a ${card.name} on ${
-					message.client.users.cache.get(skippedUser.id).tag
+					skippedUser.name
 				}. They drew two cards and it is now ${
-					message.client.users.cache.get(
-						data.users[
-							nextTurn(data.currentPlayer, "skip", settings, data)
-						].id
-					).tag
+					data.users[
+						nextTurn(data.currentPlayer, "skip", settings, data)
+					].name
 				}'s turn!`
 			);
 		message.channel.send("", { embed: SendEmbed });
@@ -1747,6 +1734,7 @@ async function doSpecialCardAbility(message, card, data) {
 	return special;
 }
 async function startGame(message) {
+	// * should be stable
 	const foundGame = discordUNO.storage.get(message.channel.id);
 	if (!foundGame)
 		return message.channel.send(
@@ -1816,6 +1804,7 @@ async function startGame(message) {
 }
 
 function outOfCards(cardType) {
+	// * should be stable
 	for (const card of cardType) {
 		if (card.inPlay < card.count) return false;
 	}
@@ -1823,6 +1812,7 @@ function outOfCards(cardType) {
 }
 
 function createCards(message, amount, topCard) {
+	// ? might overflow?
 	if (!topCard) topCard = false;
 	let counter = 0;
 	let cardHand = [];
@@ -1913,28 +1903,29 @@ function createCards(message, amount, topCard) {
 }
 
 async function returnCards(message, cards) {
+	// * should be stable
 	const gameCards = discordUNO.gameCards.get(message.channel.id);
 	for (const card of cards) {
 		let userdCard;
 		switch (card.color) {
 			case "red":
-				userdCard = gameCards.red.find(c => c.name === card.name);
+				userdCard = gameCards.red.find((c) => c.name === card.name);
 				userdCard.inPlay -= 1;
 				break;
 			case "yellow":
-				userdCard = gameCards.yellow.find(c => c.name === card.name);
+				userdCard = gameCards.yellow.find((c) => c.name === card.name);
 				userdCard.inPlay -= 1;
 				break;
 			case "blue":
-				userdCard = gameCards.blue.find(c => c.name === card.name);
+				userdCard = gameCards.blue.find((c) => c.name === card.name);
 				userdCard.inPlay -= 1;
 				break;
 			case "green":
-				userdCard = gameCards.green.find(c => c.name === card.name);
+				userdCard = gameCards.green.find((c) => c.name === card.name);
 				userdCard.inPlay -= 1;
 				break;
 			case null:
-				userdCard = gameCards.wild.find(c => c.name === card.name);
+				userdCard = gameCards.wild.find((c) => c.name === card.name);
 				userdCard.inPlay -= 1;
 				break;
 		}
@@ -1942,6 +1933,7 @@ async function returnCards(message, cards) {
 }
 
 async function displayWinners(message, foundWinners) {
+	// * should be stable
 	const canvas = canvas_1.default.createCanvas(700, 500);
 	const ctx = canvas.getContext("2d");
 	ctx.fillStyle = "#282a2c";
@@ -2066,7 +2058,9 @@ async function displayWinners(message, foundWinners) {
 	}
 	return canvas.toBuffer("image/png");
 }
+
 async function endGame(message) {
+	// * should be stable
 	const foundGame = discordUNO.storage.get(message.channel.id);
 	if (!foundGame)
 		return message.channel.send(

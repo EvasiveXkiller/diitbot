@@ -5,7 +5,8 @@
   "main": "parent.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ."
+    "start": "node .",
+    "debug": "node .\\thread_games.js"
   },
   "contributors": [
     {
@@ -21,15 +22,20 @@
   "license": "MIT",
   "dependencies": {
     "@discordjs/opus": "^0.4.0",
+    "bufferutil": "^4.0.3",
     "canvas": "^2.6.1",
     "discord-music-player": "^6.4.1",
     "discord-tictactoe": "^2.0.8",
     "discord-uno": "^2.0.21",
     "discord.js": "^12.5.1",
     "discord.js-poll-embed": "^1.0.2",
+    "erlpack": "github:discord/erlpack",
     "fuse.js": "^6.4.6",
+    "libsodium-wrappers": "^0.7.9",
     "lowdb": "^1.0.0",
-    "luxon": "^1.26.0"
+    "luxon": "^1.26.0",
+    "utf-8-validate": "^5.0.4",
+    "zlib-sync": "^0.1.7"
   },
   "devDependencies": {
     "eslint": "^7.20.0"

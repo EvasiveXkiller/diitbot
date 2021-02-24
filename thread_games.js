@@ -1,6 +1,5 @@
+"use strict";
 const Discord = require("discord.js");
-const low = require("lowdb");
-const FileSync = require("lowdb/adapters/FileSync");
 var __importDefault =
 	(this && this.__importDefault) ||
 	function (mod) {
@@ -16,9 +15,6 @@ const discordUNO = {
 	settings: new Discord.Collection(),
 	embedColor: "#FF0000",
 };
-
-const adapter = new FileSync("dbtest.json");
-const db = low(adapter);
 
 const prefix = "$";
 let enableuno = 1;
@@ -110,9 +106,11 @@ client.on("message", async (message) => {
 			return;
 		}
 		if (enableuno == 1) {
-			await playCard(message);
+			await playCard(message).catch((error) => {
+				console.log(error);
+				console.log(discordUNO);
+			});
 			console.log(discordUNO);
-			db.set("rawdata", discordUNO).write();
 		}
 	}
 	if (command === "unoleave") {
@@ -158,7 +156,10 @@ client.on("message", async (message) => {
 			return;
 		}
 		if (enableuno == 1) {
-			await viewTable(message);
+			await viewTable(message).catch((error) => {
+				console.log(error);
+				console.log(discordUNO);
+			});
 		}
 	}
 	if (command === "destroy") {
@@ -749,6 +750,7 @@ async function viewTable(message) {
 		);
 		ctx.closePath();
 		ctx.restore();
+		console.log(foundGame.currentPlayer);
 		if (
 			foundGame.users[i] &&
 			foundGame.users[i].id ===

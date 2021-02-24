@@ -15,7 +15,7 @@ const prefix = "$";
 let queuetoggle = false;
 let songtoggle = false;
 let opstatsmusic = false;
-
+let eventemmitter = false;
 // > class for IPC
 class respond {
 	constructor(restitle, resdata) {
@@ -122,28 +122,32 @@ client.on("message", (message) => {
 					message.channel.send(queueembed).then(() => {
 						opstatsmusic = false;
 					});
-
-					client.player
-						.getQueue(message.guild.id)
-						.on("songChanged", (oldSong, newSong) => {
-							// * change bot status
-							client.user.setPresence({
-								activity: {
-									name: newSong.name,
-									type: "LISTENING",
-								},
+					if (eventemmitter == false) {
+						client.player
+							.getQueue(message.guild.id)
+							.on("songChanged", (oldSong, newSong) => {
+								// * change bot status
+								client.user.setPresence({
+									activity: {
+										name: newSong.name,
+										type: "LISTENING",
+									},
+								});
 							});
-						});
-					client.player.getQueue(message.guild.id).on("end", () => {
-						// * end bot status
-						//console.log("end");
-						client.user.setPresence({
-							activity: {
-								name: "Silence",
-								type: "LISTENING",
-							},
-						});
-					});
+						client.player
+							.getQueue(message.guild.id)
+							.on("end", () => {
+								// * end bot status
+								//console.log("end");
+								client.user.setPresence({
+									activity: {
+										name: "Silence",
+										type: "LISTENING",
+									},
+								});
+							});
+						eventemmitter = true;
+					}
 				})
 				.catch((err) => {
 					// * if search engine went wrong
@@ -848,6 +852,11 @@ client.on("voiceStateUpdate", () => {
 	// * Change bot status if bot leaves the voice channel
 	let botchannel = client.voice.connections.toJSON();
 	if (botchannel.length == 0) {
+		queuetoggle = false;
+		songtoggle = false;
+		eventemmitter = false;
+		songtoggle = false;
+		opstatsmusic = false;
 		client.user.setPresence({
 			status: "dnd",
 			activity: {

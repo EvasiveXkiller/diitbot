@@ -12,7 +12,6 @@ const Cards_1 = require("./Cards");
 const discordUNO = {
 	storage: new Discord.Collection(),
 	gameCards: new Discord.Collection(),
-	gameCards: new Discord.Collection(),
 	winners: new Discord.Collection(),
 	settings: new Discord.Collection(),
 	embedColor: "#FF0000",
@@ -2110,7 +2109,7 @@ function UNO(message) {
 	const user = message.mentions.users.first() || message.author;
 	const Embed = new Discord.MessageEmbed()
 		.setAuthor(user.username, user.displayAvatarURL({ format: "png" }))
-		.setColor(this.embedColor);
+		.setColor(discordUNO.embedColor);
 	if (user.id === message.author.id) {
 		if (foundGame.users.find((u) => u.id === user.id).safe)
 			return message.channel.send(
@@ -2132,7 +2131,7 @@ function UNO(message) {
 		const authorData = foundGame.users.find(
 			(u) => u.id === message.author.id
 		);
-		const newCards = this.createCards(message, 2, false);
+		const newCards = createCards(message, 2, false);
 		if (playerData.safe) {
 			return message.channel.send(
 				`OOPS! Looks like that person was safe ${message.author}!`
@@ -2140,7 +2139,7 @@ function UNO(message) {
 		} else {
 			if (playerData.hand.length === 1) {
 				newCards.forEach((c) => playerData.hand.push(c));
-				this.storage.set(message.channel.id, foundGame);
+				discordUNO.storage.set(message.channel.id, foundGame);
 				const channel = message.client.channels.cache.get(
 					foundGame.users.find((u) => u.id === user.id).DM.channelId
 				);

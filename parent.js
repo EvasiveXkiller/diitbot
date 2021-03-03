@@ -53,9 +53,15 @@ function launchmain() {
 		if (data.title == "reset") {
 			console.log("thread_main: ");
 			console.log(data);
-			thread_main.send("userkill");
-			thread_games.send("userkill");
-			thread_music.send("userkill");
+			if(thread_games != null) {
+				thread_games.send("userkill");
+			}
+			if(thread_main != null) {
+				thread_main.send("userkill");
+			}
+			if(thread_music != null) {
+				thread_music.send("userkill");
+			}
 			userkill = true;
 		}
 	});

@@ -15,7 +15,6 @@ const prefix = "$";
 let queuetoggle = false;
 let songtoggle = false;
 let opstatsmusic = false;
-let eventemmitter = false;
 // > class for IPC
 class respond {
 	constructor(restitle, resdata) {
@@ -23,6 +22,23 @@ class respond {
 		this.respond = resdata;
 	}
 }
+
+client.player.on('songChanged', (message , newSong, oldSong) => {
+	client.user.setPresence({
+		activity: {
+			name: newSong.name,
+			type: "LISTENING",
+		},
+	});
+})
+.on('queueEnd', () => {
+	client.user.setPresence({
+		activity: {
+			name: "Silence",
+			type: "LISTENING",
+		},
+	});
+})
 
 client.on("message", (message) => {
 	if (!message.content.startsWith(prefix) || message.author.bot) {
@@ -58,7 +74,7 @@ client.on("message", (message) => {
 			opstatsmusic = false;
 			return;
 		}
-		let isPlaying = client.player.isPlaying(message.guild.id);
+		let isPlaying = client.player.isPlaying(message);
 		if (!validURL(userinput)) {
 			// * if user uses a search term
 			let userfindembed = new Discord.MessageEmbed({
@@ -100,12 +116,12 @@ client.on("message", (message) => {
 				return;
 			}
 			client.player
-				.addToQueue(message.guild.id, userinput, {
+				.addToQueue(message, userinput, {
 					// * Add the song to queue
 					sortBy: "relevance",
 				})
 				.then((song) => {
-					let preprocess = song.song;
+					let preprocess = song;
 					//console.log(preprocess);
 					let queueembed = new Discord.MessageEmbed({
 						description:
@@ -122,32 +138,6 @@ client.on("message", (message) => {
 					message.channel.send(queueembed).then(() => {
 						opstatsmusic = false;
 					});
-					if (eventemmitter == false) {
-						client.player
-							.getQueue(message.guild.id)
-							.on("songChanged", (oldSong, newSong) => {
-								// * change bot status
-								client.user.setPresence({
-									activity: {
-										name: newSong.name,
-										type: "LISTENING",
-									},
-								});
-							});
-						client.player
-							.getQueue(message.guild.id)
-							.on("end", () => {
-								// * end bot status
-								//console.log("end");
-								client.user.setPresence({
-									activity: {
-										name: "Silence",
-										type: "LISTENING",
-									},
-								});
-							});
-						eventemmitter = true;
-					}
 				})
 				.catch((err) => {
 					// * if search engine went wrong
@@ -180,13 +170,13 @@ client.on("message", (message) => {
 				return;
 			}
 			client.player
-				.play(message.member.voice.channel, userinput, {
+				.play(message, userinput, {
 					// * plays the song immediately when the queue is empty
 					sortBy: "relevance",
 				})
 				.then((song) => {
 					try {
-						let preprocess = song.song;
+						let preprocess = song;
 						//console.log(preprocess.name);
 						client.user.setPresence({
 							status: "dnd",
@@ -287,7 +277,7 @@ client.on("message", (message) => {
 			message.channel.send(volumerror);
 			return;
 		}
-		client.player.setVolume(message.guild.id, parseInt(userinput));
+		client.player.setVolume(message, parseInt(userinput));
 		let volumesuccess = new Discord.MessageEmbed({
 			description: "Volume is set to " + userinput + "%",
 			footer: {
@@ -347,7 +337,7 @@ client.on("message", (message) => {
 			opstatsmusic = false;
 			return;
 		} else {
-			client.player.stop(message.guild.id); // * Stop the song and deletes the queue
+			client.player.stop(message); // * Stop the song and deletes the queue
 			client.user
 				.setPresence({
 					// * Set the bot status
@@ -406,7 +396,7 @@ client.on("message", (message) => {
 			message.channel.send(diffchannelembed);
 			return;
 		}
-		songtoggle = client.player.toggleLoop(message.guild.id);
+		songtoggle = client.player.toggleLoop(message);
 		if (songtoggle) {
 			let tempembed = new Discord.MessageEmbed({
 				description: "Repeat Current track: True",
@@ -465,7 +455,7 @@ client.on("message", (message) => {
 			message.channel.send(diffchannelembed);
 			return;
 		}
-		queuetoggle = client.player.toggleQueueLoop(message.guild.id);
+		queuetoggle = client.player.toggleQueueLoop(message);
 		if (queuetoggle) {
 			let tempembed = new Discord.MessageEmbed({
 				description: "Repeat Queue: True",
@@ -527,7 +517,7 @@ client.on("message", (message) => {
 			message.channel.send(diffchannelembed);
 			return;
 		}
-		client.player.skip(message.guild.id); // * Skips the track
+		client.player.skip(message); // * Skips the track
 		let skipembed = new Discord.MessageEmbed({
 			description: "Skipping...",
 			footer: {
@@ -546,7 +536,7 @@ client.on("message", (message) => {
 			opstatsmusic = false;
 			return;
 		}
-		let queue = client.player.getQueue(message.guild.id);
+		let queue = client.player.getQueue(message);
 		if (!queue) {
 			let queueempty = new Discord.MessageEmbed({
 				description: "No more songs in queue bruh",
@@ -558,7 +548,7 @@ client.on("message", (message) => {
 			return;
 		}
 		let rawq =
-			"\n` Queue:\n" +
+			"\n`Queue:\n" +
 			queue.songs
 				.map((song, i) => {
 					return `${i === 0 ? "Now Playing" : `#${i + 1}`} - ${
@@ -576,7 +566,7 @@ client.on("message", (message) => {
 		message.channel.send(
 			rawq +
 				"\n\nCurrent Song Progress\n`" +
-				client.player.createProgressBar(message.guild.id, 20) +
+				client.player.createProgressBar(message, 20) +
 				"`" +
 				"\n" +
 				state
@@ -638,9 +628,9 @@ client.on("message", (message) => {
 			);
 			return;
 		}
-		client.player.remove(message.guild.id, SongID);
+		client.player.remove(message, SongID);
 		message.channel.send("Removed song " + userinput + " from the Queue!");
-		let queue = client.player.getQueue(message.guild.id);
+		let queue = client.player.getQueue(message);
 		message.channel.send(
 			// * Get the current queue track
 			"`Queue:\n" +
@@ -712,7 +702,7 @@ client.on("message", (message) => {
 			message.channel.send(seekerr);
 			return;
 		}
-		client.player.seek(message.guild.id, parseInt(userinput * 1000));
+		client.player.seek(message, parseInt(userinput * 1000));
 		let seeksuccessembed = new Discord.MessageEmbed({
 			description: "Seeked to " + msToTime(userinput * 1000),
 			footer: {
@@ -783,7 +773,7 @@ client.on("message", (message) => {
 					text: "International music bot",
 				},
 			});
-			client.player.stop(message.guild.id); // * stops the bot before disconnecting
+			client.player.stop(message); // * stops the bot before disconnecting
 			message.channel.send(disembed).then(() => {
 				if (message.member.voice.channel) {
 					message.member.voice.channel.leave();
@@ -854,7 +844,6 @@ client.on("voiceStateUpdate", () => {
 	if (botchannel.length == 0) {
 		queuetoggle = false;
 		songtoggle = false;
-		eventemmitter = false;
 		songtoggle = false;
 		opstatsmusic = false;
 		client.user.setPresence({

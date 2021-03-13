@@ -23,9 +23,9 @@
   "dependencies": {
     "@discordjs/opus": "^0.4.0",
     "bufferutil": "^4.0.3",
-    "canvas": "^2.6.1",
-    "discord-music-player": "^6.4.1",
-    "discord-tictactoe": "^2.0.8",
+    "canvas": "^2.7.0",
+    "discord-music-player": "^7.0.0",
+    "discord-tictactoe": "^2.1.0",
     "discord-uno": "^2.0.21",
     "discord.js": "^12.5.1",
     "discord.js-poll-embed": "^1.0.2",
@@ -35,10 +35,9 @@
     "lowdb": "^1.0.0",
     "luxon": "^1.26.0",
     "utf-8-validate": "^5.0.4",
-    "ytdl-core": "^4.5.0",
     "zlib-sync": "^0.1.7"
   },
   "devDependencies": {
-    "eslint": "^7.20.0"
+    "eslint": "^7.22.0"
   }
 }

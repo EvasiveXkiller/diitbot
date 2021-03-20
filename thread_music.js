@@ -23,22 +23,36 @@ class respond {
 	}
 }
 
-client.player.on('songChanged', (message , newSong, oldSong) => {
-	client.user.setPresence({
-		activity: {
-			name: newSong.name,
-			type: "LISTENING",
-		},
+client.player
+	.on("songChanged", (message, newSong, oldSong) => {
+		client.user.setPresence({
+			activity: {
+				name: newSong.name,
+				type: "LISTENING",
+			},
+		});
+	})
+	.on("queueEnd", () => {
+		client.user.setPresence({
+			activity: {
+				name: "Silence",
+				type: "LISTENING",
+			},
+		});
+	})
+	.on("error", (message, error) => {
+		switch (error) {
+			case "LiveUnsupported":
+				let liveeeror = new Discord.MessageEmbed({
+					description:
+						"Live Vidoes are not supported, skipping current song",
+					footer: {
+						text: "International music bot",
+					},
+				});
+				message.channel.send(liveeeror);
+		}
 	});
-})
-.on('queueEnd', () => {
-	client.user.setPresence({
-		activity: {
-			name: "Silence",
-			type: "LISTENING",
-		},
-	});
-})
 
 client.on("message", (message) => {
 	if (!message.content.startsWith(prefix) || message.author.bot) {

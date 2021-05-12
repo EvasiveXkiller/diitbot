@@ -168,8 +168,7 @@ client.on("message", (message) => {
 					"Name : " + dbinput[0] + "\n" + "Quote: " + dbinput[1],
 				color: "FF9900",
 				footer: {
-					text:
-						"Are you sure to execute command? Type [ cancel ] to abort",
+					text: "Are you sure to execute command? Type [ cancel ] to abort",
 				},
 			});
 			message.channel.send(embedcomfirm);
@@ -364,8 +363,7 @@ client.on("message", (message) => {
 					"Reset Command Failed! \n The reset command is :\n `$reset %reset%`",
 				color: "RED",
 				footer: {
-					text:
-						"Ensure that a reset is absolutely necessary before running",
+					text: "Ensure that a reset is absolutely necessary before running",
 				},
 			});
 			reseterr.setTimestamp();
@@ -425,8 +423,7 @@ client.on("message", (message) => {
 			.addFields(
 				{
 					name: "Official Docs",
-					value:
-						"https://github.com/EvasiveXkiller/diitbot-public/blob/main/README.md",
+					value: "https://github.com/EvasiveXkiller/diitbot-public/blob/main/README.md",
 				},
 				{ name: "Server Rules", value: "Rules: " },
 				{
@@ -450,8 +447,7 @@ client.on("message", (message) => {
 			)
 			.addFields({
 				name: "Bot Contributers",
-				value:
-					"Carlson(Database Implementer)\t Jack(Database Coder) \t Ken(Initiator) \t\t\t\t\t\t\t\t Yong Xian(Coder) ",
+				value: "Carlson(Database Implementer)\t Jack(Database Coder) \t Ken(Initiator) \t\t\t\t\t\t\t\t Yong Xian(Coder) ",
 			})
 			.setFooter(
 				"Why are you reading this?",
@@ -476,9 +472,8 @@ client.on("message", (message) => {
 		console.log(closeMatch[0].item.link);
 		message.channel.send(closeMatch[0].item.link);
 	}
+	// * V.4 added 2 new blocks of code one which are $timetable tomorrow and $timetable yesterday
 	if (command === "timetable") {
-		// > jack
-		// * V.2 allows user to type $timetable today to print out today's schedule. Also allows user to type $timetable / $timetable help
 		let userinput = message.content
 			.replace("$timetable", "")
 			.trim()
@@ -490,8 +485,7 @@ client.on("message", (message) => {
 				description:
 					"Type $timetable [insert a weekday here].\n\n Note that we only have Monday-Friday",
 				footer: {
-					text:
-						"Don't try to be funny and put a weekend there. I know you want to but don't. It won't do anything.",
+					text: "Don't try to be funny and put a weekend there. I know you want to but don't. It won't do anything.",
 				},
 			});
 			message.channel.send(embed);
@@ -499,11 +493,11 @@ client.on("message", (message) => {
 			// this is if the user types $timetable today
 			let datetoday = DateTime.local(); // gets today's date
 			let daytoday = datetoday.toFormat("EEEE").toLowerCase(); //changes date to day e.g Wednesday
-			console.log(typeof daytoday);
+			//console.log(typeof daytoday);
 			if (daytoday === "saturday" || daytoday === "sunday") {
 				message.channel.send("We don't have class on weekends!");
 			} else {
-				let preprocess = Object.entries(db.get(daytoday).value());
+				let preprocess = Object.entries(dbjack.get(daytoday).value());
 				let sendcurrent = "\n";
 
 				for (let index = 0; index < preprocess.length; index++) {
@@ -522,6 +516,58 @@ client.on("message", (message) => {
 				});
 				message.channel.send(embed);
 			}
+		} else if (userinput === "tomorrow") {
+			// this is if the user types $timetable tomorrow
+			let datetomorrow = DateTime.local().plus({ days: 1 }); // gets tomorrow's date
+			let daytomorrow = datetomorrow.toFormat("EEEE").toLowerCase(); //changes date to day e.g Wednesday
+			if (daytomorrow === "saturday" || daytomorrow === "sunday") {
+				message.channel.send("We don't have class on weekends!");
+			} else {
+				let preprocess = Object.entries(dbjack.get(daytomorrow).value());
+				let sendcurrent = "\n";
+
+				for (let index = 0; index < preprocess.length; index++) {
+					//apphends the stuff in the array to become one big string
+					sendcurrent += preprocess[index].toString() + "\n\n";
+				}
+
+				let rawstring = daytomorrow + " Schedule\n\n";
+				let embed = new Discord.MessageEmbed({
+					//for the discord embed message
+					title: toTitleCase(rawstring),
+					description: sendcurrent,
+					footer: {
+						text: "Good luck for the day!",
+					},
+				});
+				message.channel.send(embed);
+			}
+		} else if (userinput === "yesterday") {
+			// this is if the user types $timetable yesterday
+			let dateyesterday = DateTime.local().minus({ days: 1 }); // gets testerday's date
+			let dayyesterday = dateyesterday.toFormat("EEEE").toLowerCase(); //changes date to day e.g Wednesday
+			if (dayyesterday === "saturday" || dayyesterday === "sunday") {
+				message.channel.send("We don't have class on weekends!");
+			} else {
+				let preprocess = Object.entries(dbjack.get(dayyesterday).value());
+				let sendcurrent = "\n";
+
+				for (let index = 0; index < preprocess.length; index++) {
+					//apphends the stuff in the array to become one big string
+					sendcurrent += preprocess[index].toString() + "\n\n";
+				}
+
+				let rawstring = dayyesterday + " Schedule\n\n";
+				let embed = new Discord.MessageEmbed({
+					//for the discord embed message
+					title: toTitleCase(rawstring),
+					description: sendcurrent,
+					footer: {
+						text: "Good luck for the day!",
+					},
+				});
+				message.channel.send(embed);
+			}
 		} else if (
 			userinput !== "today" ||
 			userinput !== "" ||
@@ -530,7 +576,9 @@ client.on("message", (message) => {
 			//this is if the user types $timetable [weekday]
 			let arraychecker = Object.keys(dbjack.getState()); //this checks the user's input to prevent them from typing any other random stuff
 			if (!arraychecker.includes(userinput)) {
-				message.channel.send("Please check your syntax!");
+				message.channel.send(
+					"Please check your syntax! (We don't have timetables for Saturday or Sunday!)"
+				);
 				return;
 			}
 			let preprocess = Object.entries(dbjack.get(userinput).value()); //if user enters $timetable wednesday this will pull out the wednesday object from database
@@ -718,8 +766,7 @@ client.on("message", (message) => {
 				checkDate.toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS),
 			color: "FF9900",
 			footer: {
-				text:
-					"Are you sure to execute command? Type [ cancel ] to abort",
+				text: "Are you sure to execute command? Type [ cancel ] to abort",
 			},
 		});
 		message.channel.send(comfirmembed).then(() => {
@@ -806,8 +853,7 @@ client.on("message", (message) => {
 				"Use command above, replace the parameters,to start the vote",
 			color: "GREEN",
 			footer: {
-				text:
-					"You can copy and paste the code for faster poll creation",
+				text: "You can copy and paste the code for faster poll creation",
 			},
 		});
 		message.channel.send(voteemebed);
@@ -856,8 +902,7 @@ client.on("message", (message) => {
 			.addFields(
 				{
 					name: "\t<:insta:803124128194101248>  \t",
-					value:
-						"[Instagram](https://www.instagram.com/kenn_tong/?hl=en)",
+					value: "[Instagram](https://www.instagram.com/kenn_tong/?hl=en)",
 					inline: true,
 				},
 				{
@@ -893,8 +938,7 @@ client.on("message", (message) => {
 			.addFields(
 				{
 					name: "\t<:insta:803124128194101248>  \t",
-					value:
-						"[Instagram](https://www.instagram.com/jack_tok_/?hl=en)",
+					value: "[Instagram](https://www.instagram.com/jack_tok_/?hl=en)",
 					inline: true,
 				},
 				{
@@ -914,8 +958,7 @@ client.on("message", (message) => {
 				},
 				{
 					name: "\t<:steam:803166421797699594> \t",
-					value:
-						"[Steam](https://steamcommunity.com/profiles/76561198129537202)",
+					value: "[Steam](https://steamcommunity.com/profiles/76561198129537202)",
 					inline: true,
 				}
 			)
@@ -933,8 +976,7 @@ client.on("message", (message) => {
 			.setColor("RANDOM")
 			.addFields({
 				name: "\t<:insta:803124128194101248>  \t",
-				value:
-					"[Instagram](https://www.instagram.com/_yong_xian_/?hl=en)",
+				value: "[Instagram](https://www.instagram.com/_yong_xian_/?hl=en)",
 				inline: true,
 			})
 			.setThumbnail(
@@ -952,20 +994,17 @@ client.on("message", (message) => {
 			.addFields(
 				{
 					name: "\t<:facebook:803124115354812438>  \t",
-					value:
-						"[Facebook](https://www.facebook.com/carlson.X.Destroyed)",
+					value: "[Facebook](https://www.facebook.com/carlson.X.Destroyed)",
 					inline: true,
 				},
 				{
 					name: "\t<:insta:803124128194101248>  \t",
-					value:
-						"[Instagram](https://www.instagram.com/carlson.x.destroyed/?hl=en)",
+					value: "[Instagram](https://www.instagram.com/carlson.x.destroyed/?hl=en)",
 					inline: true,
 				},
 				{
 					name: "\t<:steam:803166421797699594> \t",
-					value:
-						"[Steam](https://steamcommunity.com/id/theuniquetechnix)",
+					value: "[Steam](https://steamcommunity.com/id/theuniquetechnix)",
 					inline: true,
 				},
 				{
@@ -975,8 +1014,7 @@ client.on("message", (message) => {
 				},
 				{
 					name: "\t<:youtube:803173627759296552> \t",
-					value:
-						"[YouTube](https://www.youtube.com/channel/UCF_5rEee3uoEF_MVNaMeNAA)",
+					value: "[YouTube](https://www.youtube.com/channel/UCF_5rEee3uoEF_MVNaMeNAA)",
 					inline: true,
 				}
 			)
@@ -1004,8 +1042,7 @@ client.on("message", (message) => {
 				},
 				{
 					name: "\t<:steam:803166421797699594> \t",
-					value:
-						"[Steam](https://steamcommunity.com/profiles/76561198349598005)",
+					value: "[Steam](https://steamcommunity.com/profiles/76561198349598005)",
 					inline: true,
 				}
 			)
@@ -1026,14 +1063,12 @@ client.on("message", (message) => {
 			.addFields(
 				{
 					name: "\t<:insta:803124128194101248>  \t",
-					value:
-						"[Instagram](https://www.instagram.com/jun.karls/?hl=en)",
+					value: "[Instagram](https://www.instagram.com/jun.karls/?hl=en)",
 					inline: true,
 				},
 				{
 					name: "\t<:steam:803166421797699594> \t",
-					value:
-						"[Steam](https://steamcommunity.com/profiles/76561198253612891)",
+					value: "[Steam](https://steamcommunity.com/profiles/76561198253612891)",
 					inline: true,
 				},
 				{
@@ -1057,14 +1092,12 @@ client.on("message", (message) => {
 			.addFields(
 				{
 					name: "\t<:facebook:803124115354812438>  \t",
-					value:
-						"[Facebook](https://www.facebook.com/momo.lee.754365)",
+					value: "[Facebook](https://www.facebook.com/momo.lee.754365)",
 					inline: true,
 				},
 				{
 					name: "\t<:insta:803124128194101248>  \t",
-					value:
-						"[Instagram](https://www.instagram.com/iliketoeatdou/?hl=en)",
+					value: "[Instagram](https://www.instagram.com/iliketoeatdou/?hl=en)",
 					inline: true,
 				},
 				{
@@ -1074,8 +1107,7 @@ client.on("message", (message) => {
 				},
 				{
 					name: "\t<:youtube:803173627759296552> \t",
-					value:
-						"[YouTube](https://www.youtube.com/channel/UCeLZJqAhND7_pW7wEcLWLiA)",
+					value: "[YouTube](https://www.youtube.com/channel/UCeLZJqAhND7_pW7wEcLWLiA)",
 					inline: true,
 				}
 			)
@@ -1093,14 +1125,12 @@ client.on("message", (message) => {
 			.addFields(
 				{
 					name: "\t<:facebook:803124115354812438>  \t",
-					value:
-						"[Facebook](https://www.facebook.com/katkatweerose.tien)",
+					value: "[Facebook](https://www.facebook.com/katkatweerose.tien)",
 					inline: true,
 				},
 				{
 					name: "\t<:insta:803124128194101248>  \t",
-					value:
-						"[Instagram](https://www.instagram.com/katherinetienn/?hl=en)",
+					value: "[Instagram](https://www.instagram.com/katherinetienn/?hl=en)",
 					inline: true,
 				},
 				{
@@ -1133,14 +1163,12 @@ client.on("message", (message) => {
 			.addFields(
 				{
 					name: "\t<:facebook:803124115354812438>  \t",
-					value:
-						"[Facebook](https://www.facebook.com/ngmeiling.michelle)",
+					value: "[Facebook](https://www.facebook.com/ngmeiling.michelle)",
 					inline: true,
 				},
 				{
 					name: "\t<:insta:803124128194101248>  \t",
-					value:
-						"[Instagram](https://www.instagram.com/_michelle_ng/?hl=en)",
+					value: "[Instagram](https://www.instagram.com/_michelle_ng/?hl=en)",
 					inline: true,
 				},
 				{
@@ -1168,14 +1196,12 @@ client.on("message", (message) => {
 			.addFields(
 				{
 					name: "\t<:facebook:803124115354812438>  \t",
-					value:
-						"[Facebook](https://www.facebook.com/profile.php?id=100013145261662)",
+					value: "[Facebook](https://www.facebook.com/profile.php?id=100013145261662)",
 					inline: true,
 				},
 				{
 					name: "\t<:insta:803124128194101248>  \t",
-					value:
-						"[Instagram](https://www.instagram.com/ivanwoy/?hl=en)",
+					value: "[Instagram](https://www.instagram.com/ivanwoy/?hl=en)",
 					inline: true,
 				},
 				{
@@ -1208,8 +1234,7 @@ client.on("message", (message) => {
 				},
 				{
 					name: "\t<:insta:803124128194101248>  \t",
-					value:
-						"[Instagram](https://www.instagram.com/pavan_jassal/?hl=en)",
+					value: "[Instagram](https://www.instagram.com/pavan_jassal/?hl=en)",
 					inline: true,
 				},
 				{
@@ -1219,8 +1244,7 @@ client.on("message", (message) => {
 				},
 				{
 					name: "\t<:twitch:803166637477855243> \t",
-					value:
-						"[Twitch](https://www.twitch.tv/informal_killer/about)",
+					value: "[Twitch](https://www.twitch.tv/informal_killer/about)",
 					inline: true,
 				}
 			)
@@ -1239,14 +1263,12 @@ client.on("message", (message) => {
 			.addFields(
 				{
 					name: "\t<:facebook:803124115354812438>  \t",
-					value:
-						"[Facebook](https://www.facebook.com/pandalung.sheila)",
+					value: "[Facebook](https://www.facebook.com/pandalung.sheila)",
 					inline: true,
 				},
 				{
 					name: "\t<:insta:803124128194101248>  \t",
-					value:
-						"[Instagram](https://www.instagram.com/sheila__1017/?hl=en)",
+					value: "[Instagram](https://www.instagram.com/sheila__1017/?hl=en)",
 					inline: true,
 				},
 				{
@@ -1285,8 +1307,7 @@ client.on("message", (message) => {
 				},
 				{
 					name: "\t<:insta:803124128194101248>  \t",
-					value:
-						"[Instagram](https://www.instagram.com/wchanee_/?hl=en)",
+					value: "[Instagram](https://www.instagram.com/wchanee_/?hl=en)",
 					inline: true,
 				},
 				{
@@ -1332,8 +1353,7 @@ client.on("message", (message) => {
 				},
 				{
 					name: "\t<:insta:803124128194101248>  \t",
-					value:
-						"[Instagram](https://www.instagram.com/yi_jiez/?hl=en)",
+					value: "[Instagram](https://www.instagram.com/yi_jiez/?hl=en)",
 					inline: true,
 				},
 				{
@@ -1372,8 +1392,7 @@ client.on("message", (message) => {
 				},
 				{
 					name: "\t<:insta:803124128194101248>  \t",
-					value:
-						"[Instagram](https://www.instagram.com/khowe__01/?hl=en)",
+					value: "[Instagram](https://www.instagram.com/khowe__01/?hl=en)",
 					inline: true,
 				},
 				{
@@ -1397,14 +1416,12 @@ client.on("message", (message) => {
 			.addFields(
 				{
 					name: "\t<:facebook:803124115354812438>  \t",
-					value:
-						"[Facebook](https://www.facebook.com/dennis.tan.58910)",
+					value: "[Facebook](https://www.facebook.com/dennis.tan.58910)",
 					inline: true,
 				},
 				{
 					name: "\t<:insta:803124128194101248>  \t",
-					value:
-						"[Instagram](https://www.instagram.com/dennis_tan31/?hl=en)",
+					value: "[Instagram](https://www.instagram.com/dennis_tan31/?hl=en)",
 					inline: true,
 				},
 				{
@@ -1424,8 +1441,7 @@ client.on("message", (message) => {
 				},
 				{
 					name: "\t<:steam:803166421797699594> \t",
-					value:
-						"[Steam](https://steamcommunity.com/profiles/76561198264497133)",
+					value: "[Steam](https://steamcommunity.com/profiles/76561198264497133)",
 					inline: true,
 				}
 			)
@@ -1448,8 +1464,7 @@ client.on("message", (message) => {
 				},
 				{
 					name: "\t<:insta:803124128194101248>  \t",
-					value:
-						"[Instagram](https://www.instagram.com/yukilow0615/?hl=en)",
+					value: "[Instagram](https://www.instagram.com/yukilow0615/?hl=en)",
 					inline: true,
 				},
 				{
@@ -1472,8 +1487,7 @@ client.on("message", (message) => {
 			.addFields(
 				{
 					name: "\t<:insta:803124128194101248>  \t",
-					value:
-						"[Instagram](https://www.instagram.com/chixw_2907/?hl=en)",
+					value: "[Instagram](https://www.instagram.com/chixw_2907/?hl=en)",
 					inline: true,
 				},
 				{
@@ -1496,8 +1510,7 @@ client.on("message", (message) => {
 			.addFields(
 				{
 					name: "\t<:insta:803124128194101248>  \t",
-					value:
-						"[Instagram](https://www.instagram.com/vviviennnnn_yaan/?hl=en)",
+					value: "[Instagram](https://www.instagram.com/vviviennnnn_yaan/?hl=en)",
 					inline: true,
 				},
 				{
@@ -1520,14 +1533,12 @@ client.on("message", (message) => {
 			.addFields(
 				{
 					name: "\t<:insta:803124128194101248>  \t",
-					value:
-						"[Instagram](https://www.instagram.com/victorchung.jpg/?hl=en)",
+					value: "[Instagram](https://www.instagram.com/victorchung.jpg/?hl=en)",
 					inline: true,
 				},
 				{
 					name: "\t<:steam:803166421797699594> \t",
-					value:
-						"[Steam](https://steamcommunity.com/id/victorchungmp4)",
+					value: "[Steam](https://steamcommunity.com/id/victorchungmp4)",
 					inline: true,
 				}
 			)

@@ -388,18 +388,18 @@ client.on("message", (message) => {
 			.setTitle("The DIIT Service Board")
 			.setDescription(
 				"💠\t " +
-					"description - To display server description and bot credits \n" +
-					"📚\t " +
-					"todayisday - To display today schedule\n" +
-					"😏\t " +
-					"gif - To display certain member gif \n" +
-					"💬\t " +
-					"iconic - To display iconic quotes among the members \n" +
-					"👥\t " +
-					"profile - To display certain DIIT member`s profile \n" +
-					"📊\t " +
-					"timetable - To display current timetable \n" +
-					"For syntax please refer to our [GitHub](https://github.com/EvasiveXkiller/diitbot-public/blob/main/README.md) page"
+				"description - To display server description and bot credits \n" +
+				"📚\t " +
+				"todayisday - To display today schedule\n" +
+				"😏\t " +
+				"gif - To display certain member gif \n" +
+				"💬\t " +
+				"iconic - To display iconic quotes among the members \n" +
+				"👥\t " +
+				"profile - To display certain DIIT member`s profile \n" +
+				"📊\t " +
+				"timetable - To display current timetable \n" +
+				"For syntax please refer to our [GitHub](https://github.com/EvasiveXkiller/diitbot-public/blob/main/README.md) page"
 			);
 		message.channel.send(example);
 	}
@@ -472,7 +472,7 @@ client.on("message", (message) => {
 		console.log(closeMatch[0].item.link);
 		message.channel.send(closeMatch[0].item.link);
 	}
-	// * V.4 added 2 new blocks of code one which are $timetable tomorrow and $timetable yesterday
+	// * V.5 added 1 new block of code that is for the $timetable all which outputs all of the timetables but in 5 separate messages
 	if (command === "timetable") {
 		let userinput = message.content
 			.replace("$timetable", "")
@@ -523,7 +523,9 @@ client.on("message", (message) => {
 			if (daytomorrow === "saturday" || daytomorrow === "sunday") {
 				message.channel.send("We don't have class on weekends!");
 			} else {
-				let preprocess = Object.entries(dbjack.get(daytomorrow).value());
+				let preprocess = Object.entries(
+					dbjack.get(daytomorrow).value()
+				);
 				let sendcurrent = "\n";
 
 				for (let index = 0; index < preprocess.length; index++) {
@@ -549,7 +551,9 @@ client.on("message", (message) => {
 			if (dayyesterday === "saturday" || dayyesterday === "sunday") {
 				message.channel.send("We don't have class on weekends!");
 			} else {
-				let preprocess = Object.entries(dbjack.get(dayyesterday).value());
+				let preprocess = Object.entries(
+					dbjack.get(dayyesterday).value()
+				);
 				let sendcurrent = "\n";
 
 				for (let index = 0; index < preprocess.length; index++) {
@@ -558,6 +562,30 @@ client.on("message", (message) => {
 				}
 
 				let rawstring = dayyesterday + " Schedule\n\n";
+				let embed = new Discord.MessageEmbed({
+					//for the discord embed message
+					title: toTitleCase(rawstring),
+					description: sendcurrent,
+					footer: {
+						text: "Good luck for the day!",
+					},
+				});
+				message.channel.send(embed);
+			}
+		} else if (userinput === "all") {
+			let day = ["monday", "tuesday", "wednesday", "thursday", "friday"]; //array for days
+
+			for (let i = 0; i < day.length; i++) {
+				//outputs all the objects
+				let preprocess = Object.entries(dbjack.get(day[i]).value());
+				let sendcurrent = "\n";
+
+				for (let index = 0; index < preprocess.length; index++) {
+					//takes out the strings from the array
+					sendcurrent += preprocess[index].toString() + "\n\n";
+				}
+
+				let rawstring = day[i] + " Schedule\n\n";
 				let embed = new Discord.MessageEmbed({
 					//for the discord embed message
 					title: toTitleCase(rawstring),
@@ -599,6 +627,15 @@ client.on("message", (message) => {
 			message.channel.send(embed);
 		}
 	}
+
+	// * This makes the bot output random memes from an array !INCLUDES FUNCTION!
+	else if (command === "memes") {
+		let items = db.get("meme").value();
+		var memearray =
+			items[Math.floor(Math.random() * items.length - 1).toString()];
+		message.channel.send(memearray);
+	}
+
 	if (command === "memes") {
 		// > jack
 		let items = dbjack.get("meme").value();
@@ -1634,14 +1671,13 @@ function query(input) {
 	let randgen =
 		closeMatch[0].item.Quotes[
 			parseInt(Math.random() * closeMatch[0].item.Quotes.length)
-		];
+			];
 	let pic =
 		closeMatch[0].item.img[
 			parseInt(Math.random() * closeMatch[0].item.img.length)
-		];
-	let result = [closeMatch[0].item.Name, randgen, closeMatch[0].score, pic];
+			];
 	//console.log(result);
-	return result;
+	return [closeMatch[0].item.Name, randgen, closeMatch[0].score, pic];
 }
 function toTitleCase(str) {
 	// * Title case for schedule

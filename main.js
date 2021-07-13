@@ -1723,6 +1723,12 @@ process.on("message", (comm) => {
 			process.exit();
 		}, 5000);
 	}
+	if (comm === 'shutdown') {
+		client.destroy();
+		setTimeout(function () {
+			process.exit(0)
+		}, 1500)
+	}
 });
 
 // > API key to login to start the bot

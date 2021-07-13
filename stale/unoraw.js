@@ -8,7 +8,7 @@ const canvas_1 = __importDefault(require("canvas"));
 const discord_js_1 = require("discord.js");
 const Cards_1 = require("./data/Cards");
 const axios_1 = __importDefault(require("axios"));
-const NPMPackage = require("./package.json");
+const NPMPackage = require("../package.json");
 class DiscordUNO {
     constructor(embedColor) {
         this.embedColor = embedColor;

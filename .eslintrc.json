@@ -9,9 +9,25 @@
         "ecmaVersion": 12
     },
     "rules": {
+        "quotes": ["error", "double"],
+        "object-curly-spacing": ["error", "always"],
+        "indent": ["error", "tab"],
+        "eqeqeq": ["error", "always", { "null": "ignore" }],
+        "comma-dangle": ["error", "always-multiline"],
+        "operator-linebreak": ["error", "before"],
+        "no-eq-null": ["off"],
+        "spaced-comment": ["error", "always", { "markers": ["/"] }],
+        "radix": ["error", "always"],
+        "eol-last": ["error", "always"],
+        "lines-around-comment": ["error", {
+            "beforeLineComment": true
+        }],
+        "no-trailing-spaces": ["error"],
+        "prefer-const": "warn",
+        "no-var": "error",
+        "no-shadow": ["error", { "builtinGlobals": false, "hoist": "never", "allow": [] }]
     },
     "globals" : {
         "process" : true
     }
-    
 }

@@ -824,13 +824,14 @@ client.on("message", (message) => {
 						})
 						.write();
 					let embed = new Discord.MessageEmbed({
+
 						// * Success message
 						title: "Commit Successful",
 						description:
 							"Summary\nEvent : " +
-							userinputSplit[0] +
-							"\nTime : " +
-							checkDate.toLocaleString(
+							userinputSplit[0]
+							+ "\nTime : "
+							+ checkDate.toLocaleString(
 								DateTime.DATETIME_FULL_WITH_SECONDS
 							),
 						color: "00FF00",
@@ -930,40 +931,65 @@ client.on("message", (message) => {
 		avatarEmbed.setImage(user.displayAvatarURL());
 		message.channel.send(avatarEmbed);
 	}
-	if (message.content.startsWith(`${prefix}profile ken`)) {
-		// To display ken profile. It works . 1
-		const profile = new Discord.MessageEmbed()
-			.setTitle("Ken`s Profile")
-			.setDescription("I like icecream and waffles")
-			.setColor("RANDOM")
-			.addFields(
-				{
-					name: "\t<:insta:803124128194101248>  \t",
-					value: "[Instagram](https://www.instagram.com/kenn_tong/?hl=en)",
-					inline: true,
-				},
-				{
-					name: "\t<:facebook:803124115354812438>  \t",
-					value: "[Facebook](https://www.facebook.com/tong.kensoon)",
-					inline: true,
-				},
-				{
-					name: "\t<:snapchat:803124100133814283> \t",
-					value: "ken_372",
-					inline: true,
-				},
-				{
-					name: "\t<:tenor:803124557450838067> \t",
-					value: "[Tenor](https://tenor.com/users/ikennot)",
-					inline: true,
-				}
-			)
-			.setThumbnail(
-				"https://cdn.discordapp.com/attachments/802119940966449152/803162484894728202/ken_2.jpg"
-			)
-			.setTimestamp();
-		message.channel.send(profile);
+
+	if (command == "profile") {
+		let userinput = message.content.replace("$profile", "").trim(); // get the args that the user give
+
+		let fuse = new fusejs(dbken.get("profiles").write(), options); // load the profiles in
+		let closeMatch = fuse.search(userinput);
+
+		const fasterWay = closeMatch.length === 0 ? undefined : closeMatch[0];
+
+		let selectedStuff;
+
+		if (closeMatch.length == 0) {
+			selectedStuff = undefined;
+		} else {
+			selectedStuff = closeMatch[0].item;
+		}
+
+		console.log(selectedStuff);
+		const buildMessage = new Discord.MessageEmbed()
+		.setTitle(toTitleCase(selectedStuff.Name)).addFields(selectedStuff.fields).setDescription(selectedStuff.Description)
+		
+		message.channel.send(buildMessage);
+
 	}
+
+	// if (message.content.startsWith(`${prefix}profile ken`)) {
+	// 	// To display ken profile. It works . 1
+	// 	const profile = new Discord.MessageEmbed()
+	// 		.setTitle("Ken`s Profile")
+	// 		.setDescription("I like icecream and waffles")
+	// 		.setColor("RANDOM")
+	// 		.addFields(
+	// 			{
+	// 				name: "\t<:insta:803124128194101248>  \t",
+	// 				value: "[Instagram](https://www.instagram.com/kenn_tong/?hl=en)",
+	// 				inline: true,
+	// 			},
+	// 			{
+	// 				name: "\t<:facebook:803124115354812438>  \t",
+	// 				value: "[Facebook](https://www.facebook.com/tong.kensoon)",
+	// 				inline: true,
+	// 			},
+	// 			{
+	// 				name: "\t<:snapchat:803124100133814283> \t",
+	// 				value: "ken_372",
+	// 				inline: true,
+	// 			},
+	// 			{
+	// 				name: "\t<:tenor:803124557450838067> \t",
+	// 				value: "[Tenor](https://tenor.com/users/ikennot)",
+	// 				inline: true,
+	// 			}
+	// 		)
+	// 		.setThumbnail(
+	// 			"https://cdn.discordapp.com/attachments/802119940966449152/803162484894728202/ken_2.jpg"
+	// 		)
+	// 		.setTimestamp();
+	// 	message.channel.send(profile);
+	// }
 	if (message.content.startsWith(`${prefix}profile jack`)) {
 		// To display jack profile. It works . 2
 		const profile = new Discord.MessageEmbed()
@@ -1670,12 +1696,12 @@ function query(input) {
 	//console.log(closeMatch);
 	let randgen =
 		closeMatch[0].item.Quotes[
-			parseInt(Math.random() * closeMatch[0].item.Quotes.length)
-			];
+		parseInt(Math.random() * closeMatch[0].item.Quotes.length)
+		];
 	let pic =
 		closeMatch[0].item.img[
-			parseInt(Math.random() * closeMatch[0].item.img.length)
-			];
+		parseInt(Math.random() * closeMatch[0].item.img.length)
+		];
 	//console.log(result);
 	return [closeMatch[0].item.Name, randgen, closeMatch[0].score, pic];
 }

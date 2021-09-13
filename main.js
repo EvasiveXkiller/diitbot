@@ -950,7 +950,7 @@ client.on("message", (message) => {
 
 		console.log(selectedStuff);
 		const buildMessage = new Discord.MessageEmbed()
-		.setTitle(toTitleCase(selectedStuff.Name)).addFields(selectedStuff.fields).setDescription(selectedStuff.Description)
+		.setTitle(toTitleCase(selectedStuff.Name)).addFields(selectedStuff.fields).setDescription(selectedStuff.Description).setThumbnail(selectedStuff.Thumbnail)
 		
 		message.channel.send(buildMessage);
 

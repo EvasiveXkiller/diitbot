@@ -998,9 +998,8 @@ client.on("message", (message) => {
 		const fuse = new fusejs(dbken.get("profiles").write(), options);
 		const closeMatch = fuse.search(userinput);
 
-		const selectedStuff = closeMatch.length === 0 ? undefined : closeMatch[0]
+		const selectedStuff = closeMatch.length === 0 ? undefined : closeMatch[0].item
 
-		console.log(selectedStuff);
 		const buildMessage = new Discord.MessageEmbed()
 			.setTitle(toTitleCase(selectedStuff.Name))
 			.addFields(selectedStuff.fields)

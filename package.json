@@ -26,7 +26,6 @@
     "canvas": "^2.7.0",
     "discord-music-player": "^7.0.0-fix3",
     "discord-tictactoe": "^2.1.0",
-    "discord-uno": "^2.0.21",
     "discord.js": "^12.5.1",
     "discord.js-poll-embed": "^1.0.2",
     "erlpack": "^0.1.3",

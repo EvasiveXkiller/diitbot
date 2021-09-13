@@ -1,5 +1,5 @@
 const { fork } = require("child_process");
-const readline = require("readline"); // * for command line control;
+const readline = require("readline");
 
 const formatMemoryUsage = (data) =>
 	`${Math.round((data / 1024 / 1024) * 100) / 100} MB`;
@@ -16,6 +16,7 @@ function launchmain() {
 	if (thread_main != null) {
 		console.log("thread_main running");
 	}
+
 	// mainInstance = spawn("node", ["main.js"], {
 	// 	stdio: ["pipe", "pipe", "pipe", "ipc"],
 	// });
@@ -31,26 +32,26 @@ function launchmain() {
 	});
 
 	thread_main.on("message", (data) => {
-		if (data.title == "memusage") {
-			let localdata = data.respond;
-			let localmem = {
+		if (data.title === "memusage") {
+			const localdata = data.respond;
+			const localmem = {
 				rss: `${formatMemoryUsage(
-					localdata.rss
+					localdata.rss,
 				)} -> Resident Set Size - total memory allocated for the process execution`,
 				heapTotal: `${formatMemoryUsage(
-					localdata.heapTotal
+					localdata.heapTotal,
 				)} -> total size of the allocated heap`,
 				heapUsed: `${formatMemoryUsage(
-					localdata.heapUsed
+					localdata.heapUsed,
 				)} -> actual memory used during the execution`,
 				external: `${formatMemoryUsage(
-					localdata.external
+					localdata.external,
 				)} -> V8 external memory`,
 			};
 			console.log("thread_main: ");
 			console.log(localmem);
 		}
-		if (data.title == "reset") {
+		if (data.title === "reset") {
 			console.log("thread_main: ");
 			console.log(data);
 			if(thread_games != null) {
@@ -72,7 +73,7 @@ function launchmain() {
 	});
 
 	thread_main.on("exit", () => {
-		if (userkill == true) {
+		if (userkill === true) {
 			relaunch();
 			userkill = false;
 		}
@@ -86,6 +87,7 @@ function launchmusic() {
 	if (thread_music != null) {
 		console.log("thread_music running");
 	}
+
 	// mainInstance = spawn("node", ["main.js"], {
 	// 	stdio: ["pipe", "pipe", "pipe", "ipc"],
 	// });
@@ -101,26 +103,26 @@ function launchmusic() {
 	});
 
 	thread_music.on("message", (data) => {
-		if (data.title == "memusage") {
-			let localdata = data.respond;
-			let localmem = {
+		if (data.title === "memusage") {
+			const localdata = data.respond;
+			const localmem = {
 				rss: `${formatMemoryUsage(
-					localdata.rss
+					localdata.rss,
 				)} -> Resident Set Size - total memory allocated for the process execution`,
 				heapTotal: `${formatMemoryUsage(
-					localdata.heapTotal
+					localdata.heapTotal,
 				)} -> total size of the allocated heap`,
 				heapUsed: `${formatMemoryUsage(
-					localdata.heapUsed
+					localdata.heapUsed,
 				)} -> actual memory used during the execution`,
 				external: `${formatMemoryUsage(
-					localdata.external
+					localdata.external,
 				)} -> V8 external memory`,
 			};
 			console.log("thread_music: ");
 			console.log(localmem);
 		}
-		if (data.title == "reset") {
+		if (data.title === "reset") {
 			console.log("thread_music: ");
 			console.log(data);
 			thread_music.send("userkill");
@@ -134,7 +136,7 @@ function launchmusic() {
 	});
 
 	thread_music.on("exit", () => {
-		if (userkill == true) {
+		if (userkill === true) {
 			relaunch();
 			userkill = false;
 		}
@@ -148,6 +150,7 @@ function launchgames() {
 	if (thread_games != null) {
 		console.log("thread_games running");
 	}
+
 	// mainInstance = spawn("node", ["main.js"], {
 	// 	stdio: ["pipe", "pipe", "pipe", "ipc"],
 	// });
@@ -163,26 +166,26 @@ function launchgames() {
 	});
 
 	thread_games.on("message", (data) => {
-		if (data.title == "memusage") {
-			let localdata = data.respond;
-			let localmem = {
+		if (data.title === "memusage") {
+			const localdata = data.respond;
+			const localmem = {
 				rss: `${formatMemoryUsage(
-					localdata.rss
+					localdata.rss,
 				)} -> Resident Set Size - total memory allocated for the process execution`,
 				heapTotal: `${formatMemoryUsage(
-					localdata.heapTotal
+					localdata.heapTotal,
 				)} -> total size of the allocated hveap`,
 				heapUsed: `${formatMemoryUsage(
-					localdata.heapUsed
+					localdata.heapUsed,
 				)} -> actual memory used during the execution`,
 				external: `${formatMemoryUsage(
-					localdata.external
+					localdata.external,
 				)} -> V8 external memory`,
 			};
 			console.log("thread_games: ");
 			console.log(localmem);
 		}
-		if (data.title == "reset") {
+		if (data.title === "reset") {
 			console.log("thread_games ");
 			console.log(data);
 			thread_games.send("userkill");
@@ -196,7 +199,7 @@ function launchgames() {
 	});
 
 	thread_games.on("exit", () => {
-		if (userkill == true) {
+		if (userkill === true) {
 			relaunch();
 			userkill = false;
 		}
@@ -207,7 +210,7 @@ function launchgames() {
 }
 
 rl.on("line", (data) => {
-	if (data == "mem") {
+	if (data === "mem") {
 		if (thread_main != null) {
 			if (thread_main != null) {
 				thread_main.send("memusage");
@@ -220,7 +223,7 @@ rl.on("line", (data) => {
 			}
 		}
 	}
-	if (data == "killall") {
+	if (data === "killall") {
 		if (thread_main != null) {
 			thread_main.send("kill");
 		}
@@ -247,25 +250,25 @@ rl.on("line", (data) => {
 		}
 	}
 	if (data === "startmain") {
-		if (thread_main == null) {
+		if (thread_main === null) {
 			launchmain();
 		}
 	}
 	if (data === "startmusic") {
-		if (thread_music == null) {
+		if (thread_music === null) {
 			launchmusic();
 		}
 	}
 	if (data === "startgames") {
-		if (thread_games == null) {
+		if (thread_games === null) {
 			launchgames();
 		}
 	}
 	if (data === "startall") {
 		if (
-			thread_main == null &&
-			thread_games == null &&
-			thread_music == null
+			thread_main === null
+			&& thread_games === null
+			&& thread_music === null
 		) {
 			launchgames();
 			launchmain();
@@ -283,16 +286,16 @@ rl.on("line", (data) => {
 		console.log("thread_games: " + thread_games);
 		console.log("thread_music: " + thread_music);
 	}
-	if (data == "parentexit") {
+	if (data === "parentexit") {
 		if (
-			thread_main == null &&
-			thread_games == null &&
-			thread_music == null
+			thread_main === null
+			&& thread_games === null
+			&& thread_music === null
 		) {
 			process.exit();
 		} else {
 			console.log(
-				"An instance is running, stop manually before executing it"
+				"An instance is running, stop manually before executing it",
 			);
 		}
 	}
@@ -314,3 +317,45 @@ function relaunch() {
 }
 
 onBoot();
+
+
+// Template of IPC
+// > IPC with parent process
+// process.on("message", (comm) => {
+// 	if (comm === "memusage") {
+// 		process.send(new respond("memusage", process.memoryUsage()));
+// 	}
+// 	if (comm === "kill") {
+// 		client.channels
+// 			.fetch("755263209824321629", false, true)
+// 			.then((channel) => {
+// 				const offlinemessage = new Discord.MessageEmbed({
+// 					description: "Going Offline Immediately!",
+// 					color: "FF0000",
+// 					footer: {
+// 						text: "Console",
+// 					},
+// 				});
+// 				offlinemessage.setTimestamp();
+// 				channel.send(offlinemessage).then(() => {
+// 					client.destroy();
+// 					setTimeout(() => {
+// 						process.exit();
+// 					}, 1000);
+// 				});
+// 			})
+// 			.catch(console.error);
+// 	}
+// 	if (comm === "userkill") {
+// 		client.destroy();
+// 		setTimeout(() => {
+// 			process.exit();
+// 		}, 5000);
+// 	}
+// 	if (comm === "shutdown") {
+// 		client.destroy();
+// 		setTimeout(function () {
+// 			process.exit(0)
+// 		}, 1500)
+// 	}
+// });

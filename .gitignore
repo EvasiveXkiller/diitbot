@@ -103,6 +103,9 @@ dist
 # TernJS port file
 .tern-port
 dbtest.json
+db.json
+dbjack.json
+dbken.json
 .idea
 
 credentials.json

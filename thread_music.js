@@ -1,5 +1,14 @@
-const Discord = require("discord.js");
+/**
+ * This is the music branch, it used to have music controls but now the functions here are not up to date
+ * This has been superseded by SoundWave
+ *
+ * The code below only works for discordjs v12 and DMP v7 (If im not wrong)
+ *
+ * If u do run make sure that u do not run `npm update`. This will cause the newer packages to be downloaded and hence not compatible with this code.
+ * - Carlson
+ */
 
+const Discord = require("discord.js");
 const client = new Discord.Client();
 const { Player } = require("discord-music-player");
 const player = new Player(client, {
@@ -15,16 +24,9 @@ const prefix = "$";
 let queuetoggle = false;
 let songtoggle = false;
 let opstatsmusic = false;
-// > class for IPC
-class respond {
-	constructor(restitle, resdata) {
-		this.title = restitle;
-		this.respond = resdata;
-	}
-}
 
 client.player
-	.on("songChanged", (message, newSong, oldSong) => {
+	.on("songChanged", (message, newSong) => {
 		client.user.setPresence({
 			activity: {
 				name: newSong.name,
@@ -42,43 +44,46 @@ client.player
 	})
 	.on("error", (message, error) => {
 		switch (error) {
-			case "LiveUnsupported":
-				let liveeeror = new Discord.MessageEmbed({
-					description:
-						"Live Vidoes are not supported, skipping current song",
-					footer: {
-						text: "International music bot",
-					},
-				});
-				message.channel.send(liveeeror);
+		case "LiveUnsupported": {
+			const liveeeror = new Discord.MessageEmbed({
+				description:
+							"Live Vidoes are not supported, skipping current song",
+				footer: {
+					text: "International music bot",
+				},
+			});
+			message.channel.send(liveeeror);
+		}
 		}
 	});
 
 client.on("message", (message) => {
 	if (!message.content.startsWith(prefix) || message.author.bot) {
+
 		// * Breaks if the input is not valid
 		return;
 	}
-	let args = message.content.slice(prefix.length).split(/ +/); // * splits into words array
-	let command = args.shift().toLowerCase(); // * Processed command that ready to be read by switch cases
+	const args = message.content.slice(prefix.length).split(/ +/); // * splits into words array
+	const command = args.shift().toLowerCase(); // * Processed command that ready to be read by switch cases
 	if (command === "play" || command === "p") {
-		if (opstatsmusic == true) {
+		if (opstatsmusic === true) {
 			console.log("something is going on in the search algo");
 			return;
 		}
 		opstatsmusic = true;
-		if (message.channel.type == "dm" || message.channel.type == "group") {
+		if (message.channel.type === "dm" || message.channel.type === "group") {
 			message.channel.send("DMs are not supported!");
 			opstatsmusic = false;
 			return;
 		}
+
 		// * Music player
-		let userinput = message.content
+		const userinput = message.content
 			.replace("$play", "")
 			.replace("$p", "")
 			.trim();
-		if (userinput.length == 0) {
-			let noparamembed = new Discord.MessageEmbed({
+		if (userinput.length === 0) {
+			const noparamembed = new Discord.MessageEmbed({
 				description: "No Parameters Given",
 				footer: {
 					text: "International music bot",
@@ -88,10 +93,11 @@ client.on("message", (message) => {
 			opstatsmusic = false;
 			return;
 		}
-		let isPlaying = client.player.isPlaying(message);
+		const isPlaying = client.player.isPlaying(message);
 		if (!validURL(userinput)) {
+
 			// * if user uses a search term
-			let userfindembed = new Discord.MessageEmbed({
+			const userfindembed = new Discord.MessageEmbed({
 				description:
 					"Alright alright searching for whatever u have typed",
 				footer: {
@@ -101,11 +107,13 @@ client.on("message", (message) => {
 			message.channel.send(userfindembed);
 		}
 		if (isPlaying) {
+
 			// * add to queue if playing
-			let connecteduser = message.member.voice.channel;
+			const connecteduser = message.member.voice.channel;
 			if (!connecteduser) {
+
 				// * if user is not connected
-				let usernotconnectedembed = new Discord.MessageEmbed({
+				const usernotconnectedembed = new Discord.MessageEmbed({
 					description: "You not in a voice channel dummy",
 					footer: {
 						text: "International music bot",
@@ -115,10 +123,11 @@ client.on("message", (message) => {
 				opstatsmusic = false;
 				return;
 			}
-			let botchannel = client.voice.connections.toJSON();
+			const botchannel = client.voice.connections.toJSON();
 			if (connecteduser.id !== botchannel[0].channel) {
+
 				// * if user is not in the same channel
-				let diffchannelembed = new Discord.MessageEmbed({
+				const diffchannelembed = new Discord.MessageEmbed({
 					description:
 						"Dont try and troll other people, get other bots",
 					footer: {
@@ -131,20 +140,22 @@ client.on("message", (message) => {
 			}
 			client.player
 				.addToQueue(message, userinput, {
+
 					// * Add the song to queue
 					sortBy: "relevance",
 				})
 				.then((song) => {
-					let preprocess = song;
-					//console.log(preprocess);
-					let queueembed = new Discord.MessageEmbed({
+					const preprocess = song;
+
+					// console.log(preprocess);
+					const queueembed = new Discord.MessageEmbed({
 						description:
-							"okay added in queue : \n" +
-							"[" +
-							preprocess.name +
-							"](" +
-							preprocess.url +
-							")",
+							"okay added in queue : \n"
+							+ "["
+							+ preprocess.name
+							+ "]("
+							+ preprocess.url
+							+ ")",
 						footer: {
 							text: "International music bot",
 						},
@@ -154,8 +165,9 @@ client.on("message", (message) => {
 					});
 				})
 				.catch((err) => {
+
 					// * if search engine went wrong
-					let errembed = new Discord.MessageEmbed({
+					const errembed = new Discord.MessageEmbed({
 						description:
 							"Something went wrong internally but its probably your fault",
 						footer: {
@@ -170,10 +182,11 @@ client.on("message", (message) => {
 					return;
 				});
 		} else {
-			let connecteduser = message.member.voice.channel;
+			const connecteduser = message.member.voice.channel;
 			if (!connecteduser) {
+
 				// * if user is not connected
-				let usernotconnectedembed = new Discord.MessageEmbed({
+				const usernotconnectedembed = new Discord.MessageEmbed({
 					description: "You not in a voice channel dummy",
 					footer: {
 						text: "International music bot",
@@ -185,13 +198,15 @@ client.on("message", (message) => {
 			}
 			client.player
 				.play(message, userinput, {
+
 					// * plays the song immediately when the queue is empty
 					sortBy: "relevance",
 				})
 				.then((song) => {
 					try {
-						let preprocess = song;
-						//console.log(preprocess.name);
+						const preprocess = song;
+
+						// console.log(preprocess.name);
 						client.user.setPresence({
 							status: "dnd",
 							activity: {
@@ -199,14 +214,14 @@ client.on("message", (message) => {
 								type: "LISTENING",
 							},
 						});
-						let playembed = new Discord.MessageEmbed({
+						const playembed = new Discord.MessageEmbed({
 							description:
-								"Now playing :  \n" +
-								"[" +
-								preprocess.name +
-								"](" +
-								preprocess.url +
-								")",
+								"Now playing :  \n"
+								+ "["
+								+ preprocess.name
+								+ "]("
+								+ preprocess.url
+								+ ")",
 							footer: {
 								text: "International Music Bot",
 							},
@@ -215,8 +230,9 @@ client.on("message", (message) => {
 							opstatsmusic = false;
 						});
 					} catch (err) {
+
 						// * If something wents wrong
-						let errembed = new Discord.MessageEmbed({
+						const errembed = new Discord.MessageEmbed({
 							description:
 								"Something went wrong internally but its probably your fault",
 							footer: {
@@ -232,20 +248,22 @@ client.on("message", (message) => {
 		}
 	}
 	if (command === "volume") {
-		if (opstatsmusic == true) {
+		if (opstatsmusic === true) {
 			console.log("something is going on in the search algo");
 			return;
 		}
+
 		// * controls volume globally
-		if (message.channel.type == "dm" || message.channel.type == "group") {
+		if (message.channel.type === "dm" || message.channel.type === "group") {
 			message.channel.send("DMs are not supported!");
 			opstatsmusic = false;
 			return;
 		}
-		let connecteduser = message.member.voice.channel;
+		const connecteduser = message.member.voice.channel;
 		if (!connecteduser) {
+
 			// * if user is not connected
-			let usernotconnectedembed = new Discord.MessageEmbed({
+			const usernotconnectedembed = new Discord.MessageEmbed({
 				description: "You not in a voice channel dummy",
 				footer: {
 					text: "International music bot",
@@ -254,12 +272,14 @@ client.on("message", (message) => {
 			message.channel.send(usernotconnectedembed);
 			return;
 		}
-		let botchannel = client.voice.connections.toJSON();
-		//console.log(botchannel);
-		//console.log(connecteduser)
-		if (botchannel.length == 0) {
+		const botchannel = client.voice.connections.toJSON();
+
+		// console.log(botchannel);
+		// console.log(connecteduser)
+		if (botchannel.length === 0) {
+
 			// * if bot is not in a channel
-			let botnotconnectedembed = new Discord.MessageEmbed({
+			const botnotconnectedembed = new Discord.MessageEmbed({
 				description: "Bot not alive, just like your life",
 				footer: {
 					text: "International music bot",
@@ -269,8 +289,9 @@ client.on("message", (message) => {
 			return;
 		}
 		if (connecteduser.id !== botchannel[0].channel) {
+
 			// * if user is not in the same channel
-			let diffchannelembed = new Discord.MessageEmbed({
+			const diffchannelembed = new Discord.MessageEmbed({
 				description: "Dont try and troll other people, get other bots",
 				footer: {
 					text: "International music bot",
@@ -279,9 +300,9 @@ client.on("message", (message) => {
 			message.channel.send(diffchannelembed);
 			return;
 		}
-		let userinput = message.content.replace("$volume", "").trim();
+		const userinput = message.content.replace("$volume", "").trim();
 		if (isNaN(userinput)) {
-			let volumerror = new Discord.MessageEmbed({
+			const volumerror = new Discord.MessageEmbed({
 				description:
 					"Thats not a number, what did u do during maths class?",
 				footer: {
@@ -291,8 +312,8 @@ client.on("message", (message) => {
 			message.channel.send(volumerror);
 			return;
 		}
-		client.player.setVolume(message, parseInt(userinput));
-		let volumesuccess = new Discord.MessageEmbed({
+		client.player.setVolume(message, parseInt(userinput, 10));
+		const volumesuccess = new Discord.MessageEmbed({
 			description: "Volume is set to " + userinput + "%",
 			footer: {
 				text: "Volume is not persistent across restarts (yet)",
@@ -301,20 +322,21 @@ client.on("message", (message) => {
 		message.channel.send(volumesuccess);
 	}
 	if (command === "stop") {
-		if (message.channel.type == "dm" || message.channel.type == "group") {
+		if (message.channel.type === "dm" || message.channel.type === "group") {
 			message.channel.send("DMs are not supported!");
 			opstatsmusic = false;
 			return;
 		}
-		if (opstatsmusic == true) {
+		if (opstatsmusic === true) {
 			console.log("something is going on in the search algo");
 			return;
 		}
 		opstatsmusic = true;
-		let connecteduser = message.member.voice.channel;
+		const connecteduser = message.member.voice.channel;
 		if (!connecteduser) {
+
 			// * if user is not connected
-			let usernotconnectedembed = new Discord.MessageEmbed({
+			const usernotconnectedembed = new Discord.MessageEmbed({
 				description: "You not in a voice channel dummy",
 				footer: {
 					text: "International music bot",
@@ -324,12 +346,14 @@ client.on("message", (message) => {
 			opstatsmusic = false;
 			return;
 		}
-		let botchannel = client.voice.connections.toJSON();
-		//console.log(botchannel);
-		//console.log(connecteduser)
-		if (botchannel.length == 0) {
+		const botchannel = client.voice.connections.toJSON();
+
+		// console.log(botchannel);
+		// console.log(connecteduser)
+		if (botchannel.length === 0) {
+
 			// * if bot is not in a channel
-			let botnotconnectedembed = new Discord.MessageEmbed({
+			const botnotconnectedembed = new Discord.MessageEmbed({
 				description: "Bot not alive, just like your life",
 				footer: {
 					text: "International music bot",
@@ -340,8 +364,9 @@ client.on("message", (message) => {
 			return;
 		}
 		if (connecteduser.id !== botchannel[0].channel) {
+
 			// * if user is not in the same channel
-			let diffchannelembed = new Discord.MessageEmbed({
+			const diffchannelembed = new Discord.MessageEmbed({
 				description: "Dont try and troll other people, get other bots",
 				footer: {
 					text: "International music bot",
@@ -354,6 +379,7 @@ client.on("message", (message) => {
 			client.player.stop(message); // * Stop the song and deletes the queue
 			client.user
 				.setPresence({
+
 					// * Set the bot status
 					status: "dnd",
 					activity: {
@@ -367,18 +393,18 @@ client.on("message", (message) => {
 		}
 	}
 	if (command === "repeatsong" || command === "repeattrack") {
-		if (message.channel.type == "dm" || message.channel.type == "group") {
+		if (message.channel.type === "dm" || message.channel.type === "group") {
 			message.channel.send("DMs are not supported!");
 			opstatsmusic = false;
 			return;
 		}
-		if (opstatsmusic == true) {
+		if (opstatsmusic === true) {
 			console.log("something is going on in the search algo");
 			return;
 		}
-		let connecteduser = message.member.voice.channel;
+		const connecteduser = message.member.voice.channel;
 		if (!connecteduser) {
-			let usernotconnectedembed = new Discord.MessageEmbed({
+			const usernotconnectedembed = new Discord.MessageEmbed({
 				description: "You not in a voice channel dummy",
 				footer: {
 					text: "International music bot",
@@ -387,11 +413,12 @@ client.on("message", (message) => {
 			message.channel.send(usernotconnectedembed);
 			return;
 		}
-		let botchannel = client.voice.connections.toJSON();
+		const botchannel = client.voice.connections.toJSON();
 		console.log(botchannel);
-		//console.log(connecteduser)
-		if (botchannel.length == 0) {
-			let botnotconnectedembed = new Discord.MessageEmbed({
+
+		// console.log(connecteduser)
+		if (botchannel.length === 0) {
+			const botnotconnectedembed = new Discord.MessageEmbed({
 				description: "Bot not alive, just like your life",
 				footer: {
 					text: "International music bot",
@@ -401,7 +428,7 @@ client.on("message", (message) => {
 			return;
 		}
 		if (connecteduser.id !== botchannel[0].channel) {
-			let diffchannelembed = new Discord.MessageEmbed({
+			const diffchannelembed = new Discord.MessageEmbed({
 				description: "Dont try and troll other people, get other bots",
 				footer: {
 					text: "International music bot",
@@ -412,13 +439,13 @@ client.on("message", (message) => {
 		}
 		songtoggle = client.player.toggleLoop(message);
 		if (songtoggle) {
-			let tempembed = new Discord.MessageEmbed({
+			const tempembed = new Discord.MessageEmbed({
 				description: "Repeat Current track: True",
 				color: "PURPLE",
 			});
 			message.channel.send(tempembed);
 		} else {
-			let tempembed = new Discord.MessageEmbed({
+			const tempembed = new Discord.MessageEmbed({
 				description: "Repeat Current track: False",
 				color: "PURPLE",
 			});
@@ -426,18 +453,18 @@ client.on("message", (message) => {
 		}
 	}
 	if (command === "repeatqueue") {
-		if (opstatsmusic == true) {
+		if (opstatsmusic === true) {
 			console.log("something is going on in the search algo");
 			return;
 		}
-		if (message.channel.type == "dm" || message.channel.type == "group") {
+		if (message.channel.type === "dm" || message.channel.type === "group") {
 			message.channel.send("DMs are not supported!");
 			opstatsmusic = false;
 			return;
 		}
-		let connecteduser = message.member.voice.channel;
+		const connecteduser = message.member.voice.channel;
 		if (!connecteduser) {
-			let usernotconnectedembed = new Discord.MessageEmbed({
+			const usernotconnectedembed = new Discord.MessageEmbed({
 				description: "You not in a voice channel dummy",
 				footer: {
 					text: "International music bot",
@@ -446,11 +473,12 @@ client.on("message", (message) => {
 			message.channel.send(usernotconnectedembed);
 			return;
 		}
-		let botchannel = client.voice.connections.toJSON();
-		//console.log(botchannel);
-		//console.log(connecteduser)
-		if (botchannel.length == 0) {
-			let botnotconnectedembed = new Discord.MessageEmbed({
+		const botchannel = client.voice.connections.toJSON();
+
+		// console.log(botchannel);
+		// console.log(connecteduser)
+		if (botchannel.length === 0) {
+			const botnotconnectedembed = new Discord.MessageEmbed({
 				description: "Bot not alive, just like your life",
 				footer: {
 					text: "International music bot",
@@ -460,7 +488,7 @@ client.on("message", (message) => {
 			return;
 		}
 		if (connecteduser.id !== botchannel[0].channel) {
-			let diffchannelembed = new Discord.MessageEmbed({
+			const diffchannelembed = new Discord.MessageEmbed({
 				description: "Dont try and troll other people, get other bots",
 				footer: {
 					text: "International music bot",
@@ -471,13 +499,13 @@ client.on("message", (message) => {
 		}
 		queuetoggle = client.player.toggleQueueLoop(message);
 		if (queuetoggle) {
-			let tempembed = new Discord.MessageEmbed({
+			const tempembed = new Discord.MessageEmbed({
 				description: "Repeat Queue: True",
 				color: "PURPLE",
 			});
 			message.channel.send(tempembed);
 		} else {
-			let tempembed = new Discord.MessageEmbed({
+			const tempembed = new Discord.MessageEmbed({
 				description: "Repeat Queue: False",
 				color: "PURPLE",
 			});
@@ -485,19 +513,20 @@ client.on("message", (message) => {
 		}
 	}
 	if (command === "skip") {
-		if (opstatsmusic == true) {
+		if (opstatsmusic === true) {
 			console.log("something is going on in the search algo");
 			return;
 		}
-		if (message.channel.type == "dm" || message.channel.type == "group") {
+		if (message.channel.type === "dm" || message.channel.type === "group") {
 			message.channel.send("DMs are not supported!");
 			opstatsmusic = false;
 			return;
 		}
-		let connecteduser = message.member.voice.channel;
+		const connecteduser = message.member.voice.channel;
 		if (!connecteduser) {
+
 			// * if user is not connected
-			let usernotconnectedembed = new Discord.MessageEmbed({
+			const usernotconnectedembed = new Discord.MessageEmbed({
 				description: "You not in a voice channel dummy",
 				footer: {
 					text: "International music bot",
@@ -506,12 +535,14 @@ client.on("message", (message) => {
 			message.channel.send(usernotconnectedembed);
 			return;
 		}
-		let botchannel = client.voice.connections.toJSON();
-		//console.log(botchannel);
-		//console.log(connecteduser)
-		if (botchannel.length == 0) {
+		const botchannel = client.voice.connections.toJSON();
+
+		// console.log(botchannel);
+		// console.log(connecteduser)
+		if (botchannel.length === 0) {
+
 			// * if bot is not in a channel
-			let botnotconnectedembed = new Discord.MessageEmbed({
+			const botnotconnectedembed = new Discord.MessageEmbed({
 				description: "Bot not alive, just like your life",
 				footer: {
 					text: "International music bot",
@@ -521,8 +552,9 @@ client.on("message", (message) => {
 			return;
 		}
 		if (connecteduser.id !== botchannel[0].channel) {
+
 			// * if user is not in the same channel
-			let diffchannelembed = new Discord.MessageEmbed({
+			const diffchannelembed = new Discord.MessageEmbed({
 				description: "Dont try and troll other people, get other bots",
 				footer: {
 					text: "International music bot",
@@ -532,7 +564,7 @@ client.on("message", (message) => {
 			return;
 		}
 		client.player.skip(message); // * Skips the track
-		let skipembed = new Discord.MessageEmbed({
+		const skipembed = new Discord.MessageEmbed({
 			description: "Skipping...",
 			footer: {
 				text: "why u skip? rushing to the airport izzit?",
@@ -541,18 +573,18 @@ client.on("message", (message) => {
 		message.channel.send(skipembed);
 	}
 	if (command === "queue" || command === "q") {
-		if (opstatsmusic == true) {
+		if (opstatsmusic === true) {
 			console.log("something is going on in the search algo");
 			return;
 		}
-		if (message.channel.type == "dm" || message.channel.type == "group") {
+		if (message.channel.type === "dm" || message.channel.type === "group") {
 			message.channel.send("DMs are not supported!");
 			opstatsmusic = false;
 			return;
 		}
-		let queue = client.player.getQueue(message);
+		const queue = client.player.getQueue(message);
 		if (!queue) {
-			let queueempty = new Discord.MessageEmbed({
+			const queueempty = new Discord.MessageEmbed({
 				description: "No more songs in queue bruh",
 				footer: {
 					text: "International music bot",
@@ -561,46 +593,47 @@ client.on("message", (message) => {
 			message.channel.send(queueempty);
 			return;
 		}
-		let rawq =
-			"\n`Queue:\n" +
-			queue.songs
+		const rawq
+			= "\n`Queue:\n"
+			+ queue.songs
 				.map((song, i) => {
 					return `${i === 0 ? "Now Playing" : `#${i + 1}`} - ${
 						song.name
 					} | ${song.author}\``;
 				})
 				.join("\n`");
-		let state =
-			"`Repeat Track: " +
-			songtoggle +
-			"`\n" +
-			"`Repeat Queue: " +
-			queuetoggle +
-			"`";
+		const state
+			= "`Repeat Track: "
+			+ songtoggle
+			+ "`\n"
+			+ "`Repeat Queue: "
+			+ queuetoggle
+			+ "`";
 		message.channel.send(
-			rawq +
-				"\n\nCurrent Song Progress\n`" +
-				client.player.createProgressBar(message, 20) +
-				"`" +
-				"\n" +
-				state
+			rawq
+			+ "\n\nCurrent Song Progress\n`"
+			+ client.player.createProgressBar(message, 20)
+			+ "`"
+			+ "\n"
+			+ state,
 		);
 	}
 	if (command === "remove") {
-		if (opstatsmusic == true) {
+		if (opstatsmusic === true) {
 			console.log("something is going on in the search algo");
 			return;
 		}
-		if (message.channel.type == "dm" || message.channel.type == "group") {
+		if (message.channel.type === "dm" || message.channel.type === "group") {
 			message.channel.send("DMs are not supported!");
 			opstatsmusic = false;
 			return;
 		}
-		let userinput = message.content.replace("$remove", "").trim();
-		let connecteduser = message.member.voice.channel;
+		const userinput = message.content.replace("$remove", "").trim();
+		const connecteduser = message.member.voice.channel;
 		if (!connecteduser) {
+
 			// * if user is not connected
-			let usernotconnectedembed = new Discord.MessageEmbed({
+			const usernotconnectedembed = new Discord.MessageEmbed({
 				description: "You not in a voice channel dummy",
 				footer: {
 					text: "International music bot",
@@ -609,12 +642,14 @@ client.on("message", (message) => {
 			message.channel.send(usernotconnectedembed);
 			return;
 		}
-		let botchannel = client.voice.connections.toJSON();
-		//console.log(botchannel);
-		//console.log(connecteduser)
-		if (botchannel.length == 0) {
+		const botchannel = client.voice.connections.toJSON();
+
+		// console.log(botchannel);
+		// console.log(connecteduser)
+		if (botchannel.length === 0) {
+
 			// * if bot is not in a channel
-			let botnotconnectedembed = new Discord.MessageEmbed({
+			const botnotconnectedembed = new Discord.MessageEmbed({
 				description: "Bot not alive, just like your life",
 				footer: {
 					text: "International music bot",
@@ -624,8 +659,9 @@ client.on("message", (message) => {
 			return;
 		}
 		if (connecteduser.id !== botchannel[0].channel) {
+
 			// * if user is not in the same channel
-			let diffchannelembed = new Discord.MessageEmbed({
+			const diffchannelembed = new Discord.MessageEmbed({
 				description: "Dont try and troll other people, get other bots",
 				footer: {
 					text: "International music bot",
@@ -634,43 +670,46 @@ client.on("message", (message) => {
 			message.channel.send(diffchannelembed);
 			return;
 		}
-		let SongID = parseInt(userinput) - 1;
-		if (SongID == 0) {
+		const SongID = parseInt(userinput, 10) - 1;
+		if (SongID === 0) {
+
 			// * if user tries to remove the current song
 			message.channel.send(
-				"You cant remove the song that youre playing ._."
+				"You cant remove the song that youre playing ._.",
 			);
 			return;
 		}
 		client.player.remove(message, SongID);
 		message.channel.send("Removed song " + userinput + " from the Queue!");
-		let queue = client.player.getQueue(message);
+		const queue = client.player.getQueue(message);
 		message.channel.send(
+
 			// * Get the current queue track
-			"`Queue:\n" +
-				queue.songs
-					.map((song, i) => {
-						return `${i === 0 ? "Now Playing" : `#${i + 1}`} - ${
-							song.name
-						} | ${song.author}\``;
-					})
-					.join("\n`")
+			"`Queue:\n"
+			+ queue.songs
+				.map((song, i) => {
+					return `${i === 0 ? "Now Playing" : `#${i + 1}`} - ${
+						song.name
+					} | ${song.author}\``;
+				})
+				.join("\n`"),
 		);
 	}
 	if (command === "seek") {
-		if (opstatsmusic == true) {
+		if (opstatsmusic === true) {
 			console.log("something is going on in the search algo");
 			return;
 		}
-		if (message.channel.type == "dm" || message.channel.type == "group") {
+		if (message.channel.type === "dm" || message.channel.type === "group") {
 			message.channel.send("DMs are not supported!");
 			opstatsmusic = false;
 			return;
 		}
-		let connecteduser = message.member.voice.channel;
+		const connecteduser = message.member.voice.channel;
 		if (!connecteduser) {
+
 			// * if user is not connected
-			let usernotconnectedembed = new Discord.MessageEmbed({
+			const usernotconnectedembed = new Discord.MessageEmbed({
 				description: "You not in a voice channel dummy",
 				footer: {
 					text: "International music bot",
@@ -679,12 +718,14 @@ client.on("message", (message) => {
 			message.channel.send(usernotconnectedembed);
 			return;
 		}
-		let botchannel = client.voice.connections.toJSON();
-		//console.log(botchannel);
-		//console.log(connecteduser)
-		if (botchannel.length == 0) {
+		const botchannel = client.voice.connections.toJSON();
+
+		// console.log(botchannel);
+		// console.log(connecteduser)
+		if (botchannel.length === 0) {
+
 			// * if bot is not in a channel
-			let botnotconnectedembed = new Discord.MessageEmbed({
+			const botnotconnectedembed = new Discord.MessageEmbed({
 				description: "Bot not alive, just like your life",
 				footer: {
 					text: "International music bot",
@@ -694,8 +735,9 @@ client.on("message", (message) => {
 			return;
 		}
 		if (connecteduser.id !== botchannel[0].channel) {
+
 			// * if user is not in the same channel
-			let diffchannelembed = new Discord.MessageEmbed({
+			const diffchannelembed = new Discord.MessageEmbed({
 				description: "Dont try and troll other people, get other bots",
 				footer: {
 					text: "International music bot",
@@ -704,9 +746,9 @@ client.on("message", (message) => {
 			message.channel.send(diffchannelembed);
 			return;
 		}
-		let userinput = message.content.replace("$seek", "").trim();
+		const userinput = message.content.replace("$seek", "").trim();
 		if (!/^\d+$/.test(userinput)) {
-			let seekerr = new Discord.MessageEmbed({
+			const seekerr = new Discord.MessageEmbed({
 				description:
 					"Thats not a number, what did u do during maths class?",
 				footer: {
@@ -716,8 +758,8 @@ client.on("message", (message) => {
 			message.channel.send(seekerr);
 			return;
 		}
-		client.player.seek(message, parseInt(userinput * 1000));
-		let seeksuccessembed = new Discord.MessageEmbed({
+		client.player.seek(message, parseInt(userinput * 1000, 10));
+		const seeksuccessembed = new Discord.MessageEmbed({
 			description: "Seeked to " + msToTime(userinput * 1000),
 			footer: {
 				text: "International music bot",
@@ -727,24 +769,25 @@ client.on("message", (message) => {
 		return;
 	}
 	if (
-		command === "dis" ||
-		command === "fuckoff" ||
-		command === "leave" ||
-		command === "dc"
+		command === "dis"
+		|| command === "fuckoff"
+		|| command === "leave"
+		|| command === "dc"
 	) {
-		if (message.channel.type == "dm" || message.channel.type == "group") {
+		if (message.channel.type === "dm" || message.channel.type === "group") {
 			message.channel.send("DMs are not supported!");
 			opstatsmusic = false;
 			return;
 		}
-		if (opstatsmusic == true) {
+		if (opstatsmusic === true) {
 			console.log("something is going on in the search algo");
 			return;
 		}
-		let connecteduser = message.member.voice.channel;
+		const connecteduser = message.member.voice.channel;
 		if (!connecteduser) {
+
 			// * if user is not connected
-			let usernotconnectedembed = new Discord.MessageEmbed({
+			const usernotconnectedembed = new Discord.MessageEmbed({
 				description: "You not in a voice channel dummy",
 				footer: {
 					text: "International music bot",
@@ -753,12 +796,14 @@ client.on("message", (message) => {
 			message.channel.send(usernotconnectedembed);
 			return;
 		}
-		let botchannel = client.voice.connections.toJSON();
-		//console.log(botchannel);
-		//console.log(connecteduser)
-		if (botchannel.length == 0) {
+		const botchannel = client.voice.connections.toJSON();
+
+		// console.log(botchannel);
+		// console.log(connecteduser)
+		if (botchannel.length === 0) {
+
 			// * if bot is not in a channel
-			let botnotconnectedembed = new Discord.MessageEmbed({
+			const botnotconnectedembed = new Discord.MessageEmbed({
 				description: "Bot not alive, just like your life",
 				footer: {
 					text: "International music bot",
@@ -768,8 +813,9 @@ client.on("message", (message) => {
 			return;
 		}
 		if (connecteduser.id !== botchannel[0].channel) {
+
 			// * if user is not in the same channel
-			let diffchannelembed = new Discord.MessageEmbed({
+			const diffchannelembed = new Discord.MessageEmbed({
 				description: "Dont try and troll other people, get other bots",
 				footer: {
 					text: "International music bot",
@@ -778,10 +824,12 @@ client.on("message", (message) => {
 			message.channel.send(diffchannelembed);
 			return;
 		}
-		//console.log(botchannel);
-		if (botchannel.length == 1) {
+
+		// console.log(botchannel);
+		if (botchannel.length === 1) {
+
 			// * if all checks aare success
-			let disembed = new Discord.MessageEmbed({
+			const disembed = new Discord.MessageEmbed({
 				description: "Ciao luuuuu",
 				footer: {
 					text: "International music bot",
@@ -804,11 +852,12 @@ client.on("message", (message) => {
 		});
 	}
 	if (command === "destroy") {
+
 		// * Killing the bot, only users below can do it
-		let mods = ["EvasiveXkiller", "ikenot", "Araric"];
+		const mods = ["EvasiveXkiller", "ikenot", "Araric"];
 		if (!mods.includes(message.author.username)) {
 			message.channel.send(
-				"You dont have enough permissions to stop the bot"
+				"You dont have enough permissions to stop the bot",
 			);
 			return;
 		}
@@ -817,27 +866,7 @@ client.on("message", (message) => {
 			process.exit();
 		}, 1000);
 	}
-	// if (command === "playlist") {
-	// 	if (opstatsmusic == true) {
-	// 		console.log("something is going on in the search algo");
-	// 		return;
-	// 	}
-	// 	let playlist = await client.player.playlist(
-	// 		message.guild.id,
-	// 		args.join(" "),
-	// 		message.member.voice.channel,
-	// 		-1,
-	// 		message.author.tag
-	// 	);
-	// 	console.log(playlist);
-	// 	playlist = playlist.playlist;
-	// 	let playlistsuccess = new Discord.MessageEmbed({
-	// 		description: `Queued **${playlist.videoCount} songs**`,
-	// 	});
-	// 	playlistsuccess.setTimestamp();
-	// 	message.channel.send(playlistsuccess);
-	// 	opstatsmusic = false;
-	// }
+
 });
 
 client.on("ready", () => {
@@ -853,9 +882,10 @@ client.on("ready", () => {
 });
 
 client.on("voiceStateUpdate", () => {
+
 	// * Change bot status if bot leaves the voice channel
-	let botchannel = client.voice.connections.toJSON();
-	if (botchannel.length == 0) {
+	const botchannel = client.voice.connections.toJSON();
+	if (botchannel.length === 0) {
 		queuetoggle = false;
 		songtoggle = false;
 		songtoggle = false;
@@ -872,23 +902,25 @@ client.on("voiceStateUpdate", () => {
 });
 
 function validURL(str) {
+
 	// * detection of real url
-	var pattern = new RegExp(
-		"^(https?:\\/\\/)?" + // protocol
-			"((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-			"((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-			"(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-			"(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-			"(\\#[-a-z\\d_]*)?$",
-		"i"
+	const pattern = new RegExp(
+		"^(https?:\\/\\/)?" // protocol
+		+ "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" // domain name
+		+ "((\\d{1,3}\\.){3}\\d{1,3}))" // OR ip (v4) address
+		+ "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" // port and path
+		+ "(\\?[;&a-z\\d%_.~+=-]*)?" // query string
+		+ "(\\#[-a-z\\d_]*)?$",
+		"i",
 	); // fragment locator
 	return !!pattern.test(str);
 }
+
 function msToTime(duration) {
-	var milliseconds = parseInt((duration % 1000) / 100),
-		seconds = parseInt((duration / 1000) % 60),
-		minutes = parseInt((duration / (1000 * 60)) % 60),
-		hours = parseInt((duration / (1000 * 60 * 60)) % 24);
+	let milliseconds = parseInt((duration % 1000) / 100, 10),
+		seconds = parseInt((duration / 1000) % 60, 10),
+		minutes = parseInt((duration / (1000 * 60)) % 60, 10),
+		hours = parseInt((duration / (1000 * 60 * 60)) % 24, 10);
 
 	hours = hours < 10 ? "0" + hours : hours;
 	minutes = minutes < 10 ? "0" + minutes : minutes;
@@ -896,24 +928,5 @@ function msToTime(duration) {
 
 	return hours + " : " + minutes + " : " + seconds + " . " + milliseconds;
 }
-
-// > IPC with parent process
-process.on("message", (comm) => {
-	if (comm === "memusage") {
-		process.send(new respond("memusage", process.memoryUsage()));
-	}
-	if (comm === "kill") {
-		client.destroy();
-		setTimeout(() => {
-			process.exit();
-		}, 500);
-	}
-	if (comm === "userkill") {
-		client.destroy();
-		setTimeout(() => {
-			process.exit();
-		}, 5000);
-	}
-});
 
 client.login("ODAyMTE4MTAwMjEyMTIxNjAw.YAqksQ.QkVbWD8IDVzJijJBH0SdZYlqAHs");

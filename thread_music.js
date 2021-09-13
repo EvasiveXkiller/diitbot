@@ -8,6 +8,7 @@
  * - Carlson
  */
 
+const { token } = require("./credentials.json");
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const { Player } = require("discord-music-player");
@@ -47,7 +48,7 @@ client.player
 		case "LiveUnsupported": {
 			const liveeeror = new Discord.MessageEmbed({
 				description:
-							"Live Vidoes are not supported, skipping current song",
+					"Live Vidoes are not supported, skipping current song",
 				footer: {
 					text: "International music bot",
 				},
@@ -929,4 +930,4 @@ function msToTime(duration) {
 	return hours + " : " + minutes + " : " + seconds + " . " + milliseconds;
 }
 
-client.login("ODAyMTE4MTAwMjEyMTIxNjAw.YAqksQ.QkVbWD8IDVzJijJBH0SdZYlqAHs");
+client.login(token);

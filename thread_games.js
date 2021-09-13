@@ -16,11 +16,13 @@
  */
 /* eslint-disable */
 
-
+const { token } = require("./credentials.json");
 const Discord = require("discord.js");
 const __importDefault
-    = (this && this.__importDefault)
-    || function (mod) {return mod && mod.__esModule ? mod : { default: mod };};
+	= (this && this.__importDefault)
+	|| function (mod) {
+		return mod && mod.__esModule ? mod : { default: mod };
+	};
 const client = new Discord.Client();
 const canvas_1 = __importDefault(require("canvas"));
 const Cards_1 = require("./Cards");
@@ -348,7 +350,7 @@ async function removeUser(message) {
 	await Promise.all([msg.react("✅"), msg.react("❌")]);
 	const filter = (reaction, user) =>
 		user.id === message.author.id
-        && ["✅", "❌"].includes(reaction.emoji.name);
+		&& ["✅", "❌"].includes(reaction.emoji.name);
 	const response = await msg.awaitReactions(filter, { max: 1 });
 	if (response.size > 0) {
 		const reaction = response.first();
@@ -479,7 +481,7 @@ async function playCard(message) {
 	if (settings.jumpIns) {
 		if (
 			cardObject.name === foundGame.topCard.name
-            && foundGame.users[foundGame.currentPlayer].id !== message.author.id
+			&& foundGame.users[foundGame.currentPlayer].id !== message.author.id
 		) {
 			jumpedIn = true;
 			foundGame.currentPlayer = foundGame.users.findIndex(
@@ -487,12 +489,12 @@ async function playCard(message) {
 			);
 		} else if (
 			cardObject.name !== foundGame.topCard.name
-            && foundGame.users[foundGame.currentPlayer].id !== message.author.id
+			&& foundGame.users[foundGame.currentPlayer].id !== message.author.id
 		)
 			return message.channel.send("You can't jump in with that card...");
 		else if (
 			checkTop(foundGame.topCard, cardObject)
-            && foundGame.users[foundGame.currentPlayer].id === message.author.id
+			&& foundGame.users[foundGame.currentPlayer].id === message.author.id
 		)
 			jumpedIn = false;
 	} else if (user.id !== message.author.id)
@@ -624,9 +626,9 @@ function checkTop(topCard, playedCard) {
 	// * Should be stable
 	if (
 		topCard.color === playedCard.color
-        || topCard.value === playedCard.value
-        || playedCard.value === "Wild"
-        || playedCard.value === "Wild Draw Four"
+		|| topCard.value === playedCard.value
+		|| playedCard.value === "Wild"
+		|| playedCard.value === "Wild Draw Four"
 	)
 		return true;
 	else return false;
@@ -675,8 +677,8 @@ function nextTurn(player, type, settings, storage) {
 					return 2;
 				}
 
-				// else if (player - 2 < 0) {
-				// 	return storage.users.length - 2;
+					// else if (player - 2 < 0) {
+					// 	return storage.users.length - 2;
 				// }
 				else {
 					return player + 2;
@@ -772,8 +774,8 @@ async function viewTable(message) {
 		console.log(foundGame.currentPlayer);
 		if (
 			foundGame.users[i]
-            && foundGame.users[i].id
-            === foundGame.users[foundGame.currentPlayer].id
+			&& foundGame.users[i].id
+			=== foundGame.users[foundGame.currentPlayer].id
 		) {
 			ctx.fillStyle = "#ffffff";
 			ctx.save();
@@ -913,9 +915,9 @@ function draw(message) {
 			"You can't draw cards yet! It isn't your turn.",
 		);
 	const beforeCondition
-        = foundGame.users[foundGame.currentPlayer].hand.find((c) => c.color === foundGame.topCard.color)
-        || foundGame.users[foundGame.currentPlayer].hand.find((c) => c.value === foundGame.topCard.value)
-        || foundGame.users[foundGame.currentPlayer].hand.find((c) => c.value === "null");
+		= foundGame.users[foundGame.currentPlayer].hand.find((c) => c.color === foundGame.topCard.color)
+		|| foundGame.users[foundGame.currentPlayer].hand.find((c) => c.value === foundGame.topCard.value)
+		|| foundGame.users[foundGame.currentPlayer].hand.find((c) => c.value === "null");
 	if (beforeCondition)
 		return message.channel.send(
 			"You already have a card in your hand that you can play! Try playing that instead.",
@@ -932,12 +934,12 @@ function draw(message) {
 				foundSettings,
 				foundGame,
 			)
-		].id,
+			].id,
 	);
 	const condition
-        = foundGame.users[foundGame.currentPlayer].hand.find((c) => c.color === foundGame.topCard.color)
-        || foundGame.users[foundGame.currentPlayer].hand.find((c) => c.value === foundGame.topCard.value)
-        || foundGame.users[foundGame.currentPlayer].hand.find((c) => c.value === "null");
+		= foundGame.users[foundGame.currentPlayer].hand.find((c) => c.color === foundGame.topCard.color)
+		|| foundGame.users[foundGame.currentPlayer].hand.find((c) => c.value === foundGame.topCard.value)
+		|| foundGame.users[foundGame.currentPlayer].hand.find((c) => c.value === "null");
 	const DrawEmbed = new Discord.MessageEmbed()
 		.setColor(discordUNO.embedColor)
 		.setDescription(
@@ -956,7 +958,7 @@ function draw(message) {
 									foundSettings,
 									foundGame,
 								)
-							].id,
+								].id,
 						).username
 					}'s turn.`
 					: ""
@@ -1034,7 +1036,7 @@ async function doSpecialCardAbility(message, card, data) {
 		);
 		const filter = (reaction, u) =>
 			["🔴", "🟢", "🔵", "🟡"].includes(reaction.emoji.name)
-            && u.id === message.author.id;
+			&& u.id === message.author.id;
 		await Promise.all([
 			msg.react("🔴"),
 			msg.react("🟢"),
@@ -1114,7 +1116,7 @@ async function doSpecialCardAbility(message, card, data) {
 					data.users
 						.find((user) => user.id === challenged.id)
 						.hand.find((crd) => crd.value === data.topCard.value)
-                    || data.users.find((user) => user.id === challenged.id).hand.find((crd) => crd.color === data.topCard.color)
+					|| data.users.find((user) => user.id === challenged.id).hand.find((crd) => crd.color === data.topCard.color)
 				) {
 					type = "normal";
 					challengeWIN = true;
@@ -1184,7 +1186,7 @@ async function doSpecialCardAbility(message, card, data) {
 				).setDescription(
 					`Looks like you decided not to challenge. You drew 4 cards.\n\n${data.users[
 						nextUser
-					].hand
+						].hand
 						.map((c) => c.name)
 						.join(" - ")}`,
 				);
@@ -1220,7 +1222,7 @@ async function doSpecialCardAbility(message, card, data) {
 			).setDescription(
 				`Looks like you decided not to challenge. You drew 4 cards.\n\n${data.users[
 					nextUser
-				].hand
+					].hand
 					.map((c) => c.name)
 					.join(" | ")}`,
 			);
@@ -1258,7 +1260,7 @@ async function doSpecialCardAbility(message, card, data) {
 			if (user.id !== message.author.id) return;
 			return (
 				["🔴", "🟢", "🔵", "🟡"].includes(reaction.emoji.name)
-                && user.id === message.author.id
+				&& user.id === message.author.id
 			);
 		};
 		await Promise.all([
@@ -1307,7 +1309,7 @@ async function doSpecialCardAbility(message, card, data) {
 				} and switched the color to ${color}. It is now ${
 					data.users[
 						nextTurn(data.currentPlayer, "normal", settings, data)
-					].name
+						].name
 				}'s turn`,
 			)
 			.setColor(discordUNO.embedColor)
@@ -1315,7 +1317,7 @@ async function doSpecialCardAbility(message, card, data) {
 				message.guild.members.cache.get(
 					data.users[
 						nextTurn(data.currentPlayer, "normal", settings, data)
-					].id,
+						].id,
 				).user.username,
 				message.guild.members.cache
 					.get(
@@ -1326,7 +1328,7 @@ async function doSpecialCardAbility(message, card, data) {
 								settings,
 								data,
 							)
-						].id,
+							].id,
 					)
 					.user.displayAvatarURL({ format: "png" }),
 			);
@@ -1356,20 +1358,20 @@ async function doSpecialCardAbility(message, card, data) {
 				`${message.author.tag} played a ${card.name}. It is now ${
 					data.users[
 						nextTurn(data.currentPlayer, type, settings, data)
-					].name
+						].name
 				}'s turn`,
 			)
 			.setAuthor(
 				message.client.users.cache.get(
 					data.users[
 						nextTurn(data.currentPlayer, type, settings, data)
-					].id,
+						].id,
 				).username,
 				message.client.users.cache
 					.get(
 						data.users[
 							nextTurn(data.currentPlayer, type, settings, data)
-						].id,
+							].id,
 					)
 					.displayAvatarURL({ format: "png" }),
 			)
@@ -1398,24 +1400,24 @@ async function doSpecialCardAbility(message, card, data) {
 				`${message.author.tag} skipped ${
 					data.users[
 						nextTurn(data.currentPlayer, "normal", settings, data)
-					].name
+						].name
 				} with a ${card.name}. It is now ${
 					data.users[
 						nextTurn(data.currentPlayer, "skip", settings, data)
-					].name
+						].name
 				}'s turn!`,
 			)
 			.setAuthor(
 				message.client.users.cache.get(
 					data.users[
 						nextTurn(data.currentPlayer, "skip", settings, data)
-					].id,
+						].id,
 				).username,
 				message.client.users.cache
 					.get(
 						data.users[
 							nextTurn(data.currentPlayer, "skip", settings, data)
-						].id,
+							].id,
 					)
 					.displayAvatarURL({ format: "png" }),
 			)
@@ -1491,7 +1493,7 @@ async function doSpecialCardAbility(message, card, data) {
 									settings,
 									data,
 								)
-							].id,
+								].id,
 						).user.tag
 					}'s turn.`,
 				)
@@ -1505,7 +1507,7 @@ async function doSpecialCardAbility(message, card, data) {
 								settings,
 								data,
 							)
-						].id,
+							].id,
 					).user.username,
 					message.guild.members.cache
 						.get(
@@ -1516,7 +1518,7 @@ async function doSpecialCardAbility(message, card, data) {
 									settings,
 									data,
 								)
-							].id,
+								].id,
 						)
 						.user.displayAvatarURL({ format: "png" }),
 				);
@@ -1575,7 +1577,7 @@ async function doSpecialCardAbility(message, card, data) {
 										(u) => u.id === user.id,
 									) + 1
 								).toString()
-							]
+								]
 						} - ${
 							message.guild.members.cache.get(user.id).user.tag
 						} has ${user.hand.length} cards`,
@@ -1593,7 +1595,7 @@ async function doSpecialCardAbility(message, card, data) {
 			const msg = await message.channel.send("", { embed: EmbedMsg });
 			const filter = (reaction, user) =>
 				reactions.includes(reaction.emoji.name)
-                && message.author.id === user.id;
+				&& message.author.id === user.id;
 			reactions.forEach((e) => {
 				msg.react(e);
 			});
@@ -1619,7 +1621,7 @@ async function doSpecialCardAbility(message, card, data) {
 				swapToUser = dataToChooseFrom[num];
 			} else {
 				const math
-                    = Math.floor(Math.random() * dataToChooseFrom.length) + 1;
+					= Math.floor(Math.random() * dataToChooseFrom.length) + 1;
 				swapToUser = dataToChooseFrom[math];
 			}
 			const authorHand = data.users.find(
@@ -1672,13 +1674,13 @@ async function doSpecialCardAbility(message, card, data) {
 				} swapped hands with ${user}! It is now ${message.client.users.cache.get(
 					data.users[
 						nextTurn(data.currentPlayer, "normal", settings, data)
-					].id,
+						].id,
 				)}'s turn!`,
 			).setAuthor(
 				message.client.users.cache.get(
 					data.users[
 						nextTurn(data.currentPlayer, "normal", settings, data)
-					].id,
+						].id,
 				).username,
 				message.client.users.cache
 					.get(
@@ -1689,7 +1691,7 @@ async function doSpecialCardAbility(message, card, data) {
 								settings,
 								data,
 							)
-						].id,
+							].id,
 					)
 					.displayAvatarURL({ format: "png" }),
 			);
@@ -1704,7 +1706,7 @@ async function doSpecialCardAbility(message, card, data) {
 		special = true;
 		const newCards = createCards(message, 2, false);
 		const skippedUser
-            = data.users[nextTurn(data.currentPlayer, "normal", settings, data)];
+			= data.users[nextTurn(data.currentPlayer, "normal", settings, data)];
 		newCards.forEach((c) => skippedUser.hand.push(c));
 		Embed.setDescription(
 			`${message.author} played a ${
@@ -1729,7 +1731,7 @@ async function doSpecialCardAbility(message, card, data) {
 					.get(
 						data.users[
 							nextTurn(data.currentPlayer, "skip", settings, data)
-						].id,
+							].id,
 					)
 					.displayAvatarURL({ format: "png" }),
 			)
@@ -1740,7 +1742,7 @@ async function doSpecialCardAbility(message, card, data) {
 				}. They drew two cards and it is now ${
 					data.users[
 						nextTurn(data.currentPlayer, "skip", settings, data)
-					].name
+						].name
 				}'s turn!`,
 			);
 		message.channel.send("", { embed: SendEmbed });
@@ -1851,18 +1853,18 @@ function createCards(message, amount, topCard) {
 		}
 		const notYellow = [redCard, greenCard, blueCard, wildCard];
 		const randomNotYellow
-            = notYellow[Math.floor(Math.random() * notYellow.length)];
+			= notYellow[Math.floor(Math.random() * notYellow.length)];
 		const notRed = [yellowCard, greenCard, blueCard, wildCard];
 		const randomNotRed = notRed[Math.floor(Math.random() * notRed.length)];
 		const notGreen = [yellowCard, redCard, blueCard, wildCard];
 		const randomNotGreen
-            = notGreen[Math.floor(Math.random() * notGreen.length)];
+			= notGreen[Math.floor(Math.random() * notGreen.length)];
 		const notBlue = [yellowCard, redCard, greenCard, wildCard];
 		const randomNotBlue
-            = notBlue[Math.floor(Math.random() * notBlue.length)];
+			= notBlue[Math.floor(Math.random() * notBlue.length)];
 		const notWild = [yellowCard, redCard, greenCard, blueCard];
 		const randomNotWild
-            = notWild[Math.floor(Math.random() * notWild.length)];
+			= notWild[Math.floor(Math.random() * notWild.length)];
 
 		function yellowCard() {
 			const tempMath = Math.floor(Math.random() * cards.yellow.length);
@@ -2061,19 +2063,19 @@ async function displayWinners(message, foundWinners) {
 			break;
 		default:
 			const placement
-                    = i === 3
-                    	? "4th"
-                    	: i === 4
-                    		? "5th"
-                    		: i === 5
-                    			? "6th"
-                    			: i === 6
-                    				? "7th"
-                    				: i === 7
-                    					? "8th"
-                    					: i === 8
-                    						? "9th"
-                    						: "10th";
+				= i === 3
+				? "4th"
+				: i === 4
+					? "5th"
+					: i === 5
+						? "6th"
+						: i === 6
+							? "7th"
+							: i === 7
+								? "8th"
+								: i === 8
+									? "9th"
+									: "10th";
 			ctx.fillStyle = "#ffffff";
 			ctx.beginPath();
 			ctx.textAlign = "center";
@@ -2218,4 +2220,4 @@ function UNO(message) {
 	}
 }
 
-client.login("ODAyMTE4MTAwMjEyMTIxNjAw.YAqksQ.QkVbWD8IDVzJijJBH0SdZYlqAHs");
+client.login(token);

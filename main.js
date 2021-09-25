@@ -508,7 +508,7 @@ client.on("message", (message) => {
 		message.channel.send(closeMatch[0].item.link);
 	}
 
-	// * V.5 added 1 new block of code that is for the $timetable all which outputs all of the timetables but in 5 separate messages
+	// * V.6.1 changed the message embed to let user know that wednesday, sunday and saturday has no class when user types $timetable wednesday || saturday || sunday
 	if (command === "timetable") {
 		const userinput = message.content
 			.replace("$timetable", "")
@@ -520,7 +520,7 @@ client.on("message", (message) => {
 			const embed = new Discord.MessageEmbed({
 				title: "How To Use $timetable",
 				description:
-					"Type $timetable [insert a weekday here].\n\n Note that we only have Monday-Friday",
+					"Type $timetable [insert a weekday here].\n\n Note that we only have Monday, Tuesday, Thursday and Friday only.",
 				footer: {
 					text:
 						"Don't try to be funny and put a weekend there. I know you want to but don't. It won't do anything.",
@@ -533,10 +533,10 @@ client.on("message", (message) => {
 			const datetoday = DateTime.local(); // gets today's date
 			const daytoday = datetoday.toFormat("EEEE").toLowerCase(); // changes date to day e.g Wednesday
 
-			if (daytoday === "saturday" || daytoday === "sunday") {
-				message.channel.send("We don't have class on weekends!");
+			if (daytoday === "saturday" || daytoday === "sunday" || daytoday === "wednesday") {
+				message.channel.send("We don't have class today.");
 			} else {
-				const preprocess = Object.entries(db.get(daytoday).value());
+				const preprocess = Object.entries(dbjack.get(daytoday).value());
 				let sendcurrent = "\n";
 
 				for (let index = 0; index < preprocess.length; index++) {
@@ -561,11 +561,11 @@ client.on("message", (message) => {
 
 			// this is if the user types $timetable tomorrow
 			const datetomorrow = DateTime.local().plus({ days: 1 }); // gets tomorrow's date
-			const daytomorrow = datetomorrow.toFormat("EEEE").toLowerCase(); // changes date to day e.g Wednesday
-			if (daytomorrow === "saturday" || daytomorrow === "sunday") {
-				message.channel.send("We don't have class on weekends!");
+			const daytomorrow = datetomorrow.toFormat("EEEE").toLowerCase(); // changes date to day e.g wednesday
+			if (daytomorrow === "saturday" || daytomorrow === "sunday" || daytomorrow ==="wednesday") {
+				message.channel.send("We don't have class tomorrow");
 			} else {
-				const preprocess = Object.entries(db.get(daytomorrow).value());
+				const preprocess = Object.entries(dbjack.get(daytomorrow).value());
 				let sendcurrent = "\n";
 
 				for (let index = 0; index < preprocess.length; index++) {
@@ -591,10 +591,10 @@ client.on("message", (message) => {
 			// this is if the user types $timetable yesterday
 			const dateyesterday = DateTime.local().minus({ days: 1 }); // gets testerday's date
 			const dayyesterday = dateyesterday.toFormat("EEEE").toLowerCase(); // changes date to day e.g Wednesday
-			if (dayyesterday === "saturday" || dayyesterday === "sunday") {
-				message.channel.send("We don't have class on weekends!");
+			if (dayyesterday === "saturday" || dayyesterday === "sunday" || dayyesterday === "wednesday") {
+				message.channel.send("We don't have class yesterday");
 			} else {
-				const preprocess = Object.entries(db.get(dayyesterday).value());
+				const preprocess = Object.entries(dbjack.get(dayyesterday).value());
 				let sendcurrent = "\n";
 
 				for (let index = 0; index < preprocess.length; index++) {
@@ -617,13 +617,13 @@ client.on("message", (message) => {
 			}
 		}
 		else if (userinput === "all") {
-			const day = ["monday", "tuesday", "wednesday", "thursday", "friday"]  // array for days
+			const day = ["monday", "tuesday", "thursday", "friday"]  // array for days
 
 			for (let i = 0; i < day.length; i++) {  // outputs all the objects
-				const preprocess = Object.entries(db.get(day[i]).value());
+				const preprocess = Object.entries(dbjack.get(day[i]).value());
 				let sendcurrent = "\n";
 
-				for (let index = 0; index < preprocess.length; index++) {
+				for (let index = 0; index < preprocess.length; index++){
 
 					// takes out the strings from the array
 					sendcurrent += preprocess[index].toString() + "\n\n";
@@ -648,15 +648,17 @@ client.on("message", (message) => {
 			userinput !== "today"
 			|| userinput !== ""
 			|| userinput !== "help"
+			|| userinput !== "yesterday"
+			|| userinput !== "tomorrow"
 		) {
 
 			// this is if the user types $timetable [weekday]
-			const arraychecker = Object.keys(db.getState()); // this checks the user's input to prevent them from typing any other random stuff
+			const arraychecker = Object.keys(dbjack.getState()); // this checks the user's input to prevent them from typing any other random stuff
 			if (!arraychecker.includes(userinput)) {
-				message.channel.send("Please check your syntax! (We don't have timetables for Saturday or Sunday!)");
+				message.channel.send("Please check your syntax! (We don't have timetables for Wednesday, Saturday or Sunday!)");
 				return;
 			}
-			const preprocess = Object.entries(db.get(userinput).value()); // if user enters $timetable wednesday this will pull out the wednesday object from database
+			const preprocess = Object.entries(dbjack.get(userinput).value()); // if user enters $timetable wednesday this will pull out the wednesday object from database
 			let sendcurrent = "\n";
 			for (let index = 0; index < preprocess.length; index++) {
 

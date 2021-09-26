@@ -338,7 +338,7 @@ client.on("message", (message) => {
 
 			// * Summary system
 			title: "Commit Successful",
-			description: userinputSplit[0] + " has been removed",
+			description: userinputSplit[1] + " has been removed",
 			color: "00FF00",
 			footer: {
 				text: "nosql",
@@ -434,15 +434,6 @@ client.on("message", (message) => {
 				+ "For syntax please refer to our [GitHub](https://github.com/EvasiveXkiller/diitbot-public/blob/main/README.md) page",
 			);
 		message.channel.send(example);
-	}
-	if (command === "timetablepic") {
-
-		// * This is to display timetable schedule for semester three. It's done for the code.
-		// > Ken
-		message.channel.send("Here you go, " + `${message.author},`);
-		message.channel.send(
-			"https://cdn.discordapp.com/attachments/786216853848588309/794864558706786306/image0.png",
-		);
 	}
 	if (command === "description") {
 
@@ -696,7 +687,7 @@ client.on("message", (message) => {
 
 		// * enable debug feature
 		const userinput = message.content.replace("$debug", "").trim();
-		if (userinput === 1) {
+		if (userinput === "1") {
 			const embed = new Discord.MessageEmbed({
 				description: "Debug Enabled",
 				footer: {
@@ -706,7 +697,7 @@ client.on("message", (message) => {
 			embed.setTimestamp();
 			verbosedebug = 1;
 			message.channel.send(embed);
-		} else if (userinput === 0) {
+		} else if (userinput === "0") {
 			const embed = new Discord.MessageEmbed({
 				description: "Debug Disabled",
 				footer: {

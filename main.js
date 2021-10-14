@@ -499,7 +499,7 @@ client.on("message", (message) => {
 		message.channel.send(closeMatch[0].item.link);
 	}
 
-	// * V.6.1 changed the message embed to let user know that wednesday, sunday and saturday has no class when user types $timetable wednesday || saturday || sunday
+	// * V.6.2 changed the message embed to let user know that wednesday, sunday and saturday has no class when user types $timetable wednesday || saturday || sunday and friday
 	if (command === "timetable") {
 		const userinput = message.content
 			.replace("$timetable", "")
@@ -524,7 +524,7 @@ client.on("message", (message) => {
 			const datetoday = DateTime.local(); // gets today's date
 			const daytoday = datetoday.toFormat("EEEE").toLowerCase(); // changes date to day e.g Wednesday
 
-			if (daytoday === "saturday" || daytoday === "sunday" || daytoday === "wednesday") {
+			if (daytoday === "saturday" || daytoday === "sunday" || daytoday === "wednesday" || daytoday === "friday") {
 				message.channel.send("We don't have class today.");
 			} else {
 				const preprocess = Object.entries(dbjack.get(daytoday).value());
@@ -553,7 +553,7 @@ client.on("message", (message) => {
 			// this is if the user types $timetable tomorrow
 			const datetomorrow = DateTime.local().plus({ days: 1 }); // gets tomorrow's date
 			const daytomorrow = datetomorrow.toFormat("EEEE").toLowerCase(); // changes date to day e.g wednesday
-			if (daytomorrow === "saturday" || daytomorrow === "sunday" || daytomorrow ==="wednesday") {
+			if (daytomorrow === "saturday" || daytomorrow === "sunday" || daytomorrow === "wednesday" || daytomorrow === "friday") {
 				message.channel.send("We don't have class tomorrow");
 			} else {
 				const preprocess = Object.entries(dbjack.get(daytomorrow).value());
@@ -582,7 +582,7 @@ client.on("message", (message) => {
 			// this is if the user types $timetable yesterday
 			const dateyesterday = DateTime.local().minus({ days: 1 }); // gets testerday's date
 			const dayyesterday = dateyesterday.toFormat("EEEE").toLowerCase(); // changes date to day e.g Wednesday
-			if (dayyesterday === "saturday" || dayyesterday === "sunday" || dayyesterday === "wednesday") {
+			if (dayyesterday === "saturday" || dayyesterday === "sunday" || dayyesterday === "wednesday" || dayyesterday === "friday") {
 				message.channel.send("We don't have class yesterday");
 			} else {
 				const preprocess = Object.entries(dbjack.get(dayyesterday).value());
@@ -606,15 +606,14 @@ client.on("message", (message) => {
 				});
 				message.channel.send(embed);
 			}
-		}
-		else if (userinput === "all") {
-			const day = ["monday", "tuesday", "thursday", "friday"]  // array for days
+		} else if (userinput === "all") {
+			const day = ["monday", "tuesday", "thursday"]  // array for days
 
 			for (let i = 0; i < day.length; i++) {  // outputs all the objects
 				const preprocess = Object.entries(dbjack.get(day[i]).value());
 				let sendcurrent = "\n";
 
-				for (let index = 0; index < preprocess.length; index++){
+				for (let index = 0; index < preprocess.length; index++) {
 
 					// takes out the strings from the array
 					sendcurrent += preprocess[index].toString() + "\n\n";
@@ -632,10 +631,7 @@ client.on("message", (message) => {
 				});
 				message.channel.send(embed);
 			}
-		}
-
-
-		else if (
+		} else if (
 			userinput !== "today"
 			|| userinput !== ""
 			|| userinput !== "help"
@@ -646,7 +642,7 @@ client.on("message", (message) => {
 			// this is if the user types $timetable [weekday]
 			const arraychecker = Object.keys(dbjack.getState()); // this checks the user's input to prevent them from typing any other random stuff
 			if (!arraychecker.includes(userinput)) {
-				message.channel.send("Please check your syntax! (We don't have timetables for Wednesday, Saturday or Sunday!)");
+				message.channel.send("Please check your syntax! (We don't have timetables for Wednesday, Friday, Saturday or Sunday!)");
 				return;
 			}
 			const preprocess = Object.entries(dbjack.get(userinput).value()); // if user enters $timetable wednesday this will pull out the wednesday object from database

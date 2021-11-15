@@ -8,6 +8,9 @@
 # Documentation
 [Here](https://evasivexkiller.github.io/diitbot/ReadMe.html)
 
+### Old Documentation
+[Here](./stale/README.md)
+
 # Installation
 Prerequisites:
 - Discord bot token
